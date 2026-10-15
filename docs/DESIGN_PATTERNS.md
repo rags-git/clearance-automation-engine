@@ -73,4 +73,4 @@ When any handler successfully signs off on a request:
    $$\text{Signature} = \text{HMAC-SHA256}(K, \text{staff\_id} \parallel \text{dept\_code} \parallel \text{request\_id} \parallel \text{timestamp})$$
 2. `refresh_pipeline_gates()` evaluates downstream approvals:
    - Changes downstream status from `WAITING_PREREQUISITE` to `PENDING` when unblocked.
-   - If all 5 departments are approved, transitions `ClearanceRequest.overall_status` to `APPROVED` and generates a certificate digest (e.g. `PEC-CLR-2026-00042`).
+   - If all 5 departments are approved, transitions `ClearanceRequest.overall_status` to `APPROVED` and generates a certificate digest (e.g. `PEC-CLR-YYYY-XXXXX`).

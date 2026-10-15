@@ -1,7 +1,7 @@
 # Data Flow Diagrams (DFD) & Data Dictionary
 ## Academic Grievance, No-Dues & Clearance Automation Engine
 **Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-DFD-2026-FROZEN  
+**Document Identifier:** PEC-SE-DFD-FROZEN  
 **Standard Compliance:** Structured Systems Analysis & Design (Yourdon & DeMarco / Gane & Sarson Standards)  
 **Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
 **Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
@@ -297,11 +297,11 @@ flowchart TD
 | :--- | :--- | :---: | :--- | :--- |
 | `id` | Integer | PK | Clearance request identifier | `1` |
 | `student_id` | Integer | FK | References `users.id` | `1` |
-| `academic_year` | String(20) | - | Academic session | `2025-2026` |
+| `academic_year` | String(20) | - | Academic session | `Final Academic Session` |
 | `semester` | Integer | - | Current enrolled semester | `8` |
 | `reason` | String(120) | - | Clearance justification | `B.Tech Final Degree Graduation` |
 | `status` | String(30) | - | Overall status (`PENDING`, `APPROVED`, `REJECTED`) | `APPROVED` |
-| `certificate_id` | String(50) | Unique | Minted institutional certificate number | `PEC-CLR-2026-00042` |
+| `certificate_id` | String(50) | Unique | Minted institutional certificate number | `PEC-CLR-YYYY-XXXXX` |
 | `certificate_hash`| String(64) | Unique | Cryptographic SHA-256 certificate digest | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
 
 #### `DS-4`: Department Approvals (`department_approvals` table)
@@ -314,7 +314,7 @@ flowchart TD
 | `due_amount` | Float | - | Outstanding department liability in INR (`₹`) | `3500.0` |
 | `remarks` | Text | - | Positional reviewer notes | `Shivalik Mess Dues Reconciled` |
 | `digital_signature`| String(128)| - | Cryptographic HMAC-SHA256 signature seal | `a8f9c1d2e3b4a5...` |
-| `signed_at` | DateTime | - | Timestamp of cryptographic signing | `2026-10-15 14:32:00` |
+| `signed_at` | DateTime | - | Timestamp of cryptographic signing | `[Verification Timestamp]` |
 
 #### `DS-5`: Grievances (`grievances` table)
 | Field Name | Type | Key | Description | Example |
@@ -326,7 +326,7 @@ flowchart TD
 | `priority` | String(20) | - | SLA Priority (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`) | `HIGH` |
 | `disputed_amount`| Float | - | Contested liability in INR (`₹`) | `3500.0` |
 | `status` | String(20) | - | `OPEN`, `RESOLVED`, `REJECTED`, `ESCALATED` | `ESCALATED` |
-| `sla_deadline` | DateTime | - | Dynamic computed resolution deadline | `2026-10-16 02:30:00` |
+| `sla_deadline` | DateTime | - | Dynamic computed resolution deadline | `[Calculated SLA Deadline]` |
 | `is_escalated` | Boolean | - | Flag indicating DAA SLA breach escalation | `True` |
 
 #### `DS-6`: Audit Log (`audit_logs` table)
@@ -337,7 +337,7 @@ flowchart TD
 | `action` | String(50) | - | Standard action verb | `APPROVAL_SIGNED`, `ADMIN_OVERRIDE` |
 | `entity_type` | String(50) | - | Target domain entity | `ClearanceRequest`, `Grievance` |
 | `details` | Text | - | JSON-encoded mutation metadata | `{"dept": "HOSTEL", "status": "APPROVED"}` |
-| `timestamp` | DateTime | - | UTC/IST creation timestamp | `2026-10-15 14:32:01` |
+| `timestamp` | DateTime | - | UTC/IST creation timestamp | `[Transaction Timestamp]` |
 
 ---
 

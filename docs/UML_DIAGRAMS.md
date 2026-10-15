@@ -1,7 +1,7 @@
 # Unified Modeling Language (UML) Structural & Behavioral Models
 ## Academic Grievance, No-Dues & Clearance Automation Engine
 **Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-UML-2026-FROZEN  
+**Document Identifier:** PEC-SE-UML-FROZEN  
 **Standard Compliance:** OMG UML 2.5 Specification  
 **Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
 **Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
@@ -377,7 +377,7 @@ sequenceDiagram
     AccountsStaff->>API: POST /api/v1/clearance/staff/decision/{approval_id} (APPROVED)
     API->>CoR: handle(request, "ACCOUNTS", staff, APPROVED)
     CoR->>CoR: verify_prerequisites() -> Check Gates 1 & 2 Approved
-    CoR->>DB: UPDATE ClearanceRequest SET status=APPROVED, cert_id="PEC-CLR-2026-00042"
+    CoR->>DB: UPDATE ClearanceRequest SET status=APPROVED, cert_id="PEC-CLR-YYYY-XXXXX"
     CoR->>Cert: generate_certificate_hash(cert_id, sid, year, timestamp)
     Cert-->>DB: Save SHA-256 Digest
     DB-->>AccountsStaff: 200 OK (Clearance Completed & Caution Money Released)

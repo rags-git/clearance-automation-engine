@@ -1,7 +1,7 @@
 # Software Requirements Specification (SRS)
 ## Academic Grievance, No-Dues & Clearance Automation Engine
 **Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-SRS-2026-FROZEN  
+**Document Identifier:** PEC-SE-SRS-FROZEN  
 **Standard Compliance:** IEEE Std 830-1998 (Recommended Practice for Software Requirements Specifications)  
 **Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
 **Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
@@ -54,7 +54,7 @@ The system encompasses the following functional domains:
 - IEEE Std 830-1998: *IEEE Recommended Practice for Software Requirements Specifications*.
 - FIPS PUB 180-4: *Secure Hash Standard (SHS)*, National Institute of Standards and Technology.
 - RFC 2104: *HMAC: Keyed-Hashing for Message Authentication*.
-- PEC Academic Ordinances & Regulations for B.Tech., M.Tech., and Ph.D. Degree Programs (2022-2026).
+- PEC Academic Ordinances & Regulations for B.Tech., M.Tech., and Ph.D. Degree Programs.
 - UGC / AICTE Guidelines on Transparent Digital Grievance Redressal in Higher Educational Institutions.
 
 ### 1.5 IEEE Std 830-1998 Quality & Compliance Matrix
