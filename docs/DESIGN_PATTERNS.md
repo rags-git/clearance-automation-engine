@@ -70,7 +70,9 @@ Our architecture addresses this via:
 #### 3.3 Dynamic State Refresh & Digital Signature Mints
 When any handler successfully signs off on a request:
 1. An HMAC-SHA256 signature is calculated:
-   $$\text{Signature} = \text{HMAC-SHA256}(K, \text{staff\_id} \parallel \text{dept\_code} \parallel \text{request\_id} \parallel \text{timestamp})$$
+   ```text
+   Digital Signature = HMAC-SHA256(Secret_Key, staff_id + dept_code + request_id + timestamp)
+   ```
 2. `refresh_pipeline_gates()` evaluates downstream approvals:
    - Changes downstream status from `WAITING_PREREQUISITE` to `PENDING` when unblocked.
    - If all 5 departments are approved, transitions `ClearanceRequest.overall_status` to `APPROVED` and generates a certificate digest (e.g. `PEC-CLR-YYYY-XXXXX`).
