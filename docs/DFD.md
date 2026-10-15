@@ -1,19 +1,6 @@
 # Data Flow Diagrams (DFD) & Data Dictionary
 ## Academic Grievance, No-Dues & Clearance Automation Engine
-**Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-DFD-FROZEN  
-**Standard Compliance:** Structured Systems Analysis & Design (Yourdon & DeMarco / Gane & Sarson Standards)  
-**Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
-**Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
-**Status:** FROZEN & RATIFIED (Implementation-Agnostic Baseline)  
-
----
-
-### Baseline Freeze Declaration
-> **NOTICE OF BASELINE FREEZE:**  
-> This document specifies the complete, immutable data transformations, data store structures, and information flow boundaries for the PEC Clearance & Grievance Automation Engine.  
->  
-> The process hierarchies, data store schemas, input/output data flows, and data element dictionaries defined herein are **FROZEN**. Implementation changes (e.g., frontend state management, database engine replacement, or network transport layers) preserve these exact inputs, transformations, and outputs, ensuring zero modifications to this document.
+**Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**
 
 ---
 

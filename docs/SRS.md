@@ -1,18 +1,6 @@
 # Software Requirements Specification (SRS)
 ## Academic Grievance, No-Dues & Clearance Automation Engine
-**Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-SRS-FROZEN  
-**Standard Compliance:** IEEE Std 830-1998 (Recommended Practice for Software Requirements Specifications)  
-**Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
-**Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
-**Status:** Approved, Frozen & Verified (0 Syntax / Math Rendering Errors)  
-
----
-
-### Baseline Freeze Declaration
-> **IMPORTANT NOTE:**  
-> This specification defines the final, frozen software requirements for the PEC Clearance & Grievance Automation Engine.  
-> The system workflow, user roles, approval gates, security rules, and data contracts specified here are permanently frozen. Any internal code refactoring or UI styling adjustments will adhere strictly to this document without altering these requirements.
+**Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**
 
 ---
 
