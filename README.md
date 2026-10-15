@@ -3,15 +3,22 @@
 > **A Workflow-Driven Digital Clearance Platform for Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**  
 > *Software Engineering Capstone Project • Office of Dean Academic Affairs (DAA)*
 
+[![Pytest Tests](https://img.shields.io/badge/Pytest-11%2F11%20Passed-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
+[![Flake8](https://img.shields.io/badge/Flake8-0%20Violations%20(PEP%208)-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
+[![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.135+-009688)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4.0-38bdf8)](https://tailwindcss.com/)
+
 ---
 
 ## 🌟 Executive Overview
 The **PEC Academic Grievance, No-Dues & Clearance Automation Engine** digitizes, automates, and cryptographically validates end-of-semester and graduation clearance workflows across all key facilities of **Punjab Engineering College, Sector 12, Chandigarh**:
 - **Dr. B. R. Ambedkar Central Library** (Gate 1 - Parallel)
-- **PEC Hostels** (Shivalik, Kurukshetra, Himalaya, Aravali, KCH) (Gate 1 - Parallel)
+- **PEC Hostels** (Shivalik, Kurukshetra, Himalaya, Aravali, Vindhya, KCH) (Gate 1 - Parallel)
 - **Gymkhana & Sports Complex** (Gate 1 - Parallel)
 - **Departmental Research Labs** (CSE, ECE, Mechanical, Electrical, Aerospace, Civil, Metallurgy, Production) (Gate 2 - Sequential Dependency)
-- **Accounts & Finance Branch** (Caution Money Reconciliation & Security Refund Release) (Gate 3 - Final Gate & Certificate Issuance)
+- **Accounts & Finance Branch** (Caution Money Reconciliation & Security Deposit Refund Release) (Gate 3 - Final Gate & Certificate Issuance)
 
 By replacing physical paper circulars with **digital verification gates**, **HMAC-SHA256 digital signature seals**, and **automated SLA-based grievance escalation to the Dean Academic Affairs (DAA)**, this platform eliminates administrative friction, provides real-time status visibility to students, and generates tamper-evident, verifiable clearance certificates.
 
@@ -49,9 +56,9 @@ flowchart LR
 
 | Feature | Description |
 | :--- | :--- |
-| **PEC Role-Based Access Control** | Dedicated portals for **Students** (indexed by 8-digit PEC SID, e.g. `22103042`), **Department Staff**, and **Dean Academic Affairs (DAA)**. |
+| **PEC Role-Based Access Control** | Dedicated portals for **Students** (indexed by 8-digit PEC SID, e.g. `22103042`), **Department Staff** (positional designations), and **Dean Academic Affairs (DAA)**. |
 | **Parallel & Sequential Gates** | Concurrency at Gate 1 with automated dependency unlocking at Gates 2 & 3. |
-| **Tamper-Evident Signatures** | Cryptographic HMAC digital signature seals per department approval. |
+| **Tamper-Evident Signatures** | Cryptographic HMAC-SHA256 digital signature seals per department approval. |
 | **Grievance SLA Engine** | Student appeals (e.g. disputed hostel mess dues) with priority-based SLA deadlines (Critical: 4h, High: 12h, Medium: 24h, Low: 48h) and auto-escalation to the DAA upon breach. |
 | **Verifiable PEC PDF Certificates** | Downloadable institutional certificate generated via ReportLab bearing official PEC Chandigarh letterhead, DAA, and DSA signatures. |
 | **Public Verification Portal** | Allows employers, verification agencies, or foreign universities to validate certificate authenticity via SHA-256 hash or Certificate ID. |
@@ -109,23 +116,33 @@ npm run dev
 
 ## 🧪 Testing & Code Quality Verification
 
-### Run Pytest Suite (10 Automated Tests)
+### Run Pytest Suite (11 Automated Tests - 100% Pass Rate)
 ```bash
 ./venv/bin/pytest -v
 ```
 
-### Run Flake8 Static Analysis (0 Violations)
+### Run Flake8 Static Analysis (0 Violations - PEP 8)
 ```bash
 ./venv/bin/flake8 backend/app
 ```
 
 ---
 
-## 📖 Software Engineering Coursework Deliverables (Frozen Baseline)
-> The core specifications below represent the **Frozen Architectural Baseline**. All system boundaries, data contracts, state lifecycles, and sequence models are permanently frozen to ensure full separation from any future implementation tweaks.
+## 📖 Software Engineering Coursework Deliverables (Frozen Baseline v3.0.0)
 
-- [IEEE 830 Software Requirements Specification (SRS)](file:///Users/raghavbhardwaj/Documents/antigravity/wise-euclid/docs/SRS.md) — *Baseline Version 3.0.0 (Frozen)*
-- [Data Flow Diagrams (DFD Level 0, 1, 2) & Data Dictionary](file:///Users/raghavbhardwaj/Documents/antigravity/wise-euclid/docs/DFD.md) — *Baseline Version 3.0.0 (Frozen)*
-- [UML Activity, Sequence, Class, Use Case & State Diagrams](file:///Users/raghavbhardwaj/Documents/antigravity/wise-euclid/docs/UML_DIAGRAMS.md) — *Baseline Version 3.0.0 (Frozen)*
-- [Chain of Responsibility Design Pattern Documentation](file:///Users/raghavbhardwaj/Documents/antigravity/wise-euclid/docs/DESIGN_PATTERNS.md)
-- [Static Code Quality & Refactoring Report](file:///Users/raghavbhardwaj/Documents/antigravity/wise-euclid/docs/STATIC_CODE_QUALITY.md)
+> The specifications below represent the **Frozen Architectural Baseline**. All system boundaries, data contracts, state lifecycles, and sequence models are permanently frozen to ensure decoupling from implementation details.
+
+| Deliverable | Standard / Framework | Description | PDF Document | Markdown Source |
+| :--- | :---: | :--- | :---: | :---: |
+| **1. Software Requirements Specification (SRS)** | **IEEE Std 830-1998** | Full requirements covering PEC 8-digit SIDs, positional roles, INR (`₹`) currency, 3-gate pipeline, and SLA grievance escalation. | [📥 `SRS.pdf`](./docs/SRS.pdf) | [`SRS.md`](./docs/SRS.md) |
+| **2. Data Flow Diagrams (DFD) & Data Dictionary** | **Yourdon / Gane & Sarson SSAD** | Context Level 0, Level 1 Decomposition, Level 2 Functional DFDs (Clearance Gating, SLA Redressal, Certificate Minting), and Data Dictionary (`DS-1` to `DS-6`). | [📥 `DFD.pdf`](./docs/DFD.pdf) | [`DFD.md`](./docs/DFD.md) |
+| **3. Unified Modeling Language (UML) Models** | **OMG UML 2.5 Specification** | Full suite of models: Use Case with `<<include>>`/`<<extend>>`, Class Diagram, Activity Diagram, Sequence Diagrams (1-3), State Machine, and Component Diagram. | [📥 `UML_DIAGRAMS.pdf`](./docs/UML_DIAGRAMS.pdf) | [`UML_DIAGRAMS.md`](./docs/UML_DIAGRAMS.md) |
+| **4. Chain of Responsibility (CoR) Design Pattern** | **GoF Behavioral Pattern** | Detailed technical report documenting the multi-department approval chain, parallel Gate 1, sequential Gate 2/3 barriers, HMAC seals, and Admin overrides. | [📥 `DESIGN_PATTERNS.pdf`](./docs/DESIGN_PATTERNS.pdf) | [`DESIGN_PATTERNS.md`](./docs/DESIGN_PATTERNS.md) |
+| **5. Static Code Quality & Refactoring Analysis** | **PEP 8 / Flake8 / SonarQube** | Static analysis report verifying 0 PEP 8 violations, cyclomatic complexity control, maintainability index, and Coursework Units 5 & 6 compliance. | [📥 `STATIC_CODE_QUALITY.pdf`](./docs/STATIC_CODE_QUALITY.pdf) | [`STATIC_CODE_QUALITY.md`](./docs/STATIC_CODE_QUALITY.md) |
+
+---
+
+## 🌿 Repository Branch Structure
+This repository maintains two dedicated branches on GitHub:
+- **`code` Branch (Default):** Complete full-stack codebase with FastAPI backend, React 19 frontend, automated tests, and documentation.
+- **[`docs` Branch](https://github.com/rags-git/pec-clearance-automation-engine/tree/docs):** Dedicated documentation branch containing strictly the frozen academic deliverables and vector PDF publications.
