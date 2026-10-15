@@ -1,0 +1,8 @@
+venv/
+backend/
+frontend/
+*.db
+.pytest_cache/
+.flake8
+pytest.ini
+.DS_Store
