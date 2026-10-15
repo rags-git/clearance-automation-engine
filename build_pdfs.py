@@ -36,9 +36,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       line-height: 1.45;
     }}
     .pec-header {{
-      border-bottom: 2.5px solid #800000;
       padding-bottom: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }}
     .pec-title {{
       font-size: 14pt;
@@ -82,10 +81,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     h1, h2, h3 {{
       page-break-after: avoid;
       color: #1a1a1a;
+      border-bottom: none !important;
     }}
-    h1 {{ border-bottom: 1.5px solid #800000; padding-bottom: 0.25em; font-size: 16pt; }}
-    h2 {{ border-bottom: 1px solid #eaecef; padding-bottom: 0.2em; font-size: 13pt; margin-top: 1.2em; }}
-    h3 {{ font-size: 11pt; margin-top: 1em; }}
+    h1 {{ font-size: 16pt; margin-top: 0.6em; }}
+    h2 {{ font-size: 13pt; margin-top: 1.1em; }}
+    h3 {{ font-size: 11pt; margin-top: 0.9em; }}
     blockquote {{
       border-left: 3.5px solid #800000 !important;
       background: #fafafa !important;

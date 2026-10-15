@@ -1,19 +1,6 @@
 # Unified Modeling Language (UML) Structural & Behavioral Models
 ## Academic Grievance, No-Dues & Clearance Automation Engine
-**Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
-**Document Identifier:** PEC-SE-UML-FROZEN  
-**Standard Compliance:** OMG UML 2.5 Specification  
-**Baseline Version:** 3.0.0 (FROZEN ARCHITECTURAL BASELINE)  
-**Administrative Authority:** Office of the Dean Academic Affairs (DAA), PEC Chandigarh  
-**Status:** FROZEN & RATIFIED (Implementation-Agnostic Baseline)  
-
----
-
-### Baseline Freeze Declaration
-> **NOTICE OF BASELINE FREEZE:**  
-> This specification models the complete, immutable object-oriented architecture, behavioral sequences, state lifecycles, and component interfaces for the PEC Clearance & Grievance Automation Engine.  
->  
-> The use case actors, class schemas, interface contracts, state transitions, and interaction sequences modeled in this document are **FROZEN**. Internal implementation refactoring (e.g., helper function reorganizations or styling adjustments) shall conform strictly to these structural and behavioral models without requiring modifications to this document.
+**Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**
 
 ---
 
