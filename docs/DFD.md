@@ -348,15 +348,15 @@ flowchart TD
    - **Format:** `YYBBBRRR` where `YY` is enrollment year, `BBB` is academic branch code (`103` = CSE), and `RRR` is roll index.
    - **Scope:** Immutable institutional identifier.
 2. **`due_amount_inr` (Financial Liability):**
-   - **Type:** IEEE 754 Floating Point (formatted as `en-IN` decimal string in client).
+   - **Type:** Floating Point (formatted as Indian numbering `en-IN` in user interface).
    - **Currency:** Indian Rupee (`₹`).
-   - **Allowable Range:** $[0.00, \; 500000.00]$.
+   - **Allowable Range:** `0.00` to `500,000.00`.
 3. **`digital_signature` (HMAC Seal):**
    - **Type:** Hexadecimal string (64 characters).
-   - **Algorithm:** $\text{HMAC-SHA256}(K_{\text{institutional}}, \text{staff\_id} \parallel \text{dept\_code} \parallel \text{request\_id} \parallel \text{timestamp})$.
+   - **Algorithm:** `HMAC-SHA256(Institutional_Key, staff_id + dept_code + request_id + timestamp)`
 4. **`certificate_hash` (Verification Digest):**
    - **Type:** Hexadecimal string (64 characters).
-   - **Algorithm:** $\text{SHA-256}(\text{cert\_id} \parallel \text{student\_sid} \parallel \text{academic\_year} \parallel \text{completion\_time})$.
+   - **Algorithm:** `SHA-256(cert_id + student_sid + academic_session + completion_timestamp)`
 5. **`sla_priority`:**
    - **Type:** Enumeration (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`).
-   - **Mapping:** `CRITICAL` $\rightarrow 4\text{h}$, `HIGH` $\rightarrow 12\text{h}$, `MEDIUM` $\rightarrow 24\text{h}$, `LOW` $\rightarrow 48\text{h}$.
+   - **Turnaround Window:** `CRITICAL` -> 4 Hours, `HIGH` -> 12 Hours, `MEDIUM` -> 24 Hours, `LOW` -> 48 Hours.

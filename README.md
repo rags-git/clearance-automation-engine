@@ -32,7 +32,9 @@ The core approval workflow is implemented strictly using the **Behavioral Chain 
 - **Gate 2 (Sequential Dependency):** Department Labs verify hardware/workstations only after **all Gate 1 departments are officially APPROVED**.
 - **Gate 3 (Final Gate):** Accounts Branch performs the final fee reconciliation and caution money refund only after **Gate 1 and Gate 2 are fully APPROVED**.
 - **Cryptographic Sign-off:** Each approval generates an irreversible HMAC-SHA256 digital signature seal:
-  $$\text{Signature} = \text{HMAC-SHA256}(K, \text{staff\_id} \parallel \text{dept\_code} \parallel \text{request\_id} \parallel \text{timestamp})$$
+  ```text
+  Digital Signature = HMAC-SHA256(Secret_Key, staff_id + dept_code + request_id + timestamp)
+  ```
 
 ```mermaid
 flowchart LR
