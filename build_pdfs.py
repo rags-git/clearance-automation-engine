@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import base64
 import json
 import os
 import subprocess
@@ -13,11 +14,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <meta charset="utf-8">
   <title>{title}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   <style>
     @page {{
       size: A4;
@@ -33,24 +31,47 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     .markdown-body {{
       max-width: 100%;
       font-size: 10pt;
-      line-height: 1.45;
+      line-height: 1.5;
     }}
-    .pec-header {{
-      padding-bottom: 10px;
-      margin-bottom: 16px;
+    .cover-page {{
+      text-align: center;
+      padding-top: 40px;
+      page-break-after: always;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }}
-    .pec-title {{
+    .cover-title {{
+      font-size: 24pt;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 8px;
+    }}
+    .cover-subtitle {{
       font-size: 14pt;
-      font-weight: bold;
-      color: #800000;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #555;
+      margin-bottom: 30px;
     }}
-    .pec-sub {{
-      font-size: 9pt;
-      color: #444;
-      margin-top: 3px;
+    .cover-project {{
+      font-size: 18pt;
+      font-weight: 700;
+      color: #800000;
+      margin-bottom: 25px;
+    }}
+    .cover-logo {{
+      max-width: 240px;
+      margin: 0 auto 30px auto;
+      display: block;
+    }}
+    .cover-meta {{
+      display: flex;
+      justify-content: space-between;
+      text-align: left;
+      margin-top: 40px;
+      padding: 0 40px;
+      font-size: 11pt;
+      line-height: 1.6;
     }}
     .mermaid {{
       text-align: center;
@@ -62,10 +83,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       page-break-inside: avoid;
     }}
     table {{
-      font-size: 9pt !important;
+      font-size: 9.5pt !important;
       page-break-inside: avoid;
       width: 100% !important;
       margin: 12px 0 !important;
+      border-collapse: collapse;
     }}
     th {{
       background-color: #f6f8fa !important;
@@ -83,23 +105,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       color: #1a1a1a;
       border-bottom: none !important;
     }}
-    h1 {{ font-size: 16pt; margin-top: 0.6em; }}
+    h1 {{ font-size: 16pt; margin-top: 1.2em; }}
     h2 {{ font-size: 13pt; margin-top: 1.1em; }}
     h3 {{ font-size: 11pt; margin-top: 0.9em; }}
-    blockquote {{
-      border-left: 3.5px solid #800000 !important;
-      background: #fafafa !important;
-      padding: 8px 12px !important;
-      color: #333 !important;
-    }}
   </style>
 </head>
 <body>
-  <div class="pec-header">
-    <div class="pec-title">Punjab Engineering College (Deemed to be University)</div>
-    <div class="pec-sub">Sector 12, Chandigarh - 160012 | Office of Dean Academic Affairs (DAA)</div>
-    <div class="pec-sub"><strong>Capstone Coursework Deliverable &bull; Academic Clearance Automation Engine</strong></div>
-  </div>
+  {cover_html}
   <div id="content" class="markdown-body"></div>
   <script>
     const rawMd = {md_content_json};
@@ -112,16 +124,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       div.className = 'mermaid';
       div.textContent = el.textContent;
       pre.replaceWith(div);
-    }});
-
-    renderMathInElement(document.body, {{
-      delimiters: [
-        {{left: '$$', right: '$$', display: true}},
-        {{left: '$', right: '$', display: false}},
-        {{left: '\\\\(', right: '\\\\)', display: false}},
-        {{left: '\\\\[', right: '\\\\]', display: true}}
-      ],
-      throwOnError: false
     }});
 
     mermaid.initialize({{
@@ -143,23 +145,55 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>
 """
 
+COVER_TEMPLATE = """
+<div class="cover-page">
+  <div>
+    <div class="cover-title">Software Requirements Specification</div>
+    <div class="cover-subtitle">for</div>
+    <div class="cover-project">Academic Grievance, No-Dues & Clearance Automation Engine</div>
+    <img src="data:image/jpeg;base64,{logo_b64}" class="cover-logo" alt="PEC Emblem" />
+  </div>
+  <div class="cover-meta">
+    <div>
+      <strong>Submitted by:</strong><br>
+      B.Tech Computer Science & Engineering<br>
+      Batch 2022-2026<br>
+      Punjab Engineering College
+    </div>
+    <div style="text-align: right;">
+      <strong>Submitted to:</strong><br>
+      <strong>Dr. Rajesh Bhatia</strong><br>
+      Course: Software Engineering<br>
+      Punjab Engineering College (Sector 12, Chandigarh)
+    </div>
+  </div>
+</div>
+"""
+
 DOCS = [
-    ("docs/SRS.md", "docs/SRS.pdf", "Software Requirements Specification (SRS) - IEEE Std 830"),
-    ("docs/DFD.md", "docs/DFD.pdf", "Data Flow Diagrams (DFD) & Data Dictionary - Yourdon / Gane & Sarson"),
-    ("docs/UML_DIAGRAMS.md", "docs/UML_DIAGRAMS.pdf", "UML Structural & Behavioral Models - OMG UML 2.5"),
-    ("docs/DESIGN_PATTERNS.md", "docs/DESIGN_PATTERNS.pdf", "Chain of Responsibility Design Pattern Report"),
-    ("docs/STATIC_CODE_QUALITY.md", "docs/STATIC_CODE_QUALITY.pdf", "Static Code Quality & Flake8 Analysis Report")
+    ("docs/SRS.md", "docs/SRS.pdf", "Software Requirements Specification (SRS) - Karl E. Wiegers Template", True),
+    ("docs/DFD.md", "docs/DFD.pdf", "Data Flow Diagrams (DFD) & Data Dictionary - Yourdon / Gane & Sarson", False),
+    ("docs/UML_DIAGRAMS.md", "docs/UML_DIAGRAMS.pdf", "UML Structural & Behavioral Models - OMG UML 2.5", False),
+    ("docs/DESIGN_PATTERNS.md", "docs/DESIGN_PATTERNS.pdf", "Chain of Responsibility Design Pattern Report", False),
+    ("docs/STATIC_CODE_QUALITY.md", "docs/STATIC_CODE_QUALITY.pdf", "Static Code Quality & Flake8 Analysis Report", False)
 ]
 
-def render_doc(md_path, pdf_path, title):
+def render_doc(md_path, pdf_path, title, has_cover):
     if not os.path.exists(md_path):
         print(f"Skipping {md_path} (not found)")
         return False
     with open(md_path, "r", encoding="utf-8") as f:
         md_text = f.read()
 
+    cover_html = ""
+    if has_cover and os.path.exists("docs/pec_title_page.jpg"):
+        with open("docs/pec_title_page.jpg", "rb") as img_f:
+            logo_b64 = base64.b64encode(img_f.read()).decode("utf-8")
+        cover_html = COVER_TEMPLATE.format(logo_b64=logo_b64)
+
     html_content = HTML_TEMPLATE.format(
         title=title,
+        cover_html=cover_html,
         md_content_json=json.dumps(md_text)
     )
 
@@ -188,8 +222,8 @@ def render_doc(md_path, pdf_path, title):
 
 def main():
     success_count = 0
-    for md_path, pdf_path, title in DOCS:
-        if render_doc(md_path, pdf_path, title):
+    for md_path, pdf_path, title, has_cover in DOCS:
+        if render_doc(md_path, pdf_path, title, has_cover):
             success_count += 1
     print(f"\nRendered {success_count}/{len(DOCS)} PDFs successfully.")
 
