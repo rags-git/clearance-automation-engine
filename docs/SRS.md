@@ -3,9 +3,8 @@
 
 **Project Title:** Academic Grievance, No-Dues & Clearance Automation Engine  
 **Course:** Software Engineering  
-**Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
 **Submitted to:** Dr. Rajesh Bhatia  
-**Submitted by:** Raghav Bhardwaj & Karan Jain (B.Tech Computer Science & Engineering)  
+**Submitted by:** Raghav Bhardwaj & Karan Jain  
 **Standard Template:** Karl E. Wiegers SRS Template (Compliant with IEEE Std 830-1998)  
 
 ## 1. Introduction
@@ -397,8 +396,3 @@ Emits a tamper-proof PDF clearance certificate and allows instant unauthenticate
          ▼
 [Mint Certificate ID + SHA-256 Hash + ReportLab PDF]
 ```
-
----
-
-## Appendix C: To Be Determined (TBD) List
-*None. All requirements, user roles, business rules, and technical interfaces are fully specified and validated against institutional regulations of Punjab Engineering College.*
