@@ -1,0 +1,231 @@
+#!/usr/bin/env python3
+import base64
+import json
+import os
+import subprocess
+import sys
+import time
+
+CHROME_BIN = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+HTML_TEMPLATE = """<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{title}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <style>
+    @page {{
+      size: A4;
+      margin: 18mm 14mm 18mm 14mm;
+    }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1a1a1a;
+      background: #ffffff;
+      padding: 0;
+      margin: 0;
+    }}
+    .markdown-body {{
+      max-width: 100%;
+      font-size: 10pt;
+      line-height: 1.5;
+    }}
+    .cover-page {{
+      text-align: center;
+      padding-top: 40px;
+      page-break-after: always;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }}
+    .cover-title {{
+      font-size: 24pt;
+      font-weight: 800;
+      color: #111;
+      margin-bottom: 8px;
+    }}
+    .cover-subtitle {{
+      font-size: 14pt;
+      color: #555;
+      margin-bottom: 30px;
+    }}
+    .cover-project {{
+      font-size: 18pt;
+      font-weight: 700;
+      color: #800000;
+      margin-bottom: 25px;
+    }}
+    .cover-logo {{
+      max-width: 240px;
+      margin: 0 auto 30px auto;
+      display: block;
+    }}
+    .cover-meta {{
+      display: flex;
+      justify-content: space-between;
+      text-align: left;
+      margin-top: 40px;
+      padding: 0 40px;
+      font-size: 11pt;
+      line-height: 1.6;
+    }}
+    .mermaid {{
+      text-align: center;
+      margin: 18px 0;
+      background: #fafafa;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e1e4e8;
+      page-break-inside: avoid;
+    }}
+    table {{
+      font-size: 9.5pt !important;
+      page-break-inside: avoid;
+      width: 100% !important;
+      margin: 12px 0 !important;
+      border-collapse: collapse;
+    }}
+    th {{
+      background-color: #f6f8fa !important;
+      color: #24292e !important;
+    }}
+    pre {{
+      page-break-inside: avoid;
+      background-color: #f6f8fa !important;
+      font-size: 8.5pt !important;
+      padding: 10px !important;
+      border-radius: 4px !important;
+    }}
+    h1, h2, h3 {{
+      page-break-after: avoid;
+      color: #1a1a1a;
+      border-bottom: none !important;
+    }}
+    h1 {{ font-size: 16pt; margin-top: 1.2em; }}
+    h2 {{ font-size: 13pt; margin-top: 1.1em; }}
+    h3 {{ font-size: 11pt; margin-top: 0.9em; }}
+  </style>
+</head>
+<body>
+  {cover_html}
+  <div id="content" class="markdown-body"></div>
+  <script>
+    const rawMd = {md_content_json};
+    marked.setOptions({{ gfm: true, breaks: false }});
+    document.getElementById('content').innerHTML = marked.parse(rawMd);
+
+    document.querySelectorAll('pre code.language-mermaid').forEach(el => {{
+      const pre = el.parentElement;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = el.textContent;
+      pre.replaceWith(div);
+    }});
+
+    mermaid.initialize({{
+      startOnLoad: false,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: {{ htmlLabels: true, curve: 'basis' }}
+    }});
+    mermaid.run({{
+      nodes: document.querySelectorAll('.mermaid')
+    }}).then(() => {{
+      window.__MERMAID_DONE__ = true;
+    }}).catch(e => {{
+      console.error(e);
+      window.__MERMAID_DONE__ = true;
+    }});
+  </script>
+</body>
+</html>
+"""
+
+COVER_TEMPLATE = """
+<div class="cover-page">
+  <div>
+    <div class="cover-title">Software Requirements Specification</div>
+    <div class="cover-subtitle">for</div>
+    <div class="cover-project">Academic Grievance, No-Dues & Clearance Automation Engine</div>
+    <img src="data:image/jpeg;base64,{logo_b64}" class="cover-logo" alt="PEC Emblem" />
+  </div>
+  <div class="cover-meta">
+    <div>
+      <strong>Submitted by:</strong><br>
+      B.Tech Computer Science & Engineering<br>
+      Batch 2022-2026<br>
+      Punjab Engineering College
+    </div>
+    <div style="text-align: right;">
+      <strong>Submitted to:</strong><br>
+      <strong>Dr. Rajesh Bhatia</strong><br>
+      Course: Software Engineering<br>
+      Punjab Engineering College (Sector 12, Chandigarh)
+    </div>
+  </div>
+</div>
+"""
+
+DOCS = [
+    ("docs/SRS.md", "docs/SRS.pdf", "Software Requirements Specification (SRS) - Karl E. Wiegers Template", True),
+    ("docs/DFD.md", "docs/DFD.pdf", "Data Flow Diagrams (DFD) & Data Dictionary - Yourdon / Gane & Sarson", False),
+    ("docs/UML_DIAGRAMS.md", "docs/UML_DIAGRAMS.pdf", "UML Structural & Behavioral Models - OMG UML 2.5", False),
+    ("docs/DESIGN_PATTERNS.md", "docs/DESIGN_PATTERNS.pdf", "Chain of Responsibility Design Pattern Report", False),
+    ("docs/STATIC_CODE_QUALITY.md", "docs/STATIC_CODE_QUALITY.pdf", "Static Code Quality & Flake8 Analysis Report", False)
+]
+
+def render_doc(md_path, pdf_path, title, has_cover):
+    if not os.path.exists(md_path):
+        print(f"Skipping {md_path} (not found)")
+        return False
+    with open(md_path, "r", encoding="utf-8") as f:
+        md_text = f.read()
+
+    cover_html = ""
+    if has_cover and os.path.exists("docs/pec_title_page.jpg"):
+        with open("docs/pec_title_page.jpg", "rb") as img_f:
+            logo_b64 = base64.b64encode(img_f.read()).decode("utf-8")
+        cover_html = COVER_TEMPLATE.format(logo_b64=logo_b64)
+
+    html_content = HTML_TEMPLATE.format(
+        title=title,
+        cover_html=cover_html,
+        md_content_json=json.dumps(md_text)
+    )
+
+    tmp_html = f"/tmp/{os.path.basename(md_path)}.html"
+    with open(tmp_html, "w", encoding="utf-8") as f:
+        f.write(html_content)
+
+    cmd = [
+        CHROME_BIN,
+        "--headless",
+        "--disable-gpu",
+        "--allow-file-access-from-files",
+        "--run-all-compositor-stages-before-draw",
+        "--virtual-time-budget=8000",
+        f"--print-to-pdf={pdf_path}",
+        tmp_html
+    ]
+    print(f"Rendering {md_path} -> {pdf_path}...")
+    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if os.path.exists(pdf_path) and os.path.getsize(pdf_path) > 1000:
+        print(f"  [SUCCESS] {pdf_path} ({os.path.getsize(pdf_path) // 1024} KB)")
+        return True
+    else:
+        print(f"  [ERROR] Failed to generate {pdf_path}: {res.stderr[:300]}")
+        return False
+
+def main():
+    success_count = 0
+    for md_path, pdf_path, title, has_cover in DOCS:
+        if render_doc(md_path, pdf_path, title, has_cover):
+            success_count += 1
+    print(f"\nRendered {success_count}/{len(DOCS)} PDFs successfully.")
+
+if __name__ == "__main__":
+    main()
