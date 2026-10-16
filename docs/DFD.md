@@ -1,6 +1,8 @@
 # Data Flow Diagrams (DFD) & Data Dictionary
 ## Academic Grievance, No-Dues & Clearance Automation Engine
-**Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**
+**Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**  
+**Submitted by:** Raghav Bhardwaj & Karan Jain (B.Tech Computer Science & Engineering)  
+**Submitted to:** Dr. Rajesh Bhatia (Course: Software Engineering)  
 
 ---
 

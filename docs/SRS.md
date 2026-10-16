@@ -5,7 +5,7 @@
 **Course:** Software Engineering  
 **Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh - 160012  
 **Submitted to:** Dr. Rajesh Bhatia  
-**Submitted by:** B.Tech Computer Science & Engineering (Batch 2022-2026)  
+**Submitted by:** Raghav Bhardwaj & Karan Jain (B.Tech Computer Science & Engineering)  
 **Standard Template:** Karl E. Wiegers SRS Template (Compliant with IEEE Std 830-1998)  
 
 ---

@@ -156,8 +156,9 @@ COVER_TEMPLATE = """
   <div class="cover-meta">
     <div>
       <strong>Submitted by:</strong><br>
+      <strong>Raghav Bhardwaj</strong><br>
+      <strong>Karan Jain</strong><br>
       B.Tech Computer Science & Engineering<br>
-      Batch 2022-2026<br>
       Punjab Engineering College
     </div>
     <div style="text-align: right;">
