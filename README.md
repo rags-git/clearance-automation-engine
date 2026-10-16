@@ -10,6 +10,10 @@
 [![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4.0-38bdf8)](https://tailwindcss.com/)
 
+**Submitted by:** Raghav Bhardwaj & Karan Jain (B.Tech CSE, Batch 2022-2026)  
+**Submitted to:** Dr. Rajesh Bhatia (Course: Software Engineering)  
+**Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh  
+
 ---
 
 ## 🌟 Executive Overview
