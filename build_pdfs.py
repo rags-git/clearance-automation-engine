@@ -34,44 +34,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       line-height: 1.5;
     }}
     .cover-page {{
-      text-align: center;
-      padding-top: 40px;
       page-break-after: always;
-      height: 90vh;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 96vh;
+      margin: 0;
+      padding: 0;
     }}
-    .cover-title {{
-      font-size: 24pt;
-      font-weight: 800;
-      color: #111;
-      margin-bottom: 8px;
-    }}
-    .cover-subtitle {{
-      font-size: 14pt;
-      color: #555;
-      margin-bottom: 30px;
-    }}
-    .cover-project {{
-      font-size: 18pt;
-      font-weight: 700;
-      color: #800000;
-      margin-bottom: 25px;
-    }}
-    .cover-logo {{
-      max-width: 240px;
-      margin: 0 auto 30px auto;
+    .cover-img {{
+      max-width: 100%;
+      max-height: 95vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       display: block;
-    }}
-    .cover-meta {{
-      display: flex;
-      justify-content: space-between;
-      text-align: left;
-      margin-top: 40px;
-      padding: 0 40px;
-      font-size: 11pt;
-      line-height: 1.6;
+      margin: 0 auto;
     }}
     .mermaid {{
       text-align: center;
@@ -147,27 +126,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 COVER_TEMPLATE = """
 <div class="cover-page">
-  <div>
-    <div class="cover-title">Software Requirements Specification</div>
-    <div class="cover-subtitle">for</div>
-    <div class="cover-project">Academic Grievance, No-Dues & Clearance Automation Engine</div>
-    <img src="data:image/jpeg;base64,{logo_b64}" class="cover-logo" alt="PEC Emblem" />
-  </div>
-  <div class="cover-meta">
-    <div>
-      <strong>Submitted by:</strong><br>
-      <strong>Raghav Bhardwaj</strong><br>
-      <strong>Karan Jain</strong><br>
-      B.Tech Computer Science & Engineering<br>
-      Punjab Engineering College
-    </div>
-    <div style="text-align: right;">
-      <strong>Submitted to:</strong><br>
-      <strong>Dr. Rajesh Bhatia</strong><br>
-      Course: Software Engineering<br>
-      Punjab Engineering College (Sector 12, Chandigarh)
-    </div>
-  </div>
+  <img src="data:image/jpeg;base64,{logo_b64}" class="cover-img" alt="Software Requirements Specification - Punjab Engineering College" />
 </div>
 """
 
