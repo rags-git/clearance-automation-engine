@@ -32,6 +32,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       max-width: 100%;
       font-size: 10pt;
       line-height: 1.5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1a1a1a;
+    }}
+    .markdown-body a {{
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      font-weight: normal;
     }}
     .cover-page {{
       page-break-after: always;

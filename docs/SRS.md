@@ -10,48 +10,57 @@
 
 ## Table of Contents
 
-1. [Introduction](#1-introduction)  
-   1.1 [Purpose](#11-purpose)  
-   1.2 [Scope](#12-scope)  
-   1.3 [Definitions, Acronyms, Abbreviations](#13-definitions-acronyms-abbreviations)  
-   1.4 [References](#14-references)  
-   1.5 [Document Overview](#15-document-overview)  
-2. [Overall Description](#2-overall-description)  
-   2.1 [Product Perspective](#21-product-perspective)  
-   2.2 [Product Functions](#22-product-functions)  
-   2.3 [User Classes and Characteristics](#23-user-classes-and-characteristics)  
-   2.4 [Operating Environment](#24-operating-environment)  
-   2.5 [Design and Implementation Constraints](#25-design-and-implementation-constraints)  
-   2.6 [Assumptions and Dependencies](#26-assumptions-and-dependencies)  
-3. [External Interface Requirements](#3-external-interface-requirements)  
-   3.1 [User Interface](#31-user-interface)  
-   3.2 [Hardware Interface](#32-hardware-interface)  
-   3.3 [Software Interface](#33-software-interface)  
-   3.4 [Communication Interface](#34-communication-interface)  
-4. [System Features (Functional Requirements)](#4-system-features-functional-requirements)  
-   4.1 [Event Creation](#41-event-creation)  
-   4.2 [Event Listing](#42-event-listing)  
-   4.3 [Event Registration](#43-event-registration)  
-   4.4 [Expiry Management](#44-expiry-management)  
-   4.5 [Data Validation](#45-data-validation)  
-   4.6 [Collection Verification](#46-collection-verification)  
-5. [Non-Functional Requirements](#5-non-functional-requirements)  
-   5.1 [Performance](#51-performance)  
-   5.2 [Security](#52-security)  
-   5.3 [Reliability](#53-reliability)  
-   5.4 [Usability](#54-usability)  
-   5.5 [Maintainability](#55-maintainability)  
-   5.6 [Scalability](#56-scalability)  
-6. [Data Requirements](#6-data-requirements)  
-   6.1 [Event Data](#61-event-data)  
-   6.2 [User Data](#62-user-data)  
-   6.3 [Reservation Data](#63-reservation-data)  
-   6.4 [Data Constraints](#64-data-constraints)  
-   6.5 [Data Retention](#65-data-retention)  
-7. [System Constraints](#7-system-constraints)  
-8. [Risk Analysis](#8-risk-analysis)  
-9. [Future Enhancements](#9-future-enhancements)  
-10. [Conclusion](#10-conclusion)  
+1. Introduction  
+   1.1 Purpose  
+   1.2 Scope  
+   1.3 Definitions, Acronyms, Abbreviations  
+   1.4 References  
+   1.5 Document Overview  
+
+2. Overall Description  
+   2.1 Product Perspective  
+   2.2 Product Functions  
+   2.3 User Classes and Characteristics  
+   2.4 Operating Environment  
+   2.5 Design and Implementation Constraints  
+   2.6 Assumptions and Dependencies  
+
+3. External Interface Requirements  
+   3.1 User Interface  
+   3.2 Hardware Interface  
+   3.3 Software Interface  
+   3.4 Communication Interface  
+
+4. System Features (Functional Requirements)  
+   4.1 Event Creation  
+   4.2 Event Listing  
+   4.3 Event Registration  
+   4.4 Expiry Management  
+   4.5 Data Validation  
+   4.6 Collection Verification  
+
+5. Non-Functional Requirements  
+   5.1 Performance  
+   5.2 Security  
+   5.3 Reliability  
+   5.4 Usability  
+   5.5 Maintainability  
+   5.6 Scalability  
+
+6. Data Requirements  
+   6.1 Event Data  
+   6.2 User Data  
+   6.3 Reservation Data  
+   6.4 Data Constraints  
+   6.5 Data Retention  
+
+7. System Constraints  
+
+8. Risk Analysis  
+
+9. Future Enhancements  
+
+10. Conclusion  
 
 ---
 
@@ -229,9 +238,9 @@ Enables PEC students to initiate their digital clearance lifecycle event by sele
 4. The system validates that no active request exists, instantiates the clearance lifecycle record with 5 departmental approval gates, and renders the live 3-gate visual pipeline.
 
 #### 4.1.3 Functional Requirements
-- **[REQ-1]:** The system shall verify that the student has no existing clearance request in `PENDING` status before accepting a new event submission.
-- **[REQ-2]:** The system shall capture the student's 8-digit SID, current semester, academic session, and justification reason.
-- **[REQ-3]:** Upon event creation, the system shall automatically instantiate 5 department approval records:
+- The system shall verify that the student has no existing clearance request in `PENDING` status before accepting a new event submission.
+- The system shall capture the student's 8-digit SID, current semester, academic session, and justification reason.
+- Upon event creation, the system shall automatically instantiate 5 department approval records:
   - Central Library (Gate 1, initialized to `PENDING`)
   - PEC Hostels (Gate 1, initialized to `PENDING`)
   - Gymkhana & Sports (Gate 1, initialized to `PENDING`)
@@ -251,9 +260,9 @@ Provides real-time listing of active clearance applications and departmental wor
 3. The DAA views the institution-wide listing of all clearance applications and active bottlenecks.
 
 #### 4.2.3 Functional Requirements
-- **[REQ-4]:** The student dashboard shall list all 5 departmental milestones with live color-coded status badges (`APPROVED`, `REJECTED`, `PENDING`, `WAITING_PREREQUISITE`).
-- **[REQ-5]:** The departmental staff console shall list only clearance requests pending action for that staff member's specific department.
-- **[REQ-6]:** The DAA console shall list all clearance records institution-wide with filtering by department, status, and SLA violation state.
+- The student dashboard shall list all 5 departmental milestones with live color-coded status badges (`APPROVED`, `REJECTED`, `PENDING`, `WAITING_PREREQUISITE`).
+- The departmental staff console shall list only clearance requests pending action for that staff member's specific department.
+- The DAA console shall list all clearance records institution-wide with filtering by department, status, and SLA violation state.
 
 ---
 
@@ -269,13 +278,13 @@ Enables departmental authorities to register reviews, record financial dues, and
 4. The system computes an HMAC-SHA256 digital signature, registers the sign-off event, and unlocks downstream gates when prerequisites are met.
 
 #### 4.3.3 Functional Requirements
-- **[REQ-7]:** Gate 1 departments (Library, Hostels, Sports) shall process approval registrations concurrently and independently.
-- **[REQ-8]:** Upon approval registration, the system shall generate an HMAC-SHA256 digital signature:
+- Gate 1 departments (Library, Hostels, Sports) shall process approval registrations concurrently and independently.
+- Upon approval registration, the system shall generate an HMAC-SHA256 digital signature:
   ```text
   Digital Signature = HMAC-SHA256(Secret_Key, staff_id + dept_code + request_id + timestamp)
   ```
-- **[REQ-9]:** When all Gate 1 reviews reach `APPROVED`, the system shall automatically advance Gate 2 (Department Labs) from `WAITING_PREREQUISITE` to `PENDING`.
-- **[REQ-10]:** When Gate 2 is approved, the system shall automatically advance Gate 3 (Accounts Branch) to `PENDING`.
+- When all Gate 1 reviews reach `APPROVED`, the system shall automatically advance Gate 2 (Department Labs) from `WAITING_PREREQUISITE` to `PENDING`.
+- When Gate 2 is approved, the system shall automatically advance Gate 3 (Accounts Branch) to `PENDING`.
 
 ---
 
@@ -291,7 +300,7 @@ Tracks dynamic resolution deadlines for student grievances and triggers automate
 4. The DAA or staff official resolves the ticket, unblocking the clearance pipeline.
 
 #### 4.4.3 Functional Requirements
-- **[REQ-11]:** The system shall compute the SLA resolution expiry deadline upon grievance registration:
+- The system shall compute the SLA resolution expiry deadline upon grievance registration:
   ```text
   Expiry Timestamp = Submission_Timestamp + SLA_Window
   - CRITICAL Priority: 4 Hours
@@ -299,8 +308,8 @@ Tracks dynamic resolution deadlines for student grievances and triggers automate
   - MEDIUM Priority:   24 Hours
   - LOW Priority:      48 Hours
   ```
-- **[REQ-12]:** The system shall run an automated evaluation scan. Any grievance where `Current_Time > Expiry_Timestamp` and `status == 'OPEN'` shall be updated to `status = 'ESCALATED'` with `is_escalated = True`.
-- **[REQ-13]:** The DAA dashboard shall display real-time visual alerts for all expired and escalated grievance events.
+- The system shall run an automated evaluation scan. Any grievance where `Current_Time > Expiry_Timestamp` and `status == 'OPEN'` shall be updated to `status = 'ESCALATED'` with `is_escalated = True`.
+- The DAA dashboard shall display real-time visual alerts for all expired and escalated grievance events.
 
 ---
 
@@ -315,9 +324,9 @@ Enforces strict input sanitization, schema constraints, and Chain of Responsibil
 3. If a staff member attempts to sign an approval before prerequisites are satisfied, the system rejects the request with `400 Bad Request`.
 
 #### 4.5.3 Functional Requirements
-- **[REQ-14]:** Student IDs shall be validated against the 8-digit PEC format: `^[0-9]{8}$`.
-- **[REQ-15]:** Dues amounts must be strictly non-negative real numbers denominated in Indian Rupees (`₹` / INR).
-- **[REQ-16]:** The system shall reject Gate 2 approval attempts if any Gate 1 department is incomplete, and reject Gate 3 attempts if Gate 2 is incomplete (unless overridden by the DAA).
+- Student IDs shall be validated against the 8-digit PEC format: `^[0-9]{8}$`.
+- Dues amounts must be strictly non-negative real numbers denominated in Indian Rupees (`₹` / INR).
+- The system shall reject Gate 2 approval attempts if any Gate 1 department is incomplete, and reject Gate 3 attempts if Gate 2 is incomplete (unless overridden by the DAA).
 
 ---
 
@@ -333,44 +342,44 @@ Manages Accounts Branch reconciliation, caution money refund authorization, and 
 4. External verifiers visit `/verify`, enter the Certificate ID or hash, and receive instant cryptographic verification of clearance validity.
 
 #### 4.6.3 Functional Requirements
-- **[REQ-17]:** Accounts clearance shall authorize the refund release of the student's institutional Caution Money deposit (₹10,000.00).
-- **[REQ-18]:** The master clearance status shall transition to `APPROVED` and generate a unique Certificate ID upon Gate 3 completion.
-- **[REQ-19]:** The certificate verification hash shall be computed using SHA-256:
+- Accounts clearance shall authorize the refund release of the student's institutional Caution Money deposit (₹10,000.00).
+- The master clearance status shall transition to `APPROVED` and generate a unique Certificate ID upon Gate 3 completion.
+- The certificate verification hash shall be computed using SHA-256:
   ```text
   Certificate Hash = SHA-256(cert_id + student_sid + academic_session + completion_timestamp)
   ```
-- **[REQ-20]:** The public verification endpoint `/api/v1/certificate/verify` shall validate the Certificate ID and hash without requiring user authentication.
+- The public verification endpoint `/api/v1/certificate/verify` shall validate the Certificate ID and hash without requiring user authentication.
 
 ---
 
 ## 5. Non-Functional Requirements
 
 ### 5.1 Performance
-- **[NFR-1]:** Under normal operating load (100 concurrent campus users), 95% of dashboard read requests shall respond in under 150 milliseconds.
-- **[NFR-2]:** Vector PDF clearance certificate generation via ReportLab shall complete in under 1.5 seconds.
-- **[NFR-3]:** Automated SLA grievance escalation evaluation shall execute across all active records in under 500 milliseconds.
+- Under normal operating load (100 concurrent campus users), 95% of dashboard read requests shall respond in under 150 milliseconds.
+- Vector PDF clearance certificate generation via ReportLab shall complete in under 1.5 seconds.
+- Automated SLA grievance escalation evaluation shall execute across all active records in under 500 milliseconds.
 
 ### 5.2 Security
-- **[NFR-4]:** User passwords must be hashed using salted Bcrypt (work factor 12) before database insertion.
-- **[NFR-5]:** Department approvals must be digitally sealed with HMAC-SHA256. Any manual alteration of database records invalidates the signature.
-- **[NFR-6]:** Role-based access control (RBAC) shall enforce strict route isolation, preventing students from accessing staff review consoles or other students' private records.
+- User passwords must be hashed using salted Bcrypt (work factor 12) before database insertion.
+- Department approvals must be digitally sealed with HMAC-SHA256. Any manual alteration of database records invalidates the signature.
+- Role-based access control (RBAC) shall enforce strict route isolation, preventing students from accessing staff review consoles or other students' private records.
 
 ### 5.3 Reliability
-- **[NFR-7]:** The system shall maintain 99.5% uptime during end-of-semester clearance periods.
-- **[NFR-8]:** All state mutations (approval recording, gate advancing, caution money authorization) must execute inside atomic ACID transactions with automatic rollback on error.
+- The system shall maintain 99.5% uptime during end-of-semester clearance periods.
+- All state mutations (approval recording, gate advancing, caution money authorization) must execute inside atomic ACID transactions with automatic rollback on error.
 
 ### 5.4 Usability
-- **[NFR-9]:** The user interface shall provide a clear, color-coded 3-gate progress bar (Green for Approved, Red for Rejected, Yellow for Pending, Grey for Waiting).
-- **[NFR-10]:** All financial amounts and liabilities must be prominently formatted in Indian Rupees (`₹` / INR).
-- **[NFR-11]:** The portal shall be fully accessible across mobile, tablet, and desktop devices without horizontal scrolling.
+- The user interface shall provide a clear, color-coded 3-gate progress bar (Green for Approved, Red for Rejected, Yellow for Pending, Grey for Waiting).
+- All financial amounts and liabilities must be prominently formatted in Indian Rupees (`₹` / INR).
+- The portal shall be fully accessible across mobile, tablet, and desktop devices without horizontal scrolling.
 
 ### 5.5 Maintainability
-- **[NFR-12]:** The backend codebase shall strictly adhere to PEP 8 standards with 0 Flake8 lint violations.
-- **[NFR-13]:** The system architecture shall follow modular Separation of Concerns (Routers, Services, Models, Schemas) enabling isolated testing and maintenance.
+- The backend codebase shall strictly adhere to PEP 8 standards with 0 Flake8 lint violations.
+- The system architecture shall follow modular Separation of Concerns (Routers, Services, Models, Schemas) enabling isolated testing and maintenance.
 
 ### 5.6 Scalability
-- **[NFR-14]:** The stateless REST API architecture shall support horizontal scaling behind reverse proxies (Nginx / Cloudflare).
-- **[NFR-15]:** The persistence layer shall support zero-code migration from SQLite to PostgreSQL via SQLAlchemy ORM configuration.
+- The stateless REST API architecture shall support horizontal scaling behind reverse proxies (Nginx / Cloudflare).
+- The persistence layer shall support zero-code migration from SQLite to PostgreSQL via SQLAlchemy ORM configuration.
 
 ---
 
@@ -425,8 +434,8 @@ Tracks financial reservations, liabilities, and caution money escrow:
 ---
 
 ## 9. Future Enhancements
-1. **Biometric & Smart ID Card Integration:** Direct integration with Punjab Engineering College RFID student smart identity cards and biometric verification kiosks at Dr. B.R. Ambedkar Central Library, PEC Hostels, and Department Laboratories to automatically authenticate students, register asset handovers (books, keys, lab kits), and sign off department clearances upon card tap.
-2. **Automated Turnstile & Access Hardware Linkage:** Hardware relay integration with campus RFID turnstiles to automatically synchronize physical access permissions with the student's real-time clearance status across campus facilities.
+1. **Smart ID Card Integration:** Direct integration with Punjab Engineering College RFID student identity cards at Dr. B.R. Ambedkar Central Library, PEC Hostels, and Department Laboratories to automatically authenticate students and register physical asset returns (books, room keys, lab equipment kits) upon card tap.
+2. **Biometric Verification Terminals:** Deployment of dedicated biometric authentication terminals (fingerprint and facial recognition) at campus facility checkpoints to verify student physical presence and eliminate proxy approvals during clearance sign-offs.
 
 ---
 
