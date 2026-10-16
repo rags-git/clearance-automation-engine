@@ -8,59 +8,6 @@
 **Submitted by:** Raghav Bhardwaj & Karan Jain (B.Tech Computer Science & Engineering)  
 **Standard Template:** Karl E. Wiegers SRS Template (Compliant with IEEE Std 830-1998)  
 
----
-
-## Table of Contents
-1. [Introduction](#1-introduction)  
-   1.1 [Purpose](#11-purpose)  
-   1.2 [Document Conventions](#12-document-conventions)  
-   1.3 [Intended Audience and Reading Suggestions](#13-intended-audience-and-reading-suggestions)  
-   1.4 [Product Scope](#14-product-scope)  
-   1.5 [References](#15-references)  
-2. [Overall Description](#2-overall-description)  
-   2.1 [Product Perspective](#21-product-perspective)  
-   2.2 [Product Functions](#22-product-functions)  
-   2.3 [User Classes and Characteristics](#23-user-classes-and-characteristics)  
-   2.4 [Operating Environment](#24-operating-environment)  
-   2.5 [Design and Implementation Constraints](#25-design-and-implementation-constraints)  
-   2.6 [User Documentation](#26-user-documentation)  
-   2.7 [Assumptions and Dependencies](#27-assumptions-and-dependencies)  
-3. [External Interface Requirements](#3-external-interface-requirements)  
-   3.1 [User Interfaces](#31-user-interfaces)  
-   3.2 [Hardware Interfaces](#32-hardware-interfaces)  
-   3.3 [Software Interfaces](#33-software-interfaces)  
-   3.4 [Communications Interfaces](#34-communications-interfaces)  
-4. [System Features](#4-system-features)  
-   4.1 [Clearance Application Submission (Student Portal)](#41-clearance-application-submission-student-portal)  
-   4.2 [Gate 1 Parallel Department Reviews (Library, Hostels, Sports)](#42-gate-1-parallel-department-reviews-library-hostels-sports)  
-   4.3 [Gate 2 Sequential Department Labs Clearance](#43-gate-2-sequential-department-labs-clearance)  
-   4.4 [Gate 3 Accounts Settlement & Caution Money Refund Release](#44-gate-3-accounts-settlement--caution-money-refund-release)  
-   4.5 [Student Grievance Redressal & Dynamic SLA Auto-Escalation](#45-student-grievance-redressal--dynamic-sla-auto-escalation)  
-   4.6 [Dean Academic Affairs (DAA) Overrides & Analytics Dashboard](#46-dean-academic-affairs-daa-overrides--analytics-dashboard)  
-   4.7 [Digital Certificate Generation & Public Online Verification](#47-digital-certificate-generation--public-online-verification)  
-5. [Other Nonfunctional Requirements](#5-other-nonfunctional-requirements)  
-   5.1 [Performance Requirements](#51-performance-requirements)  
-   5.2 [Safety Requirements](#52-safety-requirements)  
-   5.3 [Security Requirements](#53-security-requirements)  
-   5.4 [Software Quality Attributes](#54-software-quality-attributes)  
-   5.5 [Business Rules](#55-business-rules)  
-6. [Other Requirements](#6-other-requirements)  
-[Appendix A: Glossary](#appendix-a-glossary)  
-[Appendix B: Analysis Models](#appendix-b-analysis-models)  
-[Appendix C: To Be Determined (TBD) List](#appendix-c-to-be-determined-list)  
-
----
-
-## Revision History
-
-| Name | Reason For Changes | Version |
-| :--- | :--- | :--- |
-| Initial Draft | Initial capture of institutional clearance requirements | 1.0 |
-| PEC Customization | Added Sector 12 facilities, 8-digit SID, and INR (₹) currency | 2.0 |
-| Karl E. Wiegers Format | Restructured strictly into Karl E. Wiegers standard SRS template | 3.0 |
-
----
-
 ## 1. Introduction
 
 ### 1.1 Purpose
