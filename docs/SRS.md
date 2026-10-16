@@ -425,10 +425,8 @@ Tracks financial reservations, liabilities, and caution money escrow:
 ---
 
 ## 9. Future Enhancements
-1. **DigiLocker & National Academic Depository (NAD) Integration:** Direct API integration allowing employers and government agencies to verify clearance certificates through official DigiLocker credentials.
-2. **Mobile Application (React Native / Flutter):** Dedicated mobile app providing instant push notifications when department approvals are signed or grievances are updated.
-3. **Biometric & Smart-Card Integration:** Automated clearance at Dr. B.R. Ambedkar Library and PEC Hostels via smart-card tap at physical RFID gates.
-4. **Decentralized Verifiable Credentials:** Blockchain-backed W3C verifiable credentials for tamper-proof alumni credential sharing across international universities.
+1. **Biometric & Smart ID Card Integration:** Direct integration with Punjab Engineering College RFID student smart identity cards and biometric verification kiosks at Dr. B.R. Ambedkar Central Library, PEC Hostels, and Department Laboratories to automatically authenticate students, register asset handovers (books, keys, lab kits), and sign off department clearances upon card tap.
+2. **Automated Turnstile & Access Hardware Linkage:** Hardware relay integration with campus RFID turnstiles to automatically synchronize physical access permissions with the student's real-time clearance status across campus facilities.
 
 ---
 
