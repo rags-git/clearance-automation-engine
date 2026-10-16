@@ -206,6 +206,7 @@ def render_doc(md_path, pdf_path, title, has_cover):
         CHROME_BIN,
         "--headless",
         "--disable-gpu",
+        "--no-pdf-header-footer",
         "--allow-file-access-from-files",
         "--run-all-compositor-stages-before-draw",
         "--virtual-time-budget=8000",
