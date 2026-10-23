@@ -66,12 +66,12 @@ flowchart LR
     E_VER["PUBLIC\nVERIFIER"]:::entity
 
     %% ── Processes (centre column)
-    P1(["P1\nAuthentication\n& RBAC"]):::process
-    P2(["P2\nClearance\nSetup"]):::process
-    P3(["P3\nMulti-Gate\nReview & HMAC"]):::process
-    P4(["P4\nGrievance\n& SLA"]):::process
-    P5(["P5\nCertificate\nMinting"]):::process
-    P6(["P6\nAnalytics\n& Audit"]):::process
+    P1(("P1<br/>Authentication<br/>& RBAC")):::process
+    P2(("P2<br/>Clearance<br/>Setup")):::process
+    P3(("P3<br/>Multi-Gate<br/>Review & HMAC")):::process
+    P4(("P4<br/>Grievance<br/>& SLA")):::process
+    P5(("P5<br/>Certificate<br/>Minting")):::process
+    P6(("P6<br/>Analytics<br/>& Audit")):::process
 
     %% ── Data Stores (right column)
     DS1[("DS-1\nUsers & Roles")]:::store
