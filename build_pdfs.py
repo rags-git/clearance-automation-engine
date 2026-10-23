@@ -61,23 +61,41 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }}
     .mermaid {{
       text-align: center;
-      margin: 18px 0;
+      margin: 10px auto;
       background: #fafafa;
-      padding: 12px;
+      padding: 6px;
       border-radius: 6px;
       border: 1px solid #e1e4e8;
-      page-break-inside: avoid;
+      max-width: 100%;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }}
+    .mermaid svg {{
+      max-width: 100% !important;
+      max-height: 520px !important;
+      height: auto !important;
+      display: block;
+      margin: 0 auto;
     }}
     table {{
-      font-size: 9.5pt !important;
-      page-break-inside: avoid;
+      font-size: 8pt !important;
       width: 100% !important;
-      margin: 12px 0 !important;
+      margin: 10px 0 !important;
       border-collapse: collapse;
+      table-layout: auto !important;
+      word-wrap: break-word !important;
+    }}
+    th, td {{
+      padding: 4px 5px !important;
+      border: 1px solid #d0d7de !important;
+      word-break: normal !important;
+      line-height: 1.35 !important;
+      vertical-align: top !important;
     }}
     th {{
       background-color: #f6f8fa !important;
       color: #24292e !important;
+      font-weight: 600 !important;
     }}
     pre {{
       page-break-inside: avoid;
@@ -86,8 +104,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       padding: 10px !important;
       border-radius: 4px !important;
     }}
-    h1, h2, h3 {{
+    h1, h2, h3, h4 {{
       page-break-after: avoid;
+      break-after: avoid;
       color: #1a1a1a;
       border-bottom: none !important;
     }}
@@ -121,6 +140,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     mermaid.run({{
       nodes: document.querySelectorAll('.mermaid')
     }}).then(() => {{
+      document.querySelectorAll('.mermaid svg').forEach(svg => {{
+        svg.removeAttribute('height');
+        svg.style.maxHeight = '520px';
+        svg.style.width = '100%';
+        svg.style.height = 'auto';
+      }});
       window.__MERMAID_DONE__ = true;
     }}).catch(e => {{
       console.error(e);

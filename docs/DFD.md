@@ -46,7 +46,7 @@
 
 ### 1.1 Notational Conventions & Symbol Guide
 
-This specification strictly follows the standardized graphical symbols of **Gane & Sarson** and **Yourdon & DeMarco**:
+This specification adheres strictly to the classical graphical symbols of **Gane & Sarson** and **Yourdon & DeMarco**:
 
 | Symbol Element | Gane & Sarson / Yourdon Symbol | Mermaid Semantic Representation | Architectural Definition |
 | :--- | :---: | :---: | :--- |
@@ -59,31 +59,16 @@ This specification strictly follows the standardized graphical symbols of **Gane
 
 ### 1.2 Formal DFD Construction Rules & Quality Compliance
 
-To ensure mathematical consistency, the diagrams conform to the classical **Six Golden Rules of Structured Analysis**:
+To ensure mathematical and structural consistency, the models conform to the classical **Six Golden Rules of Structured Analysis**:
 
-```
-+---------------------------------------------------------------------------------------------------+
-|                            SIX GOLDEN RULES OF STRUCTURED DFD DESIGN                              |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 1: Conservation of Data       | No "Miracles" (output without input) or "Black Holes"        |
-|                                    | (input without output). Every process transforms data.       |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 2: Entity-to-Entity Prohibited| External entities cannot communicate directly inside the DFD |
-|                                    | boundary; all interaction is mediated by a process.          |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 3: Store-to-Store Prohibited  | Data stores cannot transfer data directly between themselves |
-|                                    | without an executing process reading and writing.            |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 4: Entity-to-Store Prohibited | External entities cannot directly read or write to internal  |
-|                                    | tables without an intervening processing step.               |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 5: Horizontal & Vertical Parity| Data flows entering/leaving Level 0 Context must balance    |
-|                                    | perfectly with the aggregate boundary flows at Level 1.      |
-+------------------------------------+--------------------------------------------------------------+
-| Rule 6: Decimal Numbering Hierarchy| Unique decimal indexing: Context is 0.0, Level 1 processes   |
-|                                    | are 1.0, 2.0, 3.0, 4.0, 5.0, 6.0; Data stores are DS-1..DS-6.|
-+------------------------------------+--------------------------------------------------------------+
-```
+| Structured Analysis Rule | Rule Description & Formal Constraint | Compliance Verification in this Specification |
+| :--- | :--- | :--- |
+| **Rule 1: Conservation of Data** | A process cannot create data out of nothing ("Miracle") nor consume data without producing output ("Black Hole"). | Every process (`1.0` through `6.0`) transforms incoming inputs into concrete, auditable outputs. |
+| **Rule 2: Entity-to-Entity Prohibited** | External entities cannot communicate directly within the DFD boundary; all interaction must be mediated by a process. | Verified: All student, staff, and admin interactions are processed via numbered transformations. |
+| **Rule 3: Store-to-Store Prohibited** | Data cannot move directly from one data store to another without executing process manipulation. | Verified: Table interactions (e.g., `DS-4` to `DS-3`) are strictly mediated by processes `2.0`, `3.0`, `4.0`, and `5.0`. |
+| **Rule 4: Entity-to-Store Prohibited** | External entities cannot directly read or write to data stores without an intervening processing step. | Verified: All database queries and mutations pass through authorized API processes `1.0` to `6.0`. |
+| **Rule 5: Horizontal & Vertical Parity** | Inputs and outputs of the Level 0 Context diagram must balance perfectly with the aggregate boundary flows at Level 1. | Verified: All 22 boundary flows at Level 0 exhibit 100% exact parity with Level 1 connections. |
+| **Rule 6: Decimal Numbering Hierarchy** | Unique decimal indexing: Context is `0.0`, Level 1 processes are `1.0` to `6.0`, and Data stores are `DS-1` to `DS-6`. | Verified: Standard hierarchical numbering applied across all sections. |
 
 ---
 
@@ -111,62 +96,53 @@ The Context Diagram defines the outermost functional boundary of the **PEC Acade
 ### 2.2 Level 0 Context Diagram (Mermaid Model)
 
 ```mermaid
-flowchart TD
-    %% External Entities
-    Student["PEC Student (SID: YYBBBRRR)"]
-    Staff["PEC Positional Staff (Library, Hostels, Sports, Labs, Accounts)"]
-    Admin["Dean Academic Affairs (DAA / Admin)"]
-    Verifier["Public Certificate Verifier (Employer / University)"]
+flowchart LR
+    subgraph Campus_Clients["CAMPUS STAKEHOLDERS"]
+        direction TB
+        Student["PEC Student<br/>(SID: YYBBBRRR)"]
+        Staff["Positional Staff<br/>(Library, Hostels, Sports, Labs, Accounts)"]
+    end
 
-    %% Central Process Boundary
-    System(("0.0: PEC Academic Grievance, No-Dues & Clearance Automation Engine"))
+    System(("0.0: PEC Academic Grievance,<br/>No-Dues & Clearance<br/>Automation Engine"))
 
-    %% Student Boundary Flows
-    Student -- "1. Clearance Application (SID, Milestone, Reason)" --> System
-    Student -- "2. Grievance Submission (Dept ID, Priority, Disputed ₹)" --> System
-    Student -- "3. Student Auth Credentials (Email, Password)" --> System
-    System -- "4. Auth Token & Session Scope (JWT Bearer)" --> Student
-    System -- "5. Live Pipeline Status & INR Dues Breakdown" --> Student
-    System -- "6. Grievance Resolution & SLA Updates" --> Student
-    System -- "7. Tamper-Proof Official PDF Clearance Certificate" --> Student
+    subgraph Institutional_Auditors["ADMINISTRATION & PUBLIC"]
+        direction TB
+        Admin["Dean Academic Affairs<br/>(DAA / Executive Admin)"]
+        Verifier["Public Verifier<br/>(Employer / University)"]
+    end
 
-    %% Positional Staff Boundary Flows
-    Staff -- "8. Staff Auth Credentials (Positional Email, Password)" --> System
-    Staff -- "9. Due Inspection & Sign-off Decision (Status, Remarks, ₹ Dues)" --> System
-    Staff -- "10. Grievance Resolution Decision (Response, Adjusted ₹)" --> System
-    System -- "11. Staff Auth Token (Assigned Department Scope)" --> Staff
-    System -- "12. Departmental Pending Clearance Queue" --> Staff
-    System -- "13. Departmental Grievance Worklist" --> Staff
+    %% Student Flows
+    Student -->|"Clearance Application (SID, Milestone)<br/>Grievance Submission (Priority, ₹ Dues)<br/>Student Credentials (Email, Password)"| System
+    System -->|"Auth Token & Persona Session<br/>Live Pipeline Status & INR Dues<br/>Official PDF Clearance Certificate"| Student
 
-    %% DAA Administrator Boundary Flows
-    Admin -- "14. Admin Auth Credentials (DAA Email, Password)" --> System
-    Admin -- "15. Executive Override Command (Clearance ID, Reason)" --> System
-    Admin -- "16. SLA Engine Evaluation Trigger" --> System
-    System -- "17. Admin Auth Token (Institutional Scope)" --> Admin
-    System -- "18. Campus Clearance Analytics & Bottleneck Metrics" --> Admin
-    System -- "19. Escalated Grievance SLA Breach Alerts" --> Admin
-    System -- "20. Immutable System Audit Trail Logs" --> Admin
+    %% Staff Flows
+    Staff -->|"Staff Credentials (Email, Password)<br/>Due Inspection & Sign-off (₹ Dues)<br/>Grievance Resolution Decision"| System
+    System -->|"Staff Auth Token (Dept Scope)<br/>Department Review Queue<br/>Department Grievance Worklist"| Staff
 
-    %% Public Verifier Boundary Flows
-    Verifier -- "21. Public Verification Query (Certificate ID / SHA-256 Hash)" --> System
-    System -- "22. Cryptographic Authenticity Record (SID, Name, Seals, Date)" --> Verifier
+    %% Admin Flows
+    Admin -->|"Admin Credentials (DAA Auth)<br/>Executive Override Command<br/>SLA Engine Evaluation Trigger"| System
+    System -->|"Admin Auth Token (Full Scope)<br/>Campus Clearance Analytics<br/>Escalated SLA Breach Alerts<br/>Immutable Audit Trail Logs"| Admin
+
+    %% Verifier Flows
+    Verifier -->|"Public Query (Cert ID / Hash)"| System
+    System -->|"Authenticity Record & HMAC Seals"| Verifier
 ```
 
 ---
 
 ### 2.3 Context-Level Input and Output Boundary Data Flows
 
-| Flow Index | Flow Name | Direction | Source | Destination | Data Composition / Packet Description |
+| Flow ID | Flow Name | Direction | Origin | Destination | Data Composition / Packet Description |
 | :---: | :--- | :---: | :--- | :--- | :--- |
 | **F-01** | `Clearance Application` | Input | `Student` | Process `0.0` | `student_sid` + `academic_year` + `semester` + `reason` |
 | **F-02** | `Grievance Submission` | Input | `Student` | Process `0.0` | `student_id` + `department_id` + `subject` + `description` + `priority` |
 | **F-03** | `Student Auth Credentials` | Input | `Student` | Process `0.0` | `email` (`@pec.edu.in`) + `password` |
 | **F-04** | `Auth Token & Session Scope` | Output | Process `0.0` | `Student` | `access_token` (JWT) + `user_id` + `role: STUDENT` + `roll_number` |
-| **F-05** | `Live Pipeline Status` | Output | Process `0.0` | `Student` | `overall_status` + 5 $\times$ (`dept_name`, `gate`, `status`, `₹ due_amount`, `remarks`) |
+| **F-05** | `Live Pipeline Status` | Output | Process `0.0` | `Student` | `overall_status` + 5 $\times$ (`dept_name`, `gate`, `status`, `due_amount`, `remarks`) |
 | **F-06** | `Grievance Resolution Updates` | Output | Process `0.0` | `Student` | `grievance_id` + `status` + `staff_response` + `resolved_at` |
 | **F-07** | `Official PDF Certificate` | Output | Process `0.0` | `Student` | Binary vector PDF (`%PDF-`) + DAA/DSA letterhead + SHA-256 seal |
 | **F-08** | `Staff Auth Credentials` | Input | `Staff` | Process `0.0` | Positional email (`library@pec.edu.in`, etc.) + `password` |
-| **F-09** | `Due Inspection & Sign-off` | Input | `Staff` | Process `0.0` | `approval_id` + `decision` (`APPROVED`/`REJECTED`) + `remarks` + `₹ due_amount` |
+| **F-09** | `Due Inspection & Sign-off` | Input | `Staff` | Process `0.0` | `approval_id` + `decision` (`APPROVED`/`REJECTED`) + `remarks` + `due_amount` |
 | **F-10** | `Grievance Resolution Decision`| Input | `Staff` | Process `0.0` | `grievance_id` + `staff_response` + `status: RESOLVED` |
 | **F-11** | `Staff Auth Token` | Output | Process `0.0` | `Staff` | `access_token` (JWT) + `role: STAFF` + `department_id` |
 | **F-12** | `Department Review Queue` | Output | Process `0.0` | `Staff` | List of pending approvals filtered strictly by staff's `department_id` |
@@ -189,7 +165,7 @@ flowchart TD
 
 The Level 1 DFD decomposes the top-level process `0.0` into six dedicated, single-responsibility operational subsystems:
 
-- **`1.0: User Authentication & Role Authorization`:** Validates user credentials, generates Bcrypt hashes, issues signed JWT access tokens, and enforces Role-Based Access Control (RBAC).
+- **`1.0: User Authentication & Role Authorization`:** Validates user credentials, verifies Bcrypt password hashes, issues signed JWT access tokens, and enforces Role-Based Access Control (RBAC).
 - **`2.0: Clearance Application & Workflow Initialization`:** Enforces the single-active-request rule, captures student academic milestones, and initializes the 5 departmental approval records across the 3 gates.
 - **`3.0: Departmental Review, Chain of Responsibility & HMAC Signing`:** Orchestrates the multi-department clearance pipeline, allows parallel review at Gate 1, enforces prerequisite barriers at Gate 2 and Gate 3, generates HMAC-SHA256 digital seals, and executes DAA overrides.
 - **`4.0: Grievance Redressal & SLA Escalation Engine`:** Manages student disputes, tags priority SLA turnaround windows (4h, 12h, 24h, 48h), evaluates deadline breaches, and auto-escalates delinquent tickets to the DAA.
@@ -213,96 +189,74 @@ The system state is maintained across six relational data stores:
 ### 3.3 Level 1 System Decomposition Diagram (Mermaid Model)
 
 ```mermaid
-flowchart TD
-    %% External Entities
-    Student["PEC Student"]
-    Staff["Positional Staff"]
-    Admin["Dean Academic Affairs (DAA)"]
-    Verifier["Public Verifier"]
+flowchart TB
+    subgraph Stakeholders["1. EXTERNAL STAKEHOLDERS"]
+        Student["PEC Student"]
+        Staff["Positional Staff"]
+        Admin["Dean Academic Affairs (DAA)"]
+        Verifier["Public Verifier"]
+    end
 
-    %% Persistent Data Stores
-    DS1[("DS-1: Users & Personas")]
-    DS2[("DS-2: Campus Departments")]
-    DS3[("DS-3: Clearance Requests")]
-    DS4[("DS-4: Department Approvals & HMAC Seals")]
-    DS5[("DS-5: Grievances & SLA Timers")]
-    DS6[("DS-6: System Audit Logs")]
+    subgraph Processes["2. LEVEL 1 FUNCTIONAL PROCESSES"]
+        P1(("1.0: User Authentication & Role Authorization"))
+        P2(("2.0: Clearance Application & Workflow Initialization"))
+        P3(("3.0: Departmental Review, Chain of Responsibility & HMAC Signing"))
+        P4(("4.0: Grievance Redressal & SLA Escalation Engine"))
+        P5(("5.0: Certificate Minting, PDF Rendering & Verification"))
+        P6(("6.0: Administration, Analytics & Audit Logging"))
+    end
 
-    %% Level 1 Processes
-    P1(("1.0: User Authentication & Role Authorization"))
-    P2(("2.0: Clearance Application & Workflow Initialization"))
-    P3(("3.0: Departmental Review, Chain of Responsibility & HMAC Signing"))
-    P4(("4.0: Grievance Redressal & SLA Escalation Engine"))
-    P5(("5.0: Certificate Minting, ReportLab PDF Rendering & Public Verification"))
-    P6(("6.0: Institutional Administration, Analytics & Audit Logging"))
+    subgraph Storage["3. PERSISTENT RELATIONAL DATA STORES"]
+        DS1[("DS-1: Users & Personas")]
+        DS2[("DS-2: Campus Departments")]
+        DS3[("DS-3: Clearance Requests")]
+        DS4[("DS-4: Approvals & HMAC Seals")]
+        DS5[("DS-5: Grievances & SLA Timers")]
+        DS6[("DS-6: System Audit Logs")]
+    end
 
-    %% ================= PROCESS 1.0 FLOWS =================
-    Student -- "F-03: Credentials (@pec.edu.in)" --> P1
-    Staff -- "F-08: Positional Credentials" --> P1
-    Admin -- "F-14: Admin Credentials" --> P1
-    P1 <-->|"Verify Password Hash & Role"| DS1
-    P1 -- "F-04: JWT Bearer Token (Student Scope)" --> Student
-    P1 -- "F-11: JWT Bearer Token (Staff Scope)" --> Staff
-    P1 -- "F-17: JWT Bearer Token (Admin Scope)" --> Admin
+    %% Stakeholder to Process Flows
+    Student -->|"Credentials / Applications / Grievances"| P1
+    Student --> P2
+    Student --> P4
+    P1 -->|"JWT Token"| Student
+    P2 -->|"Pipeline Status"| Student
+    P4 -->|"Resolution Notes"| Student
+    P5 -->|"Official PDF Certificate"| Student
 
-    %% ================= PROCESS 2.0 FLOWS =================
-    Student -- "F-01: Submit Clearance (SID, Milestone)" --> P2
-    P2 <-->|"Check No Active Request in Progress"| DS3
-    P2 -->|"Read Department Codes & Gates"| DS2
-    P2 -- "Create Clearance Record (IN_PROGRESS)" --> DS3
-    P2 -- "Initialize Approvals: Gate 1 (PENDING), Gates 2-3 (WAITING)" --> DS4
-    P2 -- "Log INITIATE_CLEARANCE Action" --> P6
-    DS3 -->|"Read Current Request State"| P2
-    DS4 -->|"Read Current Gate Approvals"| P2
-    P2 -- "F-05: Live Pipeline Status & INR Dues Breakdown" --> Student
+    Staff -->|"Credentials / Inspection Decisions / Resolutions"| P1
+    Staff --> P3
+    Staff --> P4
+    P1 -->|"JWT Token"| Staff
+    P3 -->|"Review Queue"| Staff
+    P4 -->|"Grievance Worklist"| Staff
 
-    %% ================= PROCESS 3.0 FLOWS =================
-    DS4 -->|"Fetch Pending Queue for Dept"| P3
-    P3 -- "F-12: Department Review Queue" --> Staff
-    Staff -- "F-09: Due Inspection & Sign-off Decision" --> P3
-    Admin -- "F-15: Executive Override Command" --> P3
-    P3 <-->|"Validate Prerequisites & Update Gate Status"| DS4
-    P3 -- "Mint HMAC-SHA256 Digital Signature Seal" --> DS4
-    P3 <-->|"Update Master Status (APPROVED / REJECTED)"| DS3
-    P3 -- "Log APPROVAL_SIGNED / ADMIN_OVERRIDE Action" --> P6
+    Admin -->|"Credentials / Overrides / SLA Trigger"| P1
+    Admin --> P3
+    Admin --> P4
+    Admin --> P6
+    P1 -->|"JWT Token"| Admin
+    P4 -->|"SLA Alerts"| Admin
+    P6 -->|"Analytics & Audit Logs"| Admin
 
-    %% ================= PROCESS 4.0 FLOWS =================
-    Student -- "F-02: File Grievance (Dept, Priority, Disputed ₹)" --> P4
-    P4 -- "Store Grievance & Compute SLA Deadline Timestamp" --> DS5
-    P4 -- "Log FILE_GRIEVANCE Action" --> P6
-    DS5 -->|"Fetch Assigned Department Grievances"| P4
-    P4 -- "F-13: Department Grievance Worklist" --> Staff
-    Staff -- "F-10: Resolve Grievance & Adjust Dues" --> P4
-    P4 -- "Update Grievance: RESOLVED & Set resolved_at" --> DS5
-    P4 -- "Adjust / Zero Department INR Dues" --> DS4
-    P4 -- "Log RESOLVE_GRIEVANCE Action" --> P6
-    P4 -- "F-06: Grievance Resolution & Notes" --> Student
-    Admin -- "F-16: Trigger SLA Engine Check" --> P4
-    DS5 -->|"Scan: Current Time > Deadline && Status == OPEN"| P4
-    P4 -- "Set is_escalated = True, Status = ESCALATED" --> DS5
-    P4 -- "F-19: Real-time SLA Breach Escalation Alerts" --> Admin
-    P4 -- "Log SLA_BREACH_ESCALATED Action" --> P6
+    Verifier -->|"Query (Cert ID / Hash)"| P5
+    P5 -->|"Authenticity Record"| Verifier
 
-    %% ================= PROCESS 5.0 FLOWS =================
-    DS4 -->|"Check All 5 Gates == APPROVED"| P5
-    P5 -- "Mint Certificate ID & Authorize Caution Money Refund" --> DS3
-    P5 -- "Store SHA-256 Verification Digest" --> DS3
-    P5 -- "Log CERTIFICATE_GENERATED Action" --> P6
-    DS3 -->|"Fetch Cleared Record & Student Metadata"| P5
-    P5 -- "F-07: Stream Vector PDF Clearance Certificate" --> Student
-    Verifier -- "F-21: Public Query (Cert ID / Hash)" --> P5
-    P5 <-->|"Validate Digest Match"| DS3
-    P5 -->|"Fetch Department HMAC Seals"| DS4
-    P5 -- "F-22: Authenticity Record & Seals" --> Verifier
-
-    %% ================= PROCESS 6.0 FLOWS =================
-    P6 -- "Append-only Write to Audit Log" --> DS6
-    DS6 -->|"Read Historical Transactions"| P6
-    P6 -- "F-20: Immutable System Audit Trail Logs" --> Admin
-    DS3 -->|"Aggregate Overall Clearance Counts"| P6
-    DS4 -->|"Compute Department Resolution Latencies"| P6
-    DS5 -->|"Count Total & Escalated Grievances"| P6
-    P6 -- "F-18: Campus Bottleneck Analytics & Metrics" --> Admin
+    %% Process to Store Interactions
+    P1 <-->|"Verify Hash & Role"| DS1
+    P2 -->|"Read Facilities"| DS2
+    P2 <-->|"Check & Create Request"| DS3
+    P2 -->|"Initialize 5 Gates"| DS4
+    P3 <-->|"Update Gate & Attach HMAC"| DS4
+    P3 <-->|"Update Request Status"| DS3
+    P4 <-->|"Store & Scan Tickets"| DS5
+    P4 -->|"Adjust / Waive Dues"| DS4
+    P5 <-->|"Check 5 Approvals & Seals"| DS4
+    P5 <-->|"Mint Cert ID & Hash"| DS3
+    P6 <-->|"Aggregate Metrics & Append Logs"| DS6
+    P6 -->|"Read Analytics"| DS3
+    P6 -->|"Read Analytics"| DS4
+    P6 -->|"Read Analytics"| DS5
 ```
 
 ---
@@ -337,54 +291,54 @@ Process `3.0` coordinates the multi-department approval workflow using the behav
 
 #### Decision Table 1: Multi-Gate Clearance Pipeline & Prerequisite Barrier Matrix
 
-| Rule ID | Gate 1 Library Status | Gate 1 Hostel Status | Gate 1 Sports Status | Gate 2 Labs Status | Gate 3 Accounts Status | DAA Override Active? | Department Target of Current Action | Permitted Action / System State Transition |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **R-101** | `PENDING` | `PENDING` | `PENDING` | `WAITING` | `WAITING` | No | Gate 1 (Lib/Host/Sport) | Allow review; update status to `APPROVED` or `REJECTED`; Mint HMAC seal if approved. |
-| **R-102** | `APPROVED` | `APPROVED` | `PENDING` | `WAITING` | `WAITING` | No | Gate 2 (Dept Labs) | **BLOCK WITH 400 ERROR:** Prerequisite Gate 1 Sports is still incomplete. |
-| **R-103** | `APPROVED` | `APPROVED` | `REJECTED` | `WAITING` | `WAITING` | No | Gate 2 (Dept Labs) | **BLOCK WITH 400 ERROR:** Prerequisite Gate 1 Sports has outstanding liabilities. |
-| **R-104** | `APPROVED` | `APPROVED` | `APPROVED` | `WAITING` | `WAITING` | No | System Evaluation | **AUTOMATIC GATE ADVANCEMENT:** Transition Gate 2 (Dept Labs) from `WAITING` $\rightarrow$ `PENDING`. |
-| **R-105** | `APPROVED` | `APPROVED` | `APPROVED` | `PENDING` | `WAITING` | No | Gate 2 (Dept Labs) | Allow HOD Labs review; if approved, mint HMAC seal and update status to `APPROVED`. |
-| **R-106** | `APPROVED` | `APPROVED` | `APPROVED` | `APPROVED` | `WAITING` | No | System Evaluation | **AUTOMATIC GATE ADVANCEMENT:** Transition Gate 3 (Accounts) from `WAITING` $\rightarrow$ `PENDING`. |
-| **R-107** | `APPROVED` | `APPROVED` | `APPROVED` | `APPROVED` | `PENDING` | No | Gate 3 (Accounts) | Allow Accounts review; if approved, authorize ₹10,000 Caution Money refund release. |
-| **R-108** | `APPROVED` | `APPROVED` | `APPROVED` | `APPROVED` | `APPROVED` | No | System Evaluation | **MASTER CLEARANCE GRANTED:** Request status $\rightarrow$ `APPROVED`; Mint Certificate ID & SHA-256 Digest. |
-| **R-109** | Any | Any | `REJECTED` | Any | Any | **Yes (DAA)** | Gate 1 (Sports) | **EXECUTIVE OVERRIDE:** Set status $\rightarrow$ `APPROVED`; Clear dues; Mint HMAC seal; Log `ADMIN_OVERRIDE` in `DS-6`. |
+| Rule ID | Gate 1 Status (Lib / Host / Sport) | Gate 2 Status (Dept Labs) | Gate 3 Status (Accounts) | DAA Override? | Action Target & Enforced State Transition |
+| :---: | :---: | :---: | :---: | :---: | :--- |
+| **R-101** | All `PENDING` | `WAITING` | `WAITING` | No | Allow concurrent Gate 1 review; update to `APPROVED` or `REJECTED`; Mint HMAC seal on approval. |
+| **R-102** | Any `PENDING` / `REJECTED` | `WAITING` | `WAITING` | No | **BLOCK GATE 2 WITH 400 ERROR:** Prerequisite Gate 1 facilities incomplete or disputed. |
+| **R-103** | Any `REJECTED` (Dues > ₹0) | `WAITING` | `WAITING` | No | **REJECT REQUEST:** Master status `REJECTED`; student must settle dues or file grievance. |
+| **R-104** | All `APPROVED` | `WAITING` | `WAITING` | No | **AUTO-UNLOCK GATE 2:** Automatically advance Gate 2 (Dept Labs) from `WAITING` to `PENDING`. |
+| **R-105** | All `APPROVED` | `PENDING` | `WAITING` | No | Allow HOD Labs review; if approved, mint HMAC seal and update status to `APPROVED`. |
+| **R-106** | All `APPROVED` | `APPROVED` | `WAITING` | No | **AUTO-UNLOCK GATE 3:** Automatically advance Gate 3 (Accounts) from `WAITING` to `PENDING`. |
+| **R-107** | All `APPROVED` | `APPROVED` | `PENDING` | No | Allow Accounts review; if approved, authorize release of ₹10,000 Caution Money deposit refund. |
+| **R-108** | All `APPROVED` | `APPROVED` | `APPROVED` | No | **MASTER CLEARANCE GRANTED:** Master status `APPROVED`; Mint Certificate ID & SHA-256 Digest. |
+| **R-109** | Any `REJECTED` | Any | Any | **Yes (DAA)** | **EXECUTIVE OVERRIDE:** Mark target department `APPROVED`; clear dues; log `ADMIN_OVERRIDE` in `DS-6`. |
 
----
+<div style="page-break-before: always;"></div>
 
 #### Decision Tree 1: Clearance Gating & Barrier Enforcement Tree (Mermaid)
 
 ```mermaid
-flowchart TD
-    Start([Student Initiates Clearance]) --> G1_Init[Initialize Gate 1: Library, Hostel, Sports as PENDING<br/>Initialize Gate 2 & Gate 3 as WAITING_PREREQUISITE]
-    
-    G1_Init --> G1_Eval{Gate 1 Reviews Completed?}
-    G1_Eval -- No: Any Gate 1 Still Pending --> Hold_G2[Hold Gate 2 Labs in WAITING_PREREQUISITE]
-    G1_Eval -- Dues Unpaid: Any Gate 1 Rejected --> G1_Reject[Mark Master Status: REJECTED<br/>Prompt Student for Payment or Grievance]
-    
-    G1_Reject --> DAA_Check{DAA Executive Override Applied?}
-    DAA_Check -- Yes --> G1_Override[DAA Sets Gate 1 Department to APPROVED<br/>Logs Mandatory Audit Justification]
-    DAA_Check -- No --> Student_Resolve[Student Resolves Liability or Grievance]
-    Student_Resolve --> G1_Eval
-    G1_Override --> G1_All_Approved
-    
-    G1_Eval -- Yes: Library && Hostel && Sports == APPROVED --> G1_All_Approved[Gate 1 Fully Cleared]
-    G1_All_Approved --> Unlock_G2[Automatically Advance Gate 2 Labs: WAITING -> PENDING]
-    
-    Unlock_G2 --> G2_Eval{Gate 2 Labs Decision?}
-    G2_Eval -- Rejected: Lab Equipment Missing --> G2_Reject[Mark Master Status: REJECTED<br/>Record Lab Replacement Due in INR]
-    G2_Reject --> DAA_Check_G2{DAA Executive Override?}
-    DAA_Check_G2 -- Yes --> G2_Override[DAA Sets Labs to APPROVED] --> G2_Approved
-    DAA_Check_G2 -- No --> G2_Eval
-    
-    G2_Eval -- Approved: Equipment Clear --> G2_Approved[Mint HMAC-SHA256 Labs Seal<br/>Gate 2 Marked APPROVED]
-    G2_Approved --> Unlock_G3[Automatically Advance Gate 3 Accounts: WAITING -> PENDING]
-    
-    Unlock_G3 --> G3_Eval{Gate 3 Accounts Decision?}
-    G3_Eval -- Rejected: Institutional Dues Unpaid --> G3_Reject[Mark Master Status: REJECTED<br/>Hold Caution Money Escrow]
-    G3_Eval -- Approved: Fee Reconciliation Complete --> G3_Approved[Mint HMAC-SHA256 Accounts Seal<br/>Gate 3 Marked APPROVED]
-    
-    G3_Approved --> Finalize[Authorize Caution Money Refund Release: ₹10,000.00<br/>Master Clearance Status -> APPROVED<br/>Mint Institutional Certificate ID: PEC-CLR-YYYY-XXXXX<br/>Compute SHA-256 Public Verification Digest]
-    Finalize --> Done([Official Clearance Certificate Ready for Download])
+flowchart LR
+    subgraph Gate1 ["1. Gate 1: Departmental Stage (Parallel)"]
+        direction TB
+        G1_Start(["Student Clearance Initiated"]) --> G1_Init["Initialize Gate 1: Library, Hostel, Sports as PENDING<br/>Initialize Gate 2 & Gate 3 as WAITING_PREREQUISITE"]
+        G1_Init --> G1_Eval{"Gate 1 Reviews Completed?"}
+        G1_Eval -- "Any Still Pending" --> G1_Wait["Hold Gate 2 Labs in WAITING_PREREQUISITE"]
+        G1_Eval -- "Any Rejected (Dues)" --> G1_Rej{"DAA Override?"}
+        G1_Rej -- "No" --> G1_Pay["Student Resolves Due or Grievance"] --> G1_Eval
+        G1_Rej -- "Yes" --> G1_Over["DAA Marks Target Dept APPROVED<br/>Logs Mandatory Audit Justification"] --> G1_Pass["Gate 1 Cleared"]
+        G1_Eval -- "Library && Hostel && Sports == APPROVED" --> G1_Pass
+    end
+
+    subgraph Gate2 ["2. Gate 2: Academic Labs Stage"]
+        direction TB
+        G1_Pass --> G2_Unlock["Auto-Advance Gate 2 Labs: WAITING -> PENDING"]
+        G2_Unlock --> G2_Eval{"Lab Equipment Review?"}
+        G2_Eval -- "Rejected: Equipment Missing" --> G2_Rej{"DAA Override?"}
+        G2_Rej -- "No" --> G2_Pay["Replace Equipment / Disputed Grievance"] --> G2_Eval
+        G2_Rej -- "Yes" --> G2_Over["DAA Marks Labs APPROVED"] --> G2_Pass["Gate 2 Cleared: Labs HMAC Seal Minted"]
+        G2_Eval -- "Approved: Equipment Clear" --> G2_Pass
+    end
+
+    subgraph Gate3 ["3. Gate 3: Accounts & Institutional Certification"]
+        direction TB
+        G2_Pass --> G3_Unlock["Auto-Advance Gate 3 Accounts: WAITING -> PENDING"]
+        G3_Unlock --> G3_Eval{"Accounts Final Review?"}
+        G3_Eval -- "Rejected: Dues Unpaid" --> G3_Hold["Hold ₹10,000 Caution Money Escrow"]
+        G3_Eval -- "Approved: Reconciliation Clear" --> G3_Pass["Accounts HMAC Seal Minted"]
+        G3_Pass --> G3_Final["Authorize Caution Money Refund Release: ₹10,000.00<br/>Master Clearance Status -> APPROVED<br/>Mint Certificate ID: PEC-CLR-YYYY-XXXXX<br/>Compute SHA-256 Public Verification Digest"]
+        G3_Final --> G3_Done(["Official Clearance Certificate Ready"])
+    end
 ```
 
 ---
@@ -393,22 +347,22 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    ReviewStart([Department Staff Opens Student Review]) --> CheckPrereq{Are Upstream Gates Satisfied?}
+    ReviewStart(["Department Staff Opens Student Review"]) --> CheckPrereq{"Are Upstream Gates Satisfied?"}
     
-    CheckPrereq -- No --> RejectPrereq[Raise 400 Bad Request: Prerequisite Gate Dependency Incomplete]
-    CheckPrereq -- Yes --> InspectAssets[Staff Inspects Physical Asset Returns<br/>Library Books / Hostel Room Keys / Sports Equipment / Lab Kits]
+    CheckPrereq -- "No" --> RejectPrereq["Raise 400 Bad Request: Prerequisite Gate Dependency Incomplete"]
+    CheckPrereq -- "Yes" --> InspectAssets["Staff Inspects Physical Asset Returns<br/>Library Books / Hostel Room Keys / Sports Equipment / Lab Kits"]
     
-    InspectAssets --> DuesExist{Outstanding Liabilities Found?}
+    InspectAssets --> DuesExist{"Outstanding Liabilities Found?"}
     
-    DuesExist -- Yes: Unreturned Assets or Fines --> EnterDues[1. Enter Dues Amount in INR ₹ > 0.00<br/>2. Enter Itemized Positional Remarks<br/>3. Select Action: REJECTED]
-    EnterDues --> SaveReject[Save to DS-4: status = REJECTED, due_amount = ₹X.XX<br/>Set digital_signature = NULL<br/>Update DS-3: overall_status = REJECTED<br/>Log Event in DS-6: DEPT_REJECTED]
-    SaveReject --> StopReject([Clearance Blocked Pending Settlement / Grievance])
+    DuesExist -- "Yes: Unreturned Assets or Fines" --> EnterDues["1. Enter Dues Amount in INR: ₹ > 0.00<br/>2. Enter Itemized Positional Remarks<br/>3. Select Action: REJECTED"]
+    EnterDues --> SaveReject["Save to DS-4: status = REJECTED, due_amount = ₹X.XX<br/>Set digital_signature = NULL<br/>Update DS-3: overall_status = REJECTED<br/>Log Event in DS-6: DEPT_REJECTED"]
+    SaveReject --> StopReject(["Clearance Blocked Pending Settlement / Grievance"])
     
-    DuesExist -- No: All Records Clear --> EnterClear[1. Set Dues Amount = ₹0.00<br/>2. Enter Clearance Remarks<br/>3. Select Action: APPROVED]
-    EnterClear --> GenHMAC[Compute Cryptographic HMAC-SHA256 Seal:<br/>HMAC(Secret_Key, staff_id + dept_code + request_id + timestamp)]
-    GenHMAC --> SaveApprove[Save to DS-4: status = APPROVED, due_amount = 0.00<br/>Attach digital_signature = SIG-v1:DEPT:hash24<br/>Log Event in DS-6: DEPT_APPROVED]
-    SaveApprove --> CheckNext[Trigger Process 3.0: Evaluate Downstream Gate Unlocking]
-    CheckNext --> StopApprove([Department Clearance Finalized & Sealed])
+    DuesExist -- "No: All Records Clear" --> EnterClear["1. Set Dues Amount = ₹0.00<br/>2. Enter Clearance Remarks<br/>3. Select Action: APPROVED"]
+    EnterClear --> GenHMAC["Compute Cryptographic HMAC-SHA256 Seal:<br/>HMAC(Secret_Key, staff_id + dept_code + request_id + timestamp)"]
+    GenHMAC --> SaveApprove["Save to DS-4: status = APPROVED, due_amount = 0.00<br/>Attach digital_signature = SIG-v1:DEPT:hash24<br/>Log Event in DS-6: DEPT_APPROVED"]
+    SaveApprove --> CheckNext["Trigger Process 3.0: Evaluate Downstream Gate Unlocking"]
+    CheckNext --> StopApprove(["Department Clearance Finalized & Sealed"])
 ```
 
 ---
@@ -431,54 +385,51 @@ Process `4.0` governs student appeals regarding disputed fines (e.g., contested 
 
 #### Decision Table 2: Priority SLA Deadline & Automated Escalation Matrix
 
-| Rule ID | Ticket Priority | Elapsed Time ($t_{\text{now}} - t_{\text{submitted}}$) | Current Ticket Status | Department Official Action | System SLA Engine Action | Master Ticket Status Mutation |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **R-201** | `CRITICAL` | $\le$ 4 Hours | `OPEN` | Pending review | Maintain live countdown timer (4h window). | No change (`OPEN`, `is_escalated = False`) |
-| **R-202** | `CRITICAL` | **> 4 Hours** | `OPEN` | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach event. | **`ESCALATED`** (`is_escalated = True`) |
-| **R-203** | `HIGH` | $\le$ 12 Hours | `OPEN` | Pending review | Maintain live countdown timer (12h window). | No change (`OPEN`, `is_escalated = False`) |
-| **R-204** | `HIGH` | **> 12 Hours** | `OPEN` | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach event. | **`ESCALATED`** (`is_escalated = True`) |
-| **R-205** | `MEDIUM` | $\le$ 24 Hours | `OPEN` | Pending review | Maintain live countdown timer (24h window). | No change (`OPEN`, `is_escalated = False`) |
-| **R-206** | `MEDIUM` | **> 24 Hours** | `OPEN` | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach event. | **`ESCALATED`** (`is_escalated = True`) |
-| **R-207** | `LOW` | $\le$ 48 Hours | `OPEN` | Pending review | Maintain live countdown timer (48h window). | No change (`OPEN`, `is_escalated = False`) |
-| **R-208** | `LOW` | **> 48 Hours** | `OPEN` | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach event. | **`ESCALATED`** (`is_escalated = True`) |
-| **R-209** | Any | Any | `OPEN` / `ESCALATED` | Staff/DAA registers resolution remarks | Record `staff_response`; zero or adjust INR dues in `DS-4`. | **`RESOLVED`** (`resolved_at = Now`) |
+| Rule ID | Priority | Allowed SLA | Elapsed Time ($t$) | Reviewer Action | Enforced System Action & Ticket Mutation |
+| :---: | :---: | :---: | :---: | :---: | :--- |
+| **R-201** | `CRITICAL` | **4 Hours** | $t \le$ 4 Hours | Pending review | Maintain live countdown timer (`status = OPEN`, `is_escalated = False`). |
+| **R-202** | `CRITICAL` | **4 Hours** | **$t >$ 4 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
+| **R-203** | `HIGH` | **12 Hours** | $t \le$ 12 Hours | Pending review | Maintain live countdown timer (`status = OPEN`, `is_escalated = False`). |
+| **R-204** | `HIGH` | **12 Hours** | **$t >$ 12 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
+| **R-205** | `MEDIUM` | **24 Hours** | $t \le$ 24 Hours | Pending review | Maintain live countdown timer (`status = OPEN`, `is_escalated = False`). |
+| **R-206** | `MEDIUM` | **24 Hours** | **$t >$ 24 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
+| **R-207** | `LOW` | **48 Hours** | $t \le$ 48 Hours | Pending review | Maintain live countdown timer (`status = OPEN`, `is_escalated = False`). |
+| **R-208** | `LOW` | **48 Hours** | **$t >$ 48 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
+| **R-209** | Any | Any | Any | Staff/DAA registers resolution | Set `status = RESOLVED`, record `staff_response`, zero or adjust INR dues in `DS-4`, set `resolved_at = Now`. |
 
----
+<div style="page-break-before: always;"></div>
 
 #### Decision Tree 3: Grievance Arbitration & SLA Breach Escalation Tree (Mermaid)
 
 ```mermaid
-flowchart TD
-    GrievanceSubmitted([Student Submits Grievance]) --> SelectPriority{Select Priority Level}
-    
-    SelectPriority -- CRITICAL --> Set4h[Set SLA Window = 4 Hours<br/>Compute Deadline: Now + 4h]
-    SelectPriority -- HIGH --> Set12h[Set SLA Window = 12 Hours<br/>Compute Deadline: Now + 12h]
-    SelectPriority -- MEDIUM --> Set24h[Set SLA Window = 24 Hours<br/>Compute Deadline: Now + 24h]
-    SelectPriority -- LOW --> Set48h[Set SLA Window = 48 Hours<br/>Compute Deadline: Now + 48h]
-    
-    Set4h --> StoreGrievance[Store Ticket in DS-5: status = OPEN, is_escalated = False<br/>Log Event in DS-6: FILE_GRIEVANCE]
-    Set12h --> StoreGrievance
-    Set24h --> StoreGrievance
-    Set48h --> StoreGrievance
-    
-    StoreGrievance --> ActiveTimer[Active SLA Monitoring Loop]
-    ActiveTimer --> StaffReview{Department Staff Action within Deadline?}
-    
-    StaffReview -- Yes: Staff Inspects Dispute --> ResolveDecision{Staff Accepts or Rejects Dispute?}
-    ResolveDecision -- Accepted: Due Erroneous --> WaiveDue[1. Waive / Reduce Due Amount in DS-4 to INR 0.00<br/>2. Re-evaluate Department Clearance Status<br/>3. Enter Resolution Justification]
-    ResolveDecision -- Rejected: Due Legitimate --> RetainDue[1. Retain Due Amount in DS-4<br/>2. Reaffirm Clearance Rejection<br/>3. Enter Department Policy Remarks]
-    
-    WaiveDue --> MarkResolved[Set DS-5: status = RESOLVED, resolved_at = Timestamp<br/>Log Event in DS-6: RESOLVE_GRIEVANCE]
-    RetainDue --> MarkResolved
-    MarkResolved --> EndGrievance([Grievance Closed])
-    
-    StaffReview -- No: Deadline Lapses Without Action --> BreachDetected{Current Time > SLA Deadline?}
-    BreachDetected -- Yes --> AutoEscalate[1. System Engine Triggers SLA Escalation<br/>2. Update DS-5: is_escalated = True, status = ESCALATED<br/>3. Log Event in DS-6: SLA_BREACH_ESCALATED<br/>4. Push Real-time Escalation Alert to DAA Dashboard]
-    
-    AutoEscalate --> DAAIntervene[Dean Academic Affairs Arbitrates Dispute]
-    DAAIntervene --> DAA_Action{DAA Overrides Department?}
-    DAA_Action -- Yes --> DAA_Override[DAA Issues Executive Override<br/>Waives Dues in DS-4 & Sets Gate APPROVED<br/>Logs ADMIN_OVERRIDE in DS-6] --> MarkResolved
-    DAA_Action -- No --> DAA_Uphold[DAA Directs Student to Pay Liabilities] --> MarkResolved
+flowchart LR
+    subgraph S1 ["1. Priority Window Assignment"]
+        direction TB
+        T_Start(["Student Files Grievance"]) --> T_Prio{"Select Priority"}
+        T_Prio -- "CRITICAL" --> T_4h["Set Window: 4 Hours"]
+        T_Prio -- "HIGH" --> T_12h["Set Window: 12 Hours"]
+        T_Prio -- "MEDIUM" --> T_24h["Set Window: 24 Hours"]
+        T_Prio -- "LOW" --> T_48h["Set Window: 48 Hours"]
+        T_4h & T_12h & T_24h & T_48h --> T_Store["Store Ticket in DS-5: status=OPEN<br/>Start Active Countdown Timer"]
+    end
+
+    subgraph S2 ["2. Department Review"]
+        direction TB
+        T_Store --> T_Review{"Review within SLA Deadline?"}
+        T_Review -- "Yes: Action Taken" --> T_Decide{"Staff Decision?"}
+        T_Decide -- "Accepted (Due Erroneous)" --> T_Waive["Waive / Adjust Due to ₹0.00 in DS-4<br/>Enter Justification"]
+        T_Decide -- "Rejected (Due Legitimate)" --> T_Retain["Retain Due in DS-4<br/>Reaffirm Dept Rejection"]
+        T_Waive & T_Retain --> T_Close["Set DS-5: status=RESOLVED<br/>Log Event in DS-6"]
+    end
+
+    subgraph S3 ["3. SLA Breach Escalation"]
+        direction TB
+        T_Review -- "No: SLA Lapses" --> T_Breach["Engine Flags SLA Breach<br/>DS-5: status=ESCALATED, is_escalated=True<br/>Push Alert to DAA Dashboard"]
+        T_Breach --> T_DAA{"DAA Arbitration Decision"}
+        T_DAA -- "Override Dept" --> T_DAAOver["DAA Waives Due & Sets Gate APPROVED<br/>Logs ADMIN_OVERRIDE in DS-6"] --> T_Close
+        T_DAA -- "Uphold Dept" --> T_DAAUphold["Student Directed to Settle Due"] --> T_Close
+        T_Close --> T_Done(["Grievance Closed"])
+    end
 ```
 
 ---
@@ -492,7 +443,7 @@ The API Gateway enforces strict **Role-Based Access Control (RBAC)** across four
 
 #### Decision Table 3: Comprehensive RBAC Authorization Matrix
 
-| Action / Operation | API Route Endpoint | `STUDENT` | `STAFF` (Own Dept) | `STAFF` (Other Dept) | `ADMIN` (DAA) | `PUBLIC` | Enforced Error on Breach |
+| Action / Operation | API Route Endpoint | `STUDENT` | `STAFF` (Own) | `STAFF` (Other) | `ADMIN` | `PUBLIC` | Enforced Breach Error |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Apply for Clearance** | `POST /api/v1/clearance/apply` | **ALLOW** | DENY | DENY | DENY | DENY | `403 Forbidden` |
 | **View My Pipeline** | `GET /api/v1/clearance/my-requests` | **ALLOW** | DENY | DENY | DENY | DENY | `401 / 403` |
@@ -505,7 +456,7 @@ The API Gateway enforces strict **Role-Based Access Control (RBAC)** across four
 | **View System Audit Logs**| `GET /api/v1/admin/audit-logs` | DENY | DENY | DENY | **ALLOW** | DENY | `403 Forbidden` |
 | **Execute Admin Override**| `POST /api/v1/admin/clearance/{id}/override` | DENY | DENY | DENY | **ALLOW** | DENY | `403 Forbidden` |
 | **Download PDF Cert** | `GET /api/v1/certificate/download/{id}` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | DENY | `401 Unauthorized` |
-| **Public Verification** | `GET /api/v1/certificate/verify` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | None (Public Endpoint) |
+| **Public Verification** | `GET /api/v1/certificate/verify` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | Public Access |
 
 ---
 
@@ -513,26 +464,26 @@ The API Gateway enforces strict **Role-Based Access Control (RBAC)** across four
 
 ```mermaid
 flowchart TD
-    Req([Incoming HTTP Request]) --> CheckAuth{Is Endpoint Public?}
+    Req(["Incoming HTTP Request"]) --> CheckAuth{"Is Endpoint Public?"}
     
-    CheckAuth -- Yes: /api/v1/certificate/verify --> ServePublic[Process 5.4: Execute Verification without Auth Token]
-    CheckAuth -- No: Protected Route --> CheckHeader{Authorization Bearer Header Present?}
+    CheckAuth -- "Yes: /api/v1/certificate/verify" --> ServePublic["Process 5.0: Execute Verification without Auth Token"]
+    CheckAuth -- "No: Protected Route" --> CheckHeader{"Authorization Bearer Header Present?"}
     
-    CheckHeader -- No Header --> Reject401[Raise 401 Unauthorized: Authentication Credentials Missing]
-    CheckHeader -- Header Present --> DecodeJWT{Decode JWT: Signature Valid && Exp > Now?}
+    CheckHeader -- "No Header" --> Reject401["Raise 401 Unauthorized: Credentials Missing"]
+    CheckHeader -- "Header Present" --> DecodeJWT{"Decode JWT: Signature Valid && Exp > Now?"}
     
-    DecodeJWT -- Invalid Signature / Expired --> Reject401Expired[Raise 401 Unauthorized: Invalid or Expired Token]
-    DecodeJWT -- Valid Token --> ExtractUser[Fetch User Record from DS-1<br/>Extract sub: user_id, role: UserRole]
+    DecodeJWT -- "Invalid or Expired" --> Reject401Expired["Raise 401 Unauthorized: Invalid or Expired Token"]
+    DecodeJWT -- "Valid Token" --> ExtractUser["Fetch User Record from DS-1<br/>Extract sub: user_id, role: UserRole"]
     
-    ExtractUser --> CheckRouteRole{Does Route Allow Extracted UserRole?}
+    ExtractUser --> CheckRouteRole{"Does Route Allow Extracted UserRole?"}
     
-    CheckRouteRole -- Student Route: Role != STUDENT --> Reject403S[Raise 403 Forbidden: Student Privileges Required]
-    CheckRouteRole -- Admin Route: Role != ADMIN --> Reject403A[Raise 403 Forbidden: Administrator Privileges Required]
-    CheckRouteRole -- Staff Route: Role not in (STAFF, ADMIN) --> Reject403St[Raise 403 Forbidden: Staff Privileges Required]
+    CheckRouteRole -- "Student Route: Role != STUDENT" --> Reject403S["Raise 403 Forbidden: Student Privileges Required"]
+    CheckRouteRole -- "Admin Route: Role != ADMIN" --> Reject403A["Raise 403 Forbidden: Admin Privileges Required"]
+    CheckRouteRole -- "Staff Route: Role not in (STAFF, ADMIN)" --> Reject403St["Raise 403 Forbidden: Staff Privileges Required"]
     
-    CheckRouteRole -- Staff Role Verified --> CheckDept{Is Staff User Assigned to Target Department?}
-    CheckDept -- No && Role != ADMIN --> Reject403Dept[Raise 403 Forbidden: Cross-department Sign-off Prohibited]
-    CheckDept -- Yes || Role == ADMIN --> AllowExecute[Authorization Succeeded: Execute Target Subsystem Process]
+    CheckRouteRole -- "Staff Role Verified" --> CheckDept{"Is Staff Assigned to Target Department?"}
+    CheckDept -- "No && Role != ADMIN" --> Reject403Dept["Raise 403 Forbidden: Cross-department Sign-off Prohibited"]
+    CheckDept -- "Yes || Role == ADMIN" --> AllowExecute["Authorization Succeeded: Execute Target Subsystem Process"]
 ```
 
 ---
@@ -594,7 +545,7 @@ The schemas reflect the exact production relational database definitions (`backe
 | `status` | `ENUM` | Not Null | `WAITING_PREREQUISITE`, `PENDING`, `APPROVED`, `REJECTED` | `APPROVED` |
 | `staff_id` | `INTEGER` | Foreign Key (`users.id`) | References signing staff official | `2` (Librarian) |
 | `approved_at` | `DATETIME` | Nullable | Exact timestamp of review sign-off | `2026-05-02 11:15:00` |
-| `remarks` | `TEXT` | Nullable | Itemized inspection commentary | `All library books accounted for. Zero dues.` |
+| `remarks` | `TEXT` | Nullable | Itemized inspection commentary | `All library books returned. Zero dues.` |
 | `due_amount` | `FLOAT` | Default 0.0 | Outstanding liability in INR (`₹`) | `0.00` |
 | `digital_signature`| `VARCHAR(255)`| Nullable | Keyed HMAC-SHA256 signature seal | `SIG-v1:LIBRARY:8a7f9c2d1b4e5f...` |
 
@@ -668,7 +619,7 @@ The schemas reflect the exact production relational database definitions (`backe
 
 ## 6. Formal Horizontal & Vertical Balancing Verification
 
-To ensure that the DFD specifications contain **zero structural discrepancies** and are **frozen permanently**, the table below verifies horizontal and vertical parity between Level 0 and Level 1:
+To ensure that the DFD specifications contain zero structural discrepancies and are frozen permanently, the table below verifies horizontal and vertical parity between Level 0 and Level 1:
 
 | Level 0 Boundary Flow Index | Boundary Flow Name | External Entity | Level 0 Direction | Level 1 Connecting Subsystem Process | Balancing Parity Status |
 | :---: | :--- | :---: | :---: | :---: | :---: |
