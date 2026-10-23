@@ -115,7 +115,7 @@ flowchart LR
 
 ### Process Descriptions
 
-| Process | Name | What It Does (Simple Explanation) |
+| Process | Name | Description |
 |:---:|:---|:---|
 | **P1** | User Login & Access Control | Checks student and staff passwords securely; issues a secure digital login token with their role (Student, Staff, or Admin). |
 | **P2** | Clearance Application Setup | Lets a student submit one active clearance application; creates the application record and sets up the 5 department checklist rows. |
@@ -126,7 +126,7 @@ flowchart LR
 
 ### Data Store Descriptions
 
-| Store | Table | What It Stores (Simple Explanation) |
+| Store | Table | Description |
 |:---:|:---|:---|
 | **DS-1** | `users` | User accounts, encrypted passwords, roles (Student, Staff, Admin), and student roll numbers. |
 | **DS-2** | `departments` | List of college departments (Library, Hostel, Sports, Labs, Accounts) and their gate order. |
