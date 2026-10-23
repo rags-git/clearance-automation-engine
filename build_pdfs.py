@@ -77,6 +77,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       display: block;
       margin: 0 auto;
     }}
+    .mermaid .nodeLabel, .mermaid .label {{
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+    }}
     table {{
       font-size: 8pt !important;
       width: 100% !important;

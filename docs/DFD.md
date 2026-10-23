@@ -12,75 +12,78 @@
 ## Table of Contents
 
 1. [DFD Level 0: Context Analysis Diagram](#1-dfd-level-0-context-analysis-diagram)
-   - 1.1 Level 0 Context Diagram (Mermaid)
-   - 1.2 Architectural Explanation & External Entities
-   - 1.3 Boundary Data Flows Summary
+   - [Level 0 Context Diagram](#level-0-context-diagram)
+   - [Architectural Explanation & External Entities](#architectural-explanation--external-entities)
+   - [Boundary Data Flows Summary](#boundary-data-flows-summary)
 2. [DFD Level 1: System Decomposition Diagram](#2-dfd-level-1-system-decomposition-diagram)
-   - 2.1 Level 1 System Decomposition Diagram (Mermaid)
-   - 2.2 Functional Subsystems Explanation (Processes 1.0 – 6.0)
-   - 2.3 Persistent Data Stores Explanation (DS-1 – DS-6)
+   - [Level 1 System Data Flow Diagram](#level-1-system-data-flow-diagram)
+   - [Functional Subsystems Explanation (Processes 1 to 6)](#functional-subsystems-explanation-processes-1-to-6)
+   - [Persistent Data Stores Explanation (DS-1 to DS-6)](#persistent-data-stores-explanation-ds-1-to-ds-6)
 3. [Clearance Gating: Decision Table 1 & Decision Trees 1 & 2](#3-clearance-gating-decision-table-1--decision-trees-1--2)
-   - 3.1 Decision Table 1: Multi-Gate Clearance Pipeline Matrix
-   - 3.2 Decision Table 1 Explanation (Chain of Responsibility & Barriers)
-   - 3.3 Decision Tree 1: Clearance Gating & Barrier Enforcement (Mermaid)
-   - 3.4 Decision Tree 1 Explanation
-   - 3.5 Decision Tree 2: Departmental Liability Assessment & HMAC Signing (Mermaid)
-   - 3.6 Decision Tree 2 Explanation
+   - [Decision Table 1: Multi-Gate Clearance Pipeline Matrix](#decision-table-1-multi-gate-clearance-pipeline-matrix)
+   - [Decision Table 1 Explanation (Chain of Responsibility & Barriers)](#decision-table-1-explanation-chain-of-responsibility--barriers)
+   - [Decision Tree 1: Clearance Gating & Barrier Enforcement](#decision-tree-1-clearance-gating--barrier-enforcement)
+   - [Decision Tree 1 Explanation](#decision-tree-1-explanation)
+   - [Decision Tree 2: Departmental Liability Assessment & HMAC Signing](#decision-tree-2-departmental-liability-assessment--hmac-signing)
+   - [Decision Tree 2 Explanation](#decision-tree-2-explanation)
 4. [Grievance Redressal: Decision Table 2 & Decision Tree 3](#4-grievance-redressal-decision-table-2--decision-tree-3)
-   - 4.1 Decision Table 2: Priority SLA Deadline & Escalation Matrix
-   - 4.2 Decision Table 2 Explanation (Dynamic SLA Timers & Rules)
-   - 4.3 Decision Tree 3: Grievance Arbitration & Escalation (Mermaid)
-   - 4.4 Decision Tree 3 Explanation
+   - [Decision Table 2: Priority SLA Deadline & Escalation Matrix](#decision-table-2-priority-sla-deadline--escalation-matrix)
+   - [Decision Table 2 Explanation (Dynamic SLA Timers & Rules)](#decision-table-2-explanation-dynamic-sla-timers--rules)
+   - [Decision Tree 3: Grievance Arbitration & Escalation](#decision-tree-3-grievance-arbitration--escalation)
+   - [Decision Tree 3 Explanation](#decision-tree-3-explanation)
 5. [Role-Based Access Control: Decision Table 3 & Decision Tree 4](#5-role-based-access-control-decision-table-3--decision-tree-4)
-   - 5.1 Decision Table 3: RBAC Authorization Matrix
-   - 5.2 Decision Table 3 Explanation (Security Scopes & Gate Enforcement)
-   - 5.3 Decision Tree 4: API Gateway Authentication & Authorization (Mermaid)
-   - 5.4 Decision Tree 4 Explanation
+   - [Decision Table 3: RBAC Authorization Matrix](#decision-table-3-rbac-authorization-matrix)
+   - [Decision Table 3 Explanation (Security Scopes & Gate Enforcement)](#decision-table-3-explanation-security-scopes--gate-enforcement)
+   - [Decision Tree 4: API Gateway Authentication & Authorization](#decision-tree-4-api-gateway-authentication--authorization)
+   - [Decision Tree 4 Explanation](#decision-tree-4-explanation)
 
 ---
 
 ## 1. DFD Level 0: Context Analysis Diagram
 
-The **Level 0 Context Diagram** defines the primary environmental boundary of the PEC Clearance Automation Engine (`0.0`), mapping all interactions between campus stakeholders and the central automated processing engine.
+The **Level 0 Context Diagram** defines the primary environmental boundary of the PEC Clearance Automation Engine, mapping all interactions between campus stakeholders and the central automated processing engine.
 
-### 1.1 Level 0 Context Diagram (Mermaid)
+### Level 0 Context Diagram
 
 ```mermaid
 flowchart LR
-    subgraph Campus_Clients ["CAMPUS STAKEHOLDERS"]
+    classDef entity fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,font-weight:bold;
+    classDef engine fill:#fff3e0,stroke:#e65100,stroke-width:3px,color:#bf360c,font-weight:bold;
+
+    subgraph Campus_Clients ["Campus Stakeholders"]
         direction TB
-        Student["PEC Student<br/>(SID: YYBBBRRR)"]
-        Staff["Positional Staff<br/>(Library, Hostels, Sports, Labs, Accounts)"]
+        Student["PEC Student<br/>(SID: YYBBBRRR)"]:::entity
+        Staff["Positional Staff<br/>(Library, Hostels, Sports, Labs, Accounts)"]:::entity
     end
 
-    System(("0.0: PEC Academic Grievance,<br/>No-Dues & Clearance<br/>Automation Engine"))
+    System(("Central Clearance<br/>Automation Engine")):::engine
 
-    subgraph Campus_Authorities ["ADMINISTRATION & PUBLIC"]
+    subgraph Campus_Authorities ["Administration & Public"]
         direction TB
-        Admin["Dean Academic Affairs<br/>(DAA / Executive Admin)"]
-        Verifier["Public Verifier<br/>(Employer / University)"]
+        Admin["Dean Academic Affairs<br/>(DAA / Executive Admin)"]:::entity
+        Verifier["Public Verifier<br/>(Employer / University)"]:::entity
     end
 
     %% Student Interactions
-    Student -->|"1. Submit Clearance Application<br/>2. File Disputed Dues Grievance<br/>3. User Authentication Credentials"| System
-    System -->|"1. Live Gating & ₹ Dues Status<br/>2. Grievance Redressal Notices<br/>3. Tamper-Proof PDF Certificate"| Student
+    Student -->|"Submit Clearance / Grievances"| System
+    System -->|"Status Updates / PDF Certificate"| Student
 
     %% Staff Interactions
-    Staff -->|"1. Staff Credentials & Session<br/>2. Inspect Liabilities & Enter ₹ Dues<br/>3. Submit Grievance Resolution"| System
-    System -->|"1. Department Clearance Review Queue<br/>2. Departmental Disputed Grievances<br/>3. Cryptographic HMAC-SHA256 Receipt"| Staff
+    Staff -->|"Staff Sign-off & ₹ Dues Inspection"| System
+    System -->|"Review Queue & Grievance Worklist"| Staff
 
     %% Admin Interactions
-    Admin -->|"1. DAA Executive Credentials<br/>2. Executive Override Orders<br/>3. Background SLA Evaluation Pulse"| System
-    System -->|"1. Campus Bottleneck Analytics<br/>2. Real-Time SLA Breach Alerts<br/>3. Append-Only System Audit Logs"| Admin
+    Admin -->|"Executive Override & SLA Triggers"| System
+    System -->|"Analytics, SLA Alerts & Audit Logs"| Admin
 
     %% Verifier Interactions
-    Verifier -->|"1. Public Query (Cert ID / SHA-256 Digest)"| System
-    System -->|"1. Authenticity Record & 5 HMAC Seals"| Verifier
+    Verifier -->|"Public Query (Cert ID / Hash)"| System
+    System -->|"Authenticity Record & HMAC Seals"| Verifier
 ```
 
-### 1.2 Architectural Explanation & External Entities
+### Architectural Explanation & External Entities
 
-The Context Diagram encapsulates the entire institutional software system within a single high-level transformation bubble (`0.0`), isolating internal operations from four external entities:
+The Context Diagram encapsulates the entire institutional software system within a single high-level transformation bubble, isolating internal operations from four external entities:
 
 1. **PEC Student (`Student`):**
    - **Identity:** Identified by an immutable 8-digit PEC Student Identifier (`YYBBBRRR`, e.g., `22103042`).
@@ -95,7 +98,7 @@ The Context Diagram encapsulates the entire institutional software system within
    - **Identity:** External employers, background screening agencies, and international universities.
    - **Function:** Performs tokenless, zero-login cryptographic verification of issued certificates using either the unique Certificate ID (`PEC-CLR-YYYY-XXXXX`) or the 64-character SHA-256 public hash digest.
 
-### 1.3 Boundary Data Flows Summary
+### Boundary Data Flows Summary
 
 - **Inbound Data Flows:**
   - `Clearance Application`: Student SID, academic year, semester, and clearance justification.
@@ -114,109 +117,102 @@ The Context Diagram encapsulates the entire institutional software system within
 
 ## 2. DFD Level 1: System Decomposition Diagram
 
-The **Level 1 System Decomposition Diagram** decomposes the master process `0.0` into six dedicated, single-responsibility operational subsystems (`1.0` through `6.0`), interacting directly with six persistent relational data stores (`DS-1` through `DS-6`).
+The **Level 1 System Data Flow Diagram** decomposes the top-level system into six dedicated, single-responsibility operational subsystems (`Process 1` through `Process 6`), interacting directly with six persistent relational data stores (`DS-1` through `DS-6`).
 
-### 2.1 Level 1 System Decomposition Diagram (Mermaid)
+### Level 1 System Data Flow Diagram
 
 ```mermaid
-flowchart TB
-    subgraph Stakeholders ["1. EXTERNAL STAKEHOLDERS"]
-        Student["PEC Student"]
-        Staff["Positional Staff"]
-        Admin["Dean Academic Affairs (DAA)"]
-        Verifier["Public Verifier"]
+flowchart LR
+    classDef entity fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,font-weight:bold;
+    classDef process fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#4a148c,font-weight:bold;
+    classDef store fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,font-weight:bold;
+
+    subgraph Entities ["External Stakeholders"]
+        direction TB
+        E_Student["PEC Student"]:::entity
+        E_Staff["Positional Staff"]:::entity
+        E_Admin["Dean Academic Affairs"]:::entity
+        E_Verifier["Public Verifier"]:::entity
     end
 
-    subgraph Processes ["2. LEVEL 1 FUNCTIONAL PROCESSES"]
-        P1(("1.0: User Authentication & Role Authorization"))
-        P2(("2.0: Clearance Application & Gating Setup"))
-        P3(("3.0: Departmental Review, Chain of Responsibility & HMAC"))
-        P4(("4.0: Grievance Redressal & SLA Escalation Engine"))
-        P5(("5.0: Certificate Minting, PDF Rendering & Verification"))
-        P6(("6.0: Institutional Administration, Analytics & Audit"))
+    subgraph Processes ["Level 1 Functional Processes"]
+        direction TB
+        P1(["Process 1: Auth & RBAC"]):::process
+        P2(["Process 2: Clearance Setup"]):::process
+        P3(["Process 3: Multi-Gate & HMAC"]):::process
+        P4(["Process 4: Grievance & SLA"]):::process
+        P5(["Process 5: Certificate & Verify"]):::process
+        P6(["Process 6: Analytics & Audit"]):::process
     end
 
-    subgraph DataStores ["3. PERSISTENT RELATIONAL DATA STORES"]
-        DS1[("DS-1: Users & Personas")]
-        DS2[("DS-2: Campus Departments")]
-        DS3[("DS-3: Clearance Requests")]
-        DS4[("DS-4: Department Approvals & HMAC")]
-        DS5[("DS-5: Grievances & SLA Timers")]
-        DS6[("DS-6: System Audit Logs")]
+    subgraph DataStores ["Persistent Data Stores"]
+        direction TB
+        DS1[("DS-1: Users & Roles")]:::store
+        DS2[("DS-2: Campus Depts")]:::store
+        DS3[("DS-3: Clearances")]:::store
+        DS4[("DS-4: Approvals & Dues")]:::store
+        DS5[("DS-5: Grievances & SLA")]:::store
+        DS6[("DS-6: System Audit Logs")]:::store
     end
 
-    %% Stakeholder to Process Links
-    Student -->|"Auth Credentials"| P1
-    Student -->|"Apply for Clearance"| P2
-    Student -->|"File Grievance Ticket"| P4
-    P1 -->|"JWT Token"| Student
-    P2 -->|"Live Gating Status"| Student
-    P4 -->|"Grievance Updates"| Student
-    P5 -->|"Official PDF Certificate"| Student
+    %% Stakeholder to Process Interactions
+    E_Student -->|"Credentials / Apply"| P1
+    E_Student -->|"Clearance Request"| P2
+    E_Student -->|"File Dispute"| P4
+    P5 -->|"Official PDF Cert"| E_Student
 
-    Staff -->|"Auth Credentials"| P1
-    Staff -->|"Sign Gate / Record Dues"| P3
-    Staff -->|"Resolve Dispute"| P4
-    P1 -->|"JWT Token (Staff Scope)"| Staff
-    P3 -->|"Review Queue"| Staff
-    P4 -->|"Grievance Worklist"| Staff
+    E_Staff -->|"Review Liabilities"| P3
+    E_Staff -->|"Submit Resolution"| P4
 
-    Admin -->|"DAA Credentials"| P1
-    Admin -->|"Executive Override"| P3
-    Admin -->|"Trigger SLA Scan"| P4
-    Admin -->|"Query Analytics / Logs"| P6
-    P1 -->|"JWT Token (Admin Scope)"| Admin
-    P4 -->|"Escalated SLA Alerts"| Admin
-    P6 -->|"Campus Metrics & Logs"| Admin
+    E_Admin -->|"Executive Override"| P3
+    P4 -->|"Escalated Alerts"| E_Admin
+    P6 -->|"Analytics & Logs"| E_Admin
 
-    Verifier -->|"Verify Query (ID / Hash)"| P5
-    P5 -->|"Authenticity Record"| Verifier
+    E_Verifier -->|"Verification Query"| P5
+    P5 -->|"Authenticity Record"| E_Verifier
 
-    %% Process to Data Store Links
-    P1 <-->|"Verify Password Hash & Role"| DS1
-    P2 -->|"Read Active Facilities"| DS2
-    P2 <-->|"Check Duplicate & Insert Request"| DS3
-    P2 -->|"Initialize 5 Gate Approvals"| DS4
-    P3 <-->|"Validate Prerequisites, Mutate Status & Save HMAC"| DS4
-    P3 <-->|"Update Master Request Status"| DS3
-    P4 <-->|"Insert Tickets & Scan SLA Deadlines"| DS5
-    P4 -->|"Waive or Adjust Liabilities"| DS4
-    P5 <-->|"Check 5 Approved HMAC Seals"| DS4
-    P5 <-->|"Mint Cert ID & Hash Digest"| DS3
-    P6 <-->|"Append Immutable Audit Trail"| DS6
-    P6 -->|"Aggregate Analytics Metrics"| DS3
-    P6 -->|"Aggregate Analytics Metrics"| DS4
-    P6 -->|"Aggregate Analytics Metrics"| DS5
+    %% Process to Data Store Interactions
+    P1 <-->|"Verify Password"| DS1
+    P2 -->|"Read Facilities"| DS2
+    P2 <-->|"Create Request"| DS3
+    P2 -->|"Initialize Gates"| DS4
+    P3 <-->|"Attach HMAC Seal"| DS4
+    P3 <-->|"Update Status"| DS3
+    P4 <-->|"Manage Tickets"| DS5
+    P4 -->|"Waive / Adjust Dues"| DS4
+    P5 <-->|"Check 5 Seals"| DS4
+    P5 <-->|"Mint Cert ID"| DS3
+    P6 <-->|"Append Logs"| DS6
 ```
 
-### 2.2 Functional Subsystems Explanation (Processes 1.0 – 6.0)
+### Functional Subsystems Explanation (Processes 1 to 6)
 
-1. **Process 1.0: User Authentication & Role Authorization (`auth.py`, `security.py`)**
+1. **Process 1: User Authentication & Role Authorization (`auth.py`, `security.py`)**
    - **Function:** Authenticates inbound users against Bcrypt-salted password hashes, validates PEC institutional domains (`@pec.edu.in`), issues signed cryptographic JSON Web Tokens (JWT), and checks role claims (`STUDENT`, `STAFF`, `ADMIN`) to protect API routes.
    - **Inputs:** Raw email and plaintext password from Student, Staff, or Admin; stored hashes from `DS-1`.
    - **Outputs:** Signed Bearer JWT access tokens with encoded identity claims (`sub`, `role`, `exp`).
-2. **Process 2.0: Clearance Application & Gating Setup (`clearance.py`)**
+2. **Process 2: Clearance Application & Gating Setup (`clearance.py`)**
    - **Function:** Enforces the institutional single-active-request invariant, captures student degree milestone details, provisions the master clearance record in `DS-3`, and initializes 5 departmental approval records in `DS-4` (Gate 1 facilities set to `PENDING`; Gates 2 & 3 set to `WAITING_PREREQUISITE`).
    - **Inputs:** Clearance application packet from Student; active facility records from `DS-2`.
    - **Outputs:** Master clearance record in `DS-3`; 5 initialized approval rows in `DS-4`; audit event to `DS-6`.
-3. **Process 3.0: Departmental Review, Chain of Responsibility & HMAC Signing (`chain_of_responsibility.py`)**
+3. **Process 3: Departmental Review, Chain of Responsibility & HMAC Signing (`chain_of_responsibility.py`)**
    - **Function:** Orchestrates the multi-signatory clearance pipeline using the behavioral Chain of Responsibility design pattern. Enforces parallel reviews at Gate 1, sequential dependency barriers at Gate 2 and Gate 3, calculates keyed HMAC-SHA256 digital seals upon approval, handles DAA executive overrides, and mutates master clearance status.
    - **Inputs:** Staff decisions (`APPROVED` / `REJECTED`), itemized dues in INR (`₹`), DAA override commands; current approval states from `DS-4`.
    - **Outputs:** Cryptographic HMAC signature seals attached to `DS-4`; unlocked downstream gates; master status update in `DS-3`.
-4. **Process 4.0: Grievance Redressal & SLA Escalation Engine (`grievance.py`)**
+4. **Process 4: Grievance Redressal & SLA Escalation Engine (`grievance.py`)**
    - **Function:** Provides an institutional dispute mechanism for students contesting incorrect dues or missing records. Automatically assigns dynamic SLA deadlines based on ticket priority (`CRITICAL`: 4h, `HIGH`: 12h, `MEDIUM`: 24h, `LOW`: 48h). Scans for expired tickets and triggers automated escalation banners directly to the DAA dashboard.
    - **Inputs:** Student grievance filings; staff resolution decisions; periodic SLA scan pulses.
    - **Outputs:** Grievance records in `DS-5`; adjusted/waived dues in `DS-4`; real-time SLA breach alerts to Admin.
-5. **Process 5.0: Certificate Minting, PDF Rendering & Verification (`certificate.py`, `pdf_generator.py`)**
+5. **Process 5: Certificate Minting, PDF Rendering & Verification (`certificate.py`, `pdf_generator.py`)**
    - **Function:** Validates that all 5 departmental facilities have recorded `APPROVED` statuses with valid cryptographic HMAC seals. Unlocks the release of the student's ₹10,000 Caution Money refund, mints a permanent Certificate ID (`PEC-CLR-YYYY-XXXXX`), calculates a 64-character SHA-256 verification hash, generates an official vector PDF with letterhead, and serves tokenless public verifications.
    - **Inputs:** 5 valid approval records from `DS-4`; clearance record from `DS-3`; public verification queries.
    - **Outputs:** Minted certificate details in `DS-3`; printable binary PDF to Student; verification JSON to Verifier.
-6. **Process 6.0: Institutional Administration, Analytics & Audit (`admin.py`)**
+6. **Process 6: Institutional Administration, Analytics & Audit (`admin.py`)**
    - **Function:** Computes institutional clearance metrics (overall completion rates, average department review latency, clearance bottlenecks), and maintains an immutable append-only system audit log tracking every security and operational event.
    - **Inputs:** Internal lifecycle event signals; aggregate queries across `DS-3`, `DS-4`, and `DS-5`.
    - **Outputs:** Real-time campus analytics payloads and append-only audit entries in `DS-6`.
 
-### 2.3 Persistent Data Stores Explanation (DS-1 – DS-6)
+### Persistent Data Stores Explanation (DS-1 to DS-6)
 
 - **`DS-1: Users & Personas` (`users` table):** Stores user credentials, salted Bcrypt password hashes, personas (`STUDENT`, `STAFF`, `ADMIN`), student roll numbers (SIDs), and staff department assignments.
 - **`DS-2: Campus Departments` (`departments` table):** Institutional configuration of the 5 facilities (Library, Hostels, Sports, Labs, Accounts), gate classifications (Gate 1, 2, or 3), and positional head titles.
@@ -229,9 +225,9 @@ flowchart TB
 
 ## 3. Clearance Gating: Decision Table 1 & Decision Trees 1 & 2
 
-### 3.1 Decision Table 1: Multi-Gate Clearance Pipeline Matrix
+### Decision Table 1: Multi-Gate Clearance Pipeline Matrix
 
-This decision table formalizes the state transition and gating barrier rules enforced by the **Chain of Responsibility** engine (`Process 3.0`):
+This decision table formalizes the state transition and gating barrier rules enforced by the **Chain of Responsibility** engine (`Process 3`):
 
 | Rule ID | Gate 1 Status (Lib / Host / Sport) | Gate 2 Status (Dept Labs) | Gate 3 Status (Accounts) | DAA Override? | Action Target & Enforced State Transition |
 | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -245,7 +241,7 @@ This decision table formalizes the state transition and gating barrier rules enf
 | **R-108** | All `APPROVED` | `APPROVED` | `APPROVED` | No | **MASTER CLEARANCE GRANTED:** Mutate master status to `APPROVED`; mint Certificate ID & SHA-256 Digest. |
 | **R-109** | Any `REJECTED` | Any | Any | **Yes (DAA)** | **EXECUTIVE OVERRIDE:** Mark target department `APPROVED`; clear dues; log `ADMIN_OVERRIDE` in `DS-6`. |
 
-### 3.2 Decision Table 1 Explanation (Chain of Responsibility & Barriers)
+### Decision Table 1 Explanation (Chain of Responsibility & Barriers)
 
 1. **Gate 1 Parallel Independence (Rule R-101):** The three Gate 1 departments (Central Library, Hostels, Sports) operate concurrently. A rejection or delay in one does not block staff members in the other two from inspecting assets or recording sign-offs.
 2. **Sequential Dependency Barriers (Rules R-102 & R-106):** Gate 2 (Department Labs) cannot be reviewed until all three Gate 1 facilities are `APPROVED`. Any attempt by lab staff to sign off prematurely is rejected with HTTP `400 Bad Request`. Similarly, Gate 3 (Accounts) cannot be accessed until Gate 2 is fully cleared.
@@ -255,7 +251,7 @@ This decision table formalizes the state transition and gating barrier rules enf
 
 ---
 
-### 3.3 Decision Tree 1: Clearance Gating & Barrier Enforcement (Mermaid)
+### Decision Tree 1: Clearance Gating & Barrier Enforcement
 
 ```mermaid
 flowchart LR
@@ -291,7 +287,7 @@ flowchart LR
     end
 ```
 
-### 3.4 Decision Tree 1 Explanation
+### Decision Tree 1 Explanation
 
 Decision Tree 1 models the hierarchical execution flow across the three clearance gates:
 - **Phase 1 (Gate 1 Execution):** Initializes the three non-academic facilities concurrently. If any liability is found, the clearance halts with status `REJECTED`, prompting the student to pay or file a grievance. Only when all three facilities record `APPROVED` (or receive DAA override) does the pipeline advance.
@@ -300,7 +296,7 @@ Decision Tree 1 models the hierarchical execution flow across the three clearanc
 
 ---
 
-### 3.5 Decision Tree 2: Departmental Liability Assessment & HMAC Signing (Mermaid)
+### Decision Tree 2: Departmental Liability Assessment & HMAC Signing
 
 ```mermaid
 flowchart TD
@@ -318,11 +314,11 @@ flowchart TD
     DuesExist -- "No: All Records Clear" --> EnterClear["1. Set Dues Amount = ₹0.00<br/>2. Enter Clearance Remarks<br/>3. Select Action: APPROVED"]
     EnterClear --> GenHMAC["Compute Cryptographic HMAC-SHA256 Seal:<br/>HMAC(Secret_Key, staff_id + dept_code + request_id + timestamp)"]
     GenHMAC --> SaveApprove["Save to DS-4: status = APPROVED, due_amount = 0.00<br/>Attach digital_signature = SIG-v1:DEPT:hash24<br/>Log Event in DS-6: DEPT_APPROVED"]
-    SaveApprove --> CheckNext["Trigger Process 3.0: Evaluate Downstream Gate Unlocking"]
+    SaveApprove --> CheckNext["Trigger Process 3: Evaluate Downstream Gate Unlocking"]
     CheckNext --> StopApprove(["Department Clearance Finalized & Sealed"])
 ```
 
-### 3.6 Decision Tree 2 Explanation
+### Decision Tree 2 Explanation
 
 Decision Tree 2 details the internal micro-logic executed by an individual department staff reviewer:
 1. **Prerequisite Gate Introspection:** The system first evaluates whether all upstream prerequisite gates have been satisfied. If Gate 2 is attempted while Gate 1 is incomplete, the request is immediately rejected with HTTP `400 Bad Request`.
@@ -335,9 +331,9 @@ Decision Tree 2 details the internal micro-logic executed by an individual depar
 
 ## 4. Grievance Redressal: Decision Table 2 & Decision Tree 3
 
-### 4.1 Decision Table 2: Priority SLA Deadline & Escalation Matrix
+### Decision Table 2: Priority SLA Deadline & Escalation Matrix
 
-This decision table defines the dynamic Service Level Agreement (SLA) windows and automated escalation rules enforced by `Process 4.0`:
+This decision table defines the dynamic Service Level Agreement (SLA) windows and automated escalation rules enforced by `Process 4`:
 
 | Rule ID | Priority | Allowed SLA Window | Elapsed Time ($t$) | Reviewer Action | Enforced System Action & Ticket Mutation |
 | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -351,7 +347,7 @@ This decision table defines the dynamic Service Level Agreement (SLA) windows an
 | **R-208** | `LOW` | **48 Hours** | **$t >$ 48 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
 | **R-209** | Any | Any | Any | Staff/DAA registers resolution | Set `status = RESOLVED`, record `staff_response`, zero or adjust INR dues in `DS-4`, set `resolved_at = Now`. |
 
-### 4.2 Decision Table 2 Explanation (Dynamic SLA Timers & Rules)
+### Decision Table 2 Explanation (Dynamic SLA Timers & Rules)
 
 1. **Deterministic SLA Calculation:** Upon grievance filing, the engine computes an immutable deadline:
    $$\text{SLA Deadline} = \text{Created Timestamp} + \text{SLA Window}(\text{Priority})$$
@@ -365,7 +361,7 @@ This decision table defines the dynamic Service Level Agreement (SLA) windows an
 
 ---
 
-### 4.3 Decision Tree 3: Grievance Arbitration & Escalation (Mermaid)
+### Decision Tree 3: Grievance Arbitration & Escalation
 
 ```mermaid
 flowchart LR
@@ -398,7 +394,7 @@ flowchart LR
     end
 ```
 
-### 4.4 Decision Tree 3 Explanation
+### Decision Tree 3 Explanation
 
 Decision Tree 3 visually depicts the three phases of grievance lifecycle management:
 - **Phase 1 (Priority Classification):** The student submits a dispute ticket linked to an active clearance request and department. The system determines the SLA duration based on priority and persists the record in `DS-5`.
@@ -412,7 +408,7 @@ Decision Tree 3 visually depicts the three phases of grievance lifecycle managem
 
 ## 5. Role-Based Access Control: Decision Table 3 & Decision Tree 4
 
-### 5.1 Decision Table 3: RBAC Authorization Matrix
+### Decision Table 3: RBAC Authorization Matrix
 
 This decision table defines the role-based access permissions enforced by the API Gateway across all system routes:
 
@@ -431,7 +427,7 @@ This decision table defines the role-based access permissions enforced by the AP
 | **Download PDF Cert** | `GET /api/v1/certificate/download/{id}` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | DENY | `401 Unauthorized` |
 | **Public Verification** | `GET /api/v1/certificate/verify` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | Public Access |
 
-### 5.2 Decision Table 3 Explanation (Security Scopes & Gate Enforcement)
+### Decision Table 3 Explanation (Security Scopes & Gate Enforcement)
 
 1. **Student Least Privilege:** Students are strictly restricted to submitting clearance applications, reviewing their own pipeline progress, submitting grievance appeals, and downloading their finalized PDF certificate. Any attempt to access staff queues or administrative endpoints is blocked with HTTP `403 Forbidden`.
 2. **Departmental Tenant Isolation (`STAFF Own` vs `STAFF Other`):** Positional staff members are cryptographically bound to their designated facility (`department_id`). A Librarian can sign off only Library clearances; attempts to inspect or approve Hostel or Lab records are blocked with HTTP `403 Forbidden: Cross-department Sign-off Prohibited`.
@@ -440,13 +436,13 @@ This decision table defines the role-based access permissions enforced by the AP
 
 ---
 
-### 5.3 Decision Tree 4: API Gateway Authentication & Authorization (Mermaid)
+### Decision Tree 4: API Gateway Authentication & Authorization
 
 ```mermaid
 flowchart TD
     Req(["Incoming HTTP Request"]) --> CheckAuth{"Is Endpoint Public?"}
     
-    CheckAuth -- "Yes: /api/v1/certificate/verify" --> ServePublic["Process 5.0: Execute Verification without Auth Token"]
+    CheckAuth -- "Yes: /api/v1/certificate/verify" --> ServePublic["Process 5: Execute Verification without Auth Token"]
     CheckAuth -- "No: Protected Route" --> CheckHeader{"Authorization Bearer Header Present?"}
     
     CheckHeader -- "No Header" --> Reject401["Raise 401 Unauthorized: Credentials Missing"]
@@ -466,7 +462,7 @@ flowchart TD
     CheckDept -- "Yes || Role == ADMIN" --> AllowExecute["Authorization Succeeded: Execute Target Subsystem Process"]
 ```
 
-### 5.4 Decision Tree 4 Explanation
+### Decision Tree 4 Explanation
 
 Decision Tree 4 models the deterministic security decision pipeline applied to every inbound HTTP request by the API Gateway:
 1. **Public Route Evaluation:** Checks if the target URL is the tokenless verification endpoint (`/api/v1/certificate/verify`). If yes, the request bypasses token verification and executes directly.
