@@ -4,7 +4,7 @@
 **Institution:** Punjab Engineering College (Deemed to be University), Chandigarh  
 **Course:** Software Engineering  
 **Supervisor:** Dr. Rajesh Bhatia  
-**Authors:** Raghav Bhardwaj & Karan Jain (B.Tech CSE, Batch 2022–2026)  
+**Authors:** Raghav Bhardwaj & Karan Jain  
 **Notation:** Yourdon / De Marco — Circles = Processes, Rectangles = External Entities, Open Boxes = Data Stores  
 
 ---
