@@ -72,17 +72,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }}
     .mermaid svg {{
       max-width: 100% !important;
-      max-height: 520px !important;
       height: auto !important;
       display: block;
       margin: 0 auto;
     }}
-    .mermaid .nodeLabel, .mermaid .label {{
-      font-size: 13.5px !important;
-      font-weight: 500 !important;
+    .mermaid .nodeLabel, .mermaid .label, .mermaid text {{
+      font-size: 12px !important;
+      font-weight: 600 !important;
     }}
     table {{
-      font-size: 8pt !important;
+      font-size: 9pt !important;
       width: 100% !important;
       margin: 10px 0 !important;
       border-collapse: collapse;
@@ -90,10 +89,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       word-wrap: break-word !important;
     }}
     th, td {{
-      padding: 4px 5px !important;
+      padding: 6px 8px !important;
       border: 1px solid #d0d7de !important;
       word-break: normal !important;
-      line-height: 1.35 !important;
+      line-height: 1.4 !important;
       vertical-align: top !important;
     }}
     th {{
@@ -146,7 +145,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }}).then(() => {{
       document.querySelectorAll('.mermaid svg').forEach(svg => {{
         svg.removeAttribute('height');
-        svg.style.maxHeight = '520px';
         svg.style.width = '100%';
         svg.style.height = 'auto';
       }});
