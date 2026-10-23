@@ -5,7 +5,7 @@
 **Course:** Software Engineering  
 **Supervisor:** Dr. Rajesh Bhatia  
 **Authors:** Raghav Bhardwaj & Karan Jain (B.Tech CSE, Batch 2022–2026)  
-**Document Scope:** Level 0 (Context), Level 1 (Decomposition), Decision Tables, Decision Trees, and Detailed Process Explanations  
+**Document Scope:** Level 0 (Context), Level 1 (Decomposition), Core Decision Table, Core Decision Tree, and Detailed Process Explanations  
 
 ---
 
@@ -19,23 +19,11 @@
    - [Level 1 System Data Flow Diagram](#level-1-system-data-flow-diagram)
    - [Functional Subsystems Explanation (Processes 1 to 6)](#functional-subsystems-explanation-processes-1-to-6)
    - [Persistent Data Stores Explanation (DS-1 to DS-6)](#persistent-data-stores-explanation-ds-1-to-ds-6)
-3. [Clearance Gating: Decision Table 1 & Decision Trees 1 & 2](#3-clearance-gating-decision-table-1--decision-trees-1--2)
-   - [Decision Table 1: Multi-Gate Clearance Pipeline Matrix](#decision-table-1-multi-gate-clearance-pipeline-matrix)
-   - [Decision Table 1 Explanation (Chain of Responsibility & Barriers)](#decision-table-1-explanation-chain-of-responsibility--barriers)
-   - [Decision Tree 1: Clearance Gating & Barrier Enforcement](#decision-tree-1-clearance-gating--barrier-enforcement)
-   - [Decision Tree 1 Explanation](#decision-tree-1-explanation)
-   - [Decision Tree 2: Departmental Liability Assessment & HMAC Signing](#decision-tree-2-departmental-liability-assessment--hmac-signing)
-   - [Decision Tree 2 Explanation](#decision-tree-2-explanation)
-4. [Grievance Redressal: Decision Table 2 & Decision Tree 3](#4-grievance-redressal-decision-table-2--decision-tree-3)
-   - [Decision Table 2: Priority SLA Deadline & Escalation Matrix](#decision-table-2-priority-sla-deadline--escalation-matrix)
-   - [Decision Table 2 Explanation (Dynamic SLA Timers & Rules)](#decision-table-2-explanation-dynamic-sla-timers--rules)
-   - [Decision Tree 3: Grievance Arbitration & Escalation](#decision-tree-3-grievance-arbitration--escalation)
-   - [Decision Tree 3 Explanation](#decision-tree-3-explanation)
-5. [Role-Based Access Control: Decision Table 3 & Decision Tree 4](#5-role-based-access-control-decision-table-3--decision-tree-4)
-   - [Decision Table 3: RBAC Authorization Matrix](#decision-table-3-rbac-authorization-matrix)
-   - [Decision Table 3 Explanation (Security Scopes & Gate Enforcement)](#decision-table-3-explanation-security-scopes--gate-enforcement)
-   - [Decision Tree 4: API Gateway Authentication & Authorization](#decision-tree-4-api-gateway-authentication--authorization)
-   - [Decision Tree 4 Explanation](#decision-tree-4-explanation)
+3. [Clearance Pipeline Decision Logic: Table & Tree](#3-clearance-pipeline-decision-logic-table--tree)
+   - [Decision Table: Multi-Gate Clearance Pipeline Matrix](#decision-table-multi-gate-clearance-pipeline-matrix)
+   - [Decision Table Explanation (Chain of Responsibility & Barriers)](#decision-table-explanation-chain-of-responsibility--barriers)
+   - [Decision Tree: Clearance Gating & Barrier Enforcement](#decision-tree-clearance-gating--barrier-enforcement)
+   - [Decision Tree Explanation](#decision-tree-explanation)
 
 ---
 
@@ -223,9 +211,11 @@ flowchart LR
 
 ---
 
-## 3. Clearance Gating: Decision Table 1 & Decision Trees 1 & 2
+## 3. Clearance Pipeline Decision Logic: Table & Tree
 
-### Decision Table 1: Multi-Gate Clearance Pipeline Matrix
+The core algorithmic innovation of the engine is the **Multi-Gate Clearance Pipeline & Barrier Enforcement Logic**, implemented via the behavioral **Chain of Responsibility** pattern. Below are the definitive Decision Table and Decision Tree governing all pipeline transitions.
+
+### Decision Table: Multi-Gate Clearance Pipeline Matrix
 
 This decision table formalizes the state transition and gating barrier rules enforced by the **Chain of Responsibility** engine (`Process 3`):
 
@@ -241,7 +231,7 @@ This decision table formalizes the state transition and gating barrier rules enf
 | **R-108** | All `APPROVED` | `APPROVED` | `APPROVED` | No | **MASTER CLEARANCE GRANTED:** Mutate master status to `APPROVED`; mint Certificate ID & SHA-256 Digest. |
 | **R-109** | Any `REJECTED` | Any | Any | **Yes (DAA)** | **EXECUTIVE OVERRIDE:** Mark target department `APPROVED`; clear dues; log `ADMIN_OVERRIDE` in `DS-6`. |
 
-### Decision Table 1 Explanation (Chain of Responsibility & Barriers)
+### Decision Table Explanation (Chain of Responsibility & Barriers)
 
 1. **Gate 1 Parallel Independence (Rule R-101):** The three Gate 1 departments (Central Library, Hostels, Sports) operate concurrently. A rejection or delay in one does not block staff members in the other two from inspecting assets or recording sign-offs.
 2. **Sequential Dependency Barriers (Rules R-102 & R-106):** Gate 2 (Department Labs) cannot be reviewed until all three Gate 1 facilities are `APPROVED`. Any attempt by lab staff to sign off prematurely is rejected with HTTP `400 Bad Request`. Similarly, Gate 3 (Accounts) cannot be accessed until Gate 2 is fully cleared.
@@ -251,7 +241,7 @@ This decision table formalizes the state transition and gating barrier rules enf
 
 ---
 
-### Decision Tree 1: Clearance Gating & Barrier Enforcement
+### Decision Tree: Clearance Gating & Barrier Enforcement
 
 ```mermaid
 flowchart LR
@@ -287,186 +277,9 @@ flowchart LR
     end
 ```
 
-### Decision Tree 1 Explanation
+### Decision Tree Explanation
 
-Decision Tree 1 models the hierarchical execution flow across the three clearance gates:
+The Decision Tree visually traces the deterministic multi-gate clearance lifecycle:
 - **Phase 1 (Gate 1 Execution):** Initializes the three non-academic facilities concurrently. If any liability is found, the clearance halts with status `REJECTED`, prompting the student to pay or file a grievance. Only when all three facilities record `APPROVED` (or receive DAA override) does the pipeline advance.
 - **Phase 2 (Gate 2 Execution):** The automated engine advances Gate 2 from `WAITING` to `PENDING`. Academic computing/hardware labs verify asset returns. Approval seals the department record with an HMAC-SHA256 signature; rejection blocks further progress.
 - **Phase 3 (Gate 3 Execution):** Accounts Branch reconciles tuition, hostel, and fee accounts. Once approved, the ₹10,000 Caution Money refund is authorized, the master status becomes `APPROVED`, and the system generates the unique Certificate ID and public verification digest.
-
----
-
-### Decision Tree 2: Departmental Liability Assessment & HMAC Signing
-
-```mermaid
-flowchart TD
-    ReviewStart(["Department Staff Opens Student Review"]) --> CheckPrereq{"Are Upstream Gates Satisfied?"}
-    
-    CheckPrereq -- "No" --> RejectPrereq["Raise 400 Bad Request: Prerequisite Gate Dependency Incomplete"]
-    CheckPrereq -- "Yes" --> InspectAssets["Staff Inspects Physical Asset Returns<br/>Library Books / Hostel Room Keys / Sports Equipment / Lab Kits"]
-    
-    InspectAssets --> DuesExist{"Outstanding Liabilities Found?"}
-    
-    DuesExist -- "Yes: Unreturned Assets or Fines" --> EnterDues["1. Enter Dues Amount in INR: ₹ > 0.00<br/>2. Enter Itemized Positional Remarks<br/>3. Select Action: REJECTED"]
-    EnterDues --> SaveReject["Save to DS-4: status = REJECTED, due_amount = ₹X.XX<br/>Set digital_signature = NULL<br/>Update DS-3: overall_status = REJECTED<br/>Log Event in DS-6: DEPT_REJECTED"]
-    SaveReject --> StopReject(["Clearance Blocked Pending Settlement / Grievance"])
-    
-    DuesExist -- "No: All Records Clear" --> EnterClear["1. Set Dues Amount = ₹0.00<br/>2. Enter Clearance Remarks<br/>3. Select Action: APPROVED"]
-    EnterClear --> GenHMAC["Compute Cryptographic HMAC-SHA256 Seal:<br/>HMAC(Secret_Key, staff_id + dept_code + request_id + timestamp)"]
-    GenHMAC --> SaveApprove["Save to DS-4: status = APPROVED, due_amount = 0.00<br/>Attach digital_signature = SIG-v1:DEPT:hash24<br/>Log Event in DS-6: DEPT_APPROVED"]
-    SaveApprove --> CheckNext["Trigger Process 3: Evaluate Downstream Gate Unlocking"]
-    CheckNext --> StopApprove(["Department Clearance Finalized & Sealed"])
-```
-
-### Decision Tree 2 Explanation
-
-Decision Tree 2 details the internal micro-logic executed by an individual department staff reviewer:
-1. **Prerequisite Gate Introspection:** The system first evaluates whether all upstream prerequisite gates have been satisfied. If Gate 2 is attempted while Gate 1 is incomplete, the request is immediately rejected with HTTP `400 Bad Request`.
-2. **Physical Asset Inspection:** Staff checks institutional physical inventory (library books, hostel room equipment, sports kits, lab microcontrollers/oscilloscopes).
-3. **Liability Branching:**
-   - **Liability Detected:** Staff inputs the unpaid fine in INR (`₹ > 0.00`) and explanatory remarks, selecting `REJECTED`. The system persists the liability in `DS-4`, clears any existing signature, sets the overall clearance status in `DS-3` to `REJECTED`, and logs the rejection in `DS-6`.
-   - **All Clear:** Staff sets dues to `₹0.00` and selects `APPROVED`. The system computes a cryptographic HMAC-SHA256 seal (`SIG-v1:<DEPT>:<HASH>`) using the server secret key, staff identity, department code, request ID, and timestamp. The digital seal is attached to `DS-4`, and the downstream gating evaluation engine is triggered.
-
----
-
-## 4. Grievance Redressal: Decision Table 2 & Decision Tree 3
-
-### Decision Table 2: Priority SLA Deadline & Escalation Matrix
-
-This decision table defines the dynamic Service Level Agreement (SLA) windows and automated escalation rules enforced by `Process 4`:
-
-| Rule ID | Priority | Allowed SLA Window | Elapsed Time ($t$) | Reviewer Action | Enforced System Action & Ticket Mutation |
-| :---: | :---: | :---: | :---: | :---: | :--- |
-| **R-201** | `CRITICAL` | **4 Hours** | $t \le$ 4 Hours | Pending review | Maintain active countdown timer (`status = OPEN`, `is_escalated = False`). |
-| **R-202** | `CRITICAL` | **4 Hours** | **$t >$ 4 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
-| **R-203** | `HIGH` | **12 Hours** | $t \le$ 12 Hours | Pending review | Maintain active countdown timer (`status = OPEN`, `is_escalated = False`). |
-| **R-204** | `HIGH` | **12 Hours** | **$t >$ 12 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
-| **R-205** | `MEDIUM` | **24 Hours** | $t \le$ 24 Hours | Pending review | Maintain active countdown timer (`status = OPEN`, `is_escalated = False`). |
-| **R-206** | `MEDIUM` | **24 Hours** | **$t >$ 24 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
-| **R-207** | `LOW` | **48 Hours** | $t \le$ 48 Hours | Pending review | Maintain active countdown timer (`status = OPEN`, `is_escalated = False`). |
-| **R-208** | `LOW` | **48 Hours** | **$t >$ 48 Hours** | None taken | **TRIGGER AUTO-ESCALATION:** Flag ticket for DAA; log breach; set `status = ESCALATED`, `is_escalated = True`. |
-| **R-209** | Any | Any | Any | Staff/DAA registers resolution | Set `status = RESOLVED`, record `staff_response`, zero or adjust INR dues in `DS-4`, set `resolved_at = Now`. |
-
-### Decision Table 2 Explanation (Dynamic SLA Timers & Rules)
-
-1. **Deterministic SLA Calculation:** Upon grievance filing, the engine computes an immutable deadline:
-   $$\text{SLA Deadline} = \text{Created Timestamp} + \text{SLA Window}(\text{Priority})$$
-   - `CRITICAL` (Immediate degree hold / convocation emergency): **4 Hours**
-   - `HIGH` (Disputed fee / scholarship block): **12 Hours**
-   - `MEDIUM` (Hostel mess bill / sports equipment dispute): **24 Hours**
-   - `LOW` (General documentation inquiry): **48 Hours**
-2. **Active Countdown Monitoring (Rules R-201, R-203, R-205, R-207):** While the elapsed time $t$ remains within the allowable window, the ticket remains in `OPEN` status, displaying a live countdown badge in the reviewing staff member's queue.
-3. **Automated SLA Breach Escalation (Rules R-202, R-204, R-206, R-208):** If the deadline lapses without staff action ($t > \text{SLA Window}$), the background engine automatically mutates the ticket status to `ESCALATED`, sets `is_escalated = True`, logs an `SLA_BREACH_ESCALATED` event in `DS-6`, and posts an urgent notification banner directly to the Dean Academic Affairs dashboard.
-4. **Resolution Settlement (Rule R-209):** When an authorized staff official or the DAA registers a written decision, the ticket status updates to `RESOLVED`, the timestamp `resolved_at` is fixed, any disputed liability in `DS-4` is adjusted or waived, and the clearance gating engine re-evaluates student eligibility.
-
----
-
-### Decision Tree 3: Grievance Arbitration & Escalation
-
-```mermaid
-flowchart LR
-    subgraph S1 ["1. Priority Window Assignment"]
-        direction TB
-        T_Start(["Student Files Grievance"]) --> T_Prio{"Select Priority"}
-        T_Prio -- "CRITICAL" --> T_4h["Set Window: 4 Hours"]
-        T_Prio -- "HIGH" --> T_12h["Set Window: 12 Hours"]
-        T_Prio -- "MEDIUM" --> T_24h["Set Window: 24 Hours"]
-        T_Prio -- "LOW" --> T_48h["Set Window: 48 Hours"]
-        T_4h & T_12h & T_24h & T_48h --> T_Store["Store Ticket in DS-5: status=OPEN<br/>Start Active Countdown Timer"]
-    end
-
-    subgraph S2 ["2. Department Review"]
-        direction TB
-        T_Store --> T_Review{"Review within SLA Deadline?"}
-        T_Review -- "Yes: Action Taken" --> T_Decide{"Staff Decision?"}
-        T_Decide -- "Accepted (Due Erroneous)" --> T_Waive["Waive / Adjust Due to ₹0.00 in DS-4<br/>Enter Justification"]
-        T_Decide -- "Rejected (Due Legitimate)" --> T_Retain["Retain Due in DS-4<br/>Reaffirm Dept Rejection"]
-        T_Waive & T_Retain --> T_Close["Set DS-5: status=RESOLVED<br/>Log Event in DS-6"]
-    end
-
-    subgraph S3 ["3. SLA Breach Escalation"]
-        direction TB
-        T_Review -- "No: SLA Lapses" --> T_Breach["Engine Flags SLA Breach<br/>DS-5: status=ESCALATED, is_escalated=True<br/>Push Alert to DAA Dashboard"]
-        T_Breach --> T_DAA{"DAA Arbitration Decision"}
-        T_DAA -- "Override Dept" --> T_DAAOver["DAA Waives Due & Sets Gate APPROVED<br/>Logs ADMIN_OVERRIDE in DS-6"] --> T_Close
-        T_DAA -- "Uphold Dept" --> T_DAAUphold["Student Directed to Settle Due"] --> T_Close
-        T_Close --> T_Done(["Grievance Closed"])
-    end
-```
-
-### Decision Tree 3 Explanation
-
-Decision Tree 3 visually depicts the three phases of grievance lifecycle management:
-- **Phase 1 (Priority Classification):** The student submits a dispute ticket linked to an active clearance request and department. The system determines the SLA duration based on priority and persists the record in `DS-5`.
-- **Phase 2 (Timely Staff Review):** If staff resolves the ticket before the SLA expires:
-  - *Dispute Accepted:* Staff reduces the liability in `DS-4` to `₹0.00`, provides justification, and updates clearance eligibility.
-  - *Dispute Rejected:* Staff reaffirms the legitimacy of the fine and provides policy references. The due is retained.
-  - In both outcomes, the ticket moves to `RESOLVED` and is logged in `DS-6`.
-- **Phase 3 (Breach & Executive Intervention):** If staff fails to act within the SLA window, the engine flags a breach, mutates the ticket to `ESCALATED`, and surfaces the dispute on the DAA executive dashboard. The DAA can either issue an executive override or direct the student to settle the dues.
-
----
-
-## 5. Role-Based Access Control: Decision Table 3 & Decision Tree 4
-
-### Decision Table 3: RBAC Authorization Matrix
-
-This decision table defines the role-based access permissions enforced by the API Gateway across all system routes:
-
-| Action / Operation | API Route Endpoint | `STUDENT` | `STAFF` (Own Dept) | `STAFF` (Other Dept) | `ADMIN` (DAA) | `PUBLIC` | Enforced Breach Error |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Apply for Clearance** | `POST /api/v1/clearance/apply` | **ALLOW** | DENY | DENY | DENY | DENY | `403 Forbidden` |
-| **View My Pipeline** | `GET /api/v1/clearance/my-requests` | **ALLOW** | DENY | DENY | DENY | DENY | `401 / 403` |
-| **View Staff Queue** | `GET /api/v1/clearance/staff/queue` | DENY | **ALLOW** | DENY | **ALLOW** | DENY | `403 Forbidden` |
-| **Sign Department Gate**| `POST /api/v1/clearance/staff/decision/{id}` | DENY | **ALLOW** | DENY | **ALLOW** | DENY | `403 Forbidden` |
-| **File Grievance Ticket**| `POST /api/v1/grievance` | **ALLOW** | DENY | DENY | DENY | DENY | `403 Forbidden` |
-| **Resolve Grievance** | `POST /api/v1/grievance/{id}/resolve` | DENY | **ALLOW** | DENY | **ALLOW** | DENY | `403 Forbidden` |
-| **Trigger SLA Scan** | `POST /api/v1/grievance/trigger-sla-check` | DENY | **ALLOW** | **ALLOW** | **ALLOW** | DENY | `403 Forbidden` |
-| **View Campus Analytics**| `GET /api/v1/admin/analytics` | DENY | **ALLOW** | **ALLOW** | **ALLOW** | DENY | `403 Forbidden` |
-| **View System Audit Logs**| `GET /api/v1/admin/audit-logs` | DENY | DENY | DENY | **ALLOW** | DENY | `403 Forbidden` |
-| **Execute Admin Override**| `POST /api/v1/admin/clearance/{id}/override` | DENY | DENY | DENY | **ALLOW** | DENY | `403 Forbidden` |
-| **Download PDF Cert** | `GET /api/v1/certificate/download/{id}` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | DENY | `401 Unauthorized` |
-| **Public Verification** | `GET /api/v1/certificate/verify` | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | **ALLOW** | Public Access |
-
-### Decision Table 3 Explanation (Security Scopes & Gate Enforcement)
-
-1. **Student Least Privilege:** Students are strictly restricted to submitting clearance applications, reviewing their own pipeline progress, submitting grievance appeals, and downloading their finalized PDF certificate. Any attempt to access staff queues or administrative endpoints is blocked with HTTP `403 Forbidden`.
-2. **Departmental Tenant Isolation (`STAFF Own` vs `STAFF Other`):** Positional staff members are cryptographically bound to their designated facility (`department_id`). A Librarian can sign off only Library clearances; attempts to inspect or approve Hostel or Lab records are blocked with HTTP `403 Forbidden: Cross-department Sign-off Prohibited`.
-3. **Executive Scope (`ADMIN` / DAA):** The DAA possesses complete operational visibility, including campus-wide analytical dashboards, append-only system audit trails, and executive override endpoints (`POST /api/v1/admin/clearance/{id}/override`).
-4. **Tokenless Public Access:** The certificate verification endpoint (`GET /api/v1/certificate/verify`) requires zero authentication tokens, allowing external employers and universities to independently verify credentials using Certificate IDs or SHA-256 hash digests.
-
----
-
-### Decision Tree 4: API Gateway Authentication & Authorization
-
-```mermaid
-flowchart TD
-    Req(["Incoming HTTP Request"]) --> CheckAuth{"Is Endpoint Public?"}
-    
-    CheckAuth -- "Yes: /api/v1/certificate/verify" --> ServePublic["Process 5: Execute Verification without Auth Token"]
-    CheckAuth -- "No: Protected Route" --> CheckHeader{"Authorization Bearer Header Present?"}
-    
-    CheckHeader -- "No Header" --> Reject401["Raise 401 Unauthorized: Credentials Missing"]
-    CheckHeader -- "Header Present" --> DecodeJWT{"Decode JWT: Signature Valid && Exp > Now?"}
-    
-    DecodeJWT -- "Invalid or Expired" --> Reject401Expired["Raise 401 Unauthorized: Invalid or Expired Token"]
-    DecodeJWT -- "Valid Token" --> ExtractUser["Fetch User Record from DS-1<br/>Extract sub: user_id, role: UserRole"]
-    
-    ExtractUser --> CheckRouteRole{"Does Route Allow Extracted UserRole?"}
-    
-    CheckRouteRole -- "Student Route: Role != STUDENT" --> Reject403S["Raise 403 Forbidden: Student Privileges Required"]
-    CheckRouteRole -- "Admin Route: Role != ADMIN" --> Reject403A["Raise 403 Forbidden: Admin Privileges Required"]
-    CheckRouteRole -- "Staff Route: Role not in (STAFF, ADMIN)" --> Reject403St["Raise 403 Forbidden: Staff Privileges Required"]
-    
-    CheckRouteRole -- "Staff Role Verified" --> CheckDept{"Is Staff Assigned to Target Department?"}
-    CheckDept -- "No && Role != ADMIN" --> Reject403Dept["Raise 403 Forbidden: Cross-department Sign-off Prohibited"]
-    CheckDept -- "Yes || Role == ADMIN" --> AllowExecute["Authorization Succeeded: Execute Target Subsystem Process"]
-```
-
-### Decision Tree 4 Explanation
-
-Decision Tree 4 models the deterministic security decision pipeline applied to every inbound HTTP request by the API Gateway:
-1. **Public Route Evaluation:** Checks if the target URL is the tokenless verification endpoint (`/api/v1/certificate/verify`). If yes, the request bypasses token verification and executes directly.
-2. **Header & Token Introspection:** For all protected routes, verifies that the `Authorization: Bearer <token>` header exists. If absent, halts with HTTP `401 Unauthorized: Credentials Missing`.
-3. **Cryptographic Validation:** Decodes the JWT, verifies the HMAC-SHA256 signature against the server secret key, and ensures `exp > current_timestamp`. Expired or tampered tokens return HTTP `401 Unauthorized: Invalid or Expired Token`.
-4. **Role Authority Check:** Compares the token's `role` claim against the route's declared role requirements (`STUDENT`, `STAFF`, `ADMIN`). Mismatched roles return HTTP `403 Forbidden`.
-5. **Departmental Scope Validation:** For staff actions (reviewing clearance or resolving grievances), verifies that the staff member's `department_id` matches the target record. Cross-department actions are blocked with HTTP `403 Forbidden`, while DAA administrators bypass this restriction. Once all gates pass, request execution proceeds.
