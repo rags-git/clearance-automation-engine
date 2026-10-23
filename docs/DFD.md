@@ -40,12 +40,12 @@ flowchart TD
 
 ### Level 0 Explanation
 
-| External Entity | Role | Data Flows In | Data Flows Out |
+| External Entity | Role | What It Sends In | What It Receives Out |
 |:---|:---|:---|:---|
-| **Student** | Degree candidate applying for clearance | Clearance application, grievance filings | Live pipeline status, official PDF certificate |
-| **Positional Staff** | Departmental signatories (Library, Hostels, Sports, Labs, Accounts) | Approval/rejection decisions with dues in ₹ | Review queue, grievance worklist |
-| **Dean Academic Affairs** | Executive override authority, monitors SLA | Override orders, SLA trigger commands | Campus analytics, SLA breach alerts, audit logs |
-| **Public Verifier** | Employer or university checking certificate | Certificate ID or SHA-256 hash | Authenticity JSON with HMAC seals |
+| **Student** | Final-year student seeking clearance | Login details, clearance application, grievance complaints | Live clearance status, official PDF certificate |
+| **Positional Staff** | Officials from Library, Hostels, Sports, Labs, and Accounts | Department approvals/rejections and any pending fine amounts (₹) | List of students waiting for review, grievance tickets to resolve |
+| **Dean Academic Affairs** | Head administrator overlooking campus clearances | Special approval override commands, grievance checks | Overall college clearance reports, alerts for delayed grievances |
+| **Public Verifier** | Outside company, university, or background checker | Student Certificate ID or QR/Hash code | Instant online confirmation whether certificate is genuine |
 
 ---
 
@@ -115,25 +115,25 @@ flowchart LR
 
 ### Process Descriptions
 
-| Process | Name | Core Function |
+| Process | Name | What It Does (Simple Explanation) |
 |:---:|:---|:---|
-| **P1** | Authentication & RBAC | Validates credentials against Bcrypt hashes in DS-1; issues signed JWT with role claims (STUDENT / STAFF / ADMIN). |
-| **P2** | Clearance Setup | Enforces single-active-request rule; creates master clearance record in DS-3; initialises 5 gate approval rows in DS-4 (Gate 1 → PENDING, Gates 2 & 3 → WAITING). |
-| **P3** | Multi-Gate Review & HMAC | Orchestrates Chain of Responsibility pipeline; enforces sequential gate barriers; computes HMAC-SHA256 seals on approval; handles DAA overrides. |
-| **P4** | Grievance & SLA Engine | Accepts student dispute filings; assigns dynamic SLA deadlines (CRITICAL 4 h, HIGH 12 h, MEDIUM 24 h, LOW 48 h); auto-escalates breached tickets to DAA. |
-| **P5** | Certificate Minting | Verifies all 5 HMAC seals; unlocks ₹10,000 Caution Money refund; mints unique Certificate ID; generates SHA-256 public digest; produces official PDF. |
-| **P6** | Analytics & Audit | Records every security and operational event to the append-only DS-6 audit log; computes campus-wide clearance metrics. |
+| **P1** | User Login & Access Control | Checks student and staff passwords securely; issues a secure digital login token with their role (Student, Staff, or Admin). |
+| **P2** | Clearance Application Setup | Lets a student submit one active clearance application; creates the application record and sets up the 5 department checklist rows. |
+| **P3** | Multi-Gate Department Review | Sends applications through Gate 1 (Library, Hostels, Sports), Gate 2 (Labs), and Gate 3 (Accounts) in order; saves digital signatures when approved. |
+| **P4** | Grievance & Helpdesk Engine | Helps students file complaints if fines or rejections are wrong; sets a resolution deadline and alerts the Dean if delayed. |
+| **P5** | Certificate Generation & Verification | Confirms all 5 departments approved; approves release of ₹10,000 caution money refund; generates the final downloadable PDF certificate. |
+| **P6** | Reports & Activity Audit Log | Keeps a tamper-proof record of every action (approvals, logins, overrides) and calculates campus clearance statistics for the Dean. |
 
 ### Data Store Descriptions
 
-| Store | Table | Contents |
+| Store | Table | What It Stores (Simple Explanation) |
 |:---:|:---|:---|
-| **DS-1** | `users` | Credentials, Bcrypt hashes, role, SID, department assignment. |
-| **DS-2** | `departments` | 5 facility records — gate classification, head title, department code. |
-| **DS-3** | `clearance_requests` | Master clearance record — student ref, status, certificate ID, SHA-256 digest. |
-| **DS-4** | `department_approvals` | Per-gate rows — status (WAITING / PENDING / APPROVED / REJECTED), due amount (₹), HMAC seal. |
-| **DS-5** | `grievances` | Dispute tickets — priority, SLA timestamp, escalation flag, staff response. |
-| **DS-6** | `audit_logs` | Immutable append-only log — actor, action verb, entity, UTC microsecond timestamp. |
+| **DS-1** | `users` | User accounts, encrypted passwords, roles (Student, Staff, Admin), and student roll numbers. |
+| **DS-2** | `departments` | List of college departments (Library, Hostel, Sports, Labs, Accounts) and their gate order. |
+| **DS-3** | `clearance_requests` | Master clearance records with overall status (Pending, Approved, Rejected) and certificate details. |
+| **DS-4** | `department_approvals` | Approval status for each department, unpaid dues/fines in ₹, and digital approval seals. |
+| **DS-5** | `grievances` | Student complaint tickets, priority levels, resolution deadlines, and staff responses. |
+| **DS-6** | `audit_logs` | Security history log recording who did what action, to which record, and at what exact time. |
 
 ---
 
