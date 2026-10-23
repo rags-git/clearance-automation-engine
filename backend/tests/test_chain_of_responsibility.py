@@ -281,4 +281,3 @@ def test_admin_override_on_rejected_department(db_session):
     assert admin_appr.status == ApprovalStatusEnum.APPROVED
     assert admin_appr.due_amount == 0.0
     assert admin_appr.digital_signature is not None
-

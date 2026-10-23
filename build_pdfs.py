@@ -142,7 +142,9 @@ DOCS = [
     ("docs/DFD.md", "docs/DFD.pdf", "Data Flow Diagrams (DFD) & Data Dictionary - Yourdon / Gane & Sarson", False),
     ("docs/UML_DIAGRAMS.md", "docs/UML_DIAGRAMS.pdf", "UML Structural & Behavioral Models - OMG UML 2.5", False),
     ("docs/DESIGN_PATTERNS.md", "docs/DESIGN_PATTERNS.pdf", "Chain of Responsibility Design Pattern Report", False),
-    ("docs/STATIC_CODE_QUALITY.md", "docs/STATIC_CODE_QUALITY.pdf", "Static Code Quality & Flake8 Analysis Report", False)
+    ("docs/STATIC_CODE_QUALITY.md", "docs/STATIC_CODE_QUALITY.pdf", "Static Code Quality & Flake8 Analysis Report", False),
+    ("docs/SDLC_PROCESS_MODEL.md", "docs/SDLC_PROCESS_MODEL.pdf", "Software Development Life Cycle (SDLC) & Process Model Specification", False),
+    ("docs/SOFTWARE_TEST_PLAN.md", "docs/SOFTWARE_TEST_PLAN.pdf", "Software Test Plan (STP) & Verification Specification - IEEE Std 829-2008", False)
 ]
 
 def render_doc(md_path, pdf_path, title, has_cover):
@@ -168,10 +170,17 @@ def render_doc(md_path, pdf_path, title, has_cover):
     with open(tmp_html, "w", encoding="utf-8") as f:
         f.write(html_content)
 
+    import tempfile
+    ud_dir = tempfile.mkdtemp(prefix="chrome_ud_")
+
     cmd = [
         CHROME_BIN,
         "--headless",
         "--disable-gpu",
+        "--no-sandbox",
+        "--disable-crash-reporter",
+        f"--crash-dumps-dir={ud_dir}",
+        f"--user-data-dir={ud_dir}",
         "--no-pdf-header-footer",
         "--allow-file-access-from-files",
         "--run-all-compositor-stages-before-draw",

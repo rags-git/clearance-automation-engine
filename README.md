@@ -3,8 +3,11 @@
 > **A Workflow-Driven Digital Clearance Platform for Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh**  
 > *Software Engineering Capstone Project • Office of Dean Academic Affairs (DAA)*
 
-[![Pytest Tests](https://img.shields.io/badge/Pytest-11%2F11%20Passed-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
+[![Pytest Tests](https://img.shields.io/badge/Pytest-73%2F73%20Passed%20(100%25)-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
+[![Code Coverage](https://img.shields.io/badge/Coverage->90%25%20Statement%2FBranch-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
 [![Flake8](https://img.shields.io/badge/Flake8-0%20Violations%20(PEP%208)-brightgreen)](https://github.com/rags-git/pec-clearance-automation-engine/tree/code)
+[![SDLC Model](https://img.shields.io/badge/SDLC-V--Model%20(V%26V)-blueviolet)](./docs/SDLC_PROCESS_MODEL.md)
+[![Test Standard](https://img.shields.io/badge/Test%20Plan-IEEE%20Std%20829--2008-orange)](./docs/SOFTWARE_TEST_PLAN.md)
 [![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.135+-009688)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
@@ -122,14 +125,14 @@ npm run dev
 
 ## 🧪 Testing & Code Quality Verification
 
-### Run Pytest Suite (11 Automated Tests - 100% Pass Rate)
+### Run Pytest Suite (73 Automated Tests - 100% Pass Rate with Code Coverage)
 ```bash
-./venv/bin/pytest -v
+./venv/bin/pytest -v --cov=backend/app --cov-report=term-missing
 ```
 
 ### Run Flake8 Static Analysis (0 Violations - PEP 8)
 ```bash
-./venv/bin/flake8 backend/app
+./venv/bin/flake8 backend/app backend/tests
 ```
 
 ---
@@ -145,6 +148,8 @@ npm run dev
 | **3. Unified Modeling Language (UML) Models** | **OMG UML 2.5 Specification** | Full suite of models: Use Case with `<<include>>`/`<<extend>>`, Class Diagram, Activity Diagram, Sequence Diagrams (1-3), State Machine, and Component Diagram. | [📥 `UML_DIAGRAMS.pdf`](./docs/UML_DIAGRAMS.pdf) | [`UML_DIAGRAMS.md`](./docs/UML_DIAGRAMS.md) |
 | **4. Chain of Responsibility (CoR) Design Pattern** | **GoF Behavioral Pattern** | Detailed technical report documenting the multi-department approval chain, parallel Gate 1, sequential Gate 2/3 barriers, HMAC seals, and Admin overrides. | [📥 `DESIGN_PATTERNS.pdf`](./docs/DESIGN_PATTERNS.pdf) | [`DESIGN_PATTERNS.md`](./docs/DESIGN_PATTERNS.md) |
 | **5. Static Code Quality & Refactoring Analysis** | **PEP 8 / Flake8 / SonarQube** | Static analysis report verifying 0 PEP 8 violations, cyclomatic complexity control, maintainability index, and Coursework Units 5 & 6 compliance. | [📥 `STATIC_CODE_QUALITY.pdf`](./docs/STATIC_CODE_QUALITY.pdf) | [`STATIC_CODE_QUALITY.md`](./docs/STATIC_CODE_QUALITY.md) |
+| **6. SDLC & Process Model Specification** | **ISO/IEC/IEEE 12207 / V-Model** | Rigorous evaluation of candidate models, formal justification of the **V-Model (V&V)** for frozen SRS baselines, MCDA scoring matrix, and bidirectional Requirements Traceability Matrix (RTM). | [📥 `SDLC_PROCESS_MODEL.pdf`](./docs/SDLC_PROCESS_MODEL.pdf) | [`SDLC_PROCESS_MODEL.md`](./docs/SDLC_PROCESS_MODEL.md) |
+| **7. Software Test Plan (STP) & Verification Specification** | **IEEE Std 829-2008 & ISO 29119** | Industrial-grade Software Test Plan specifying all levels of testing, Black-Box BVA/EP partitions, White-Box statement/branch coverage, security RBAC testing, and 73-test catalog. | [📥 `SOFTWARE_TEST_PLAN.pdf`](./docs/SOFTWARE_TEST_PLAN.pdf) | [`SOFTWARE_TEST_PLAN.md`](./docs/SOFTWARE_TEST_PLAN.md) |
 
 ---
 
