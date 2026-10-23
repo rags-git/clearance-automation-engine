@@ -23,7 +23,7 @@ flowchart TD
     DAA["DEAN ACADEMIC AFFAIRS\n(Executive Admin / DAA)"]:::entity
     VERIFIER["PUBLIC VERIFIER\n(Employer / University)"]:::entity
 
-    SYS(["PEC CLEARANCE\nAUTOMATION ENGINE"]):::system
+    SYS(("PEC CLEARANCE<br/>AUTOMATION<br/>ENGINE")):::system
 
     STUDENT -->|"Clearance Application\n+ Grievance Filing"| SYS
     SYS -->|"Pipeline Status\n+ PDF Certificate"| STUDENT
