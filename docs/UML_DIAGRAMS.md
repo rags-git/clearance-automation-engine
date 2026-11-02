@@ -77,15 +77,19 @@ flowchart LR
 
 ## 2. Static Structural Model: Class Diagram
 
-The class diagram captures the object-oriented domain entities, the Chain of Responsibility behavioral pattern handlers, cryptographic helper utilities, and service orchestration layers:
+The static structural architecture of the system is divided into two focused, high-contrast class diagrams to ensure maximum visual clarity and readability:
+1. **Core Domain Entity Model** (relational data models, attributes, methods, associations, and multiplicities)
+2. **Behavioral Chain of Responsibility & Services Model** (handler hierarchy, gate verification, and service orchestration)
+
+### 2.1 Core Domain Entity Class Diagram
 
 ```mermaid
 classDiagram
-    %% Core Domain Models
+    direction TB
+
     class User {
         +int id
         +string email
-        +string hashed_password
         +string full_name
         +string role
         +string sid
@@ -109,13 +113,11 @@ classDiagram
         +int student_id
         +string academic_year
         +int semester
-        +string reason
         +string status
         +string certificate_id
         +string certificate_hash
         +datetime completion_date
         +datetime created_at
-        +datetime updated_at
     }
 
     class DepartmentApproval {
@@ -127,9 +129,6 @@ classDiagram
         +string remarks
         +string digital_signature
         +datetime signed_at
-        +int signed_by_user_id
-        +datetime created_at
-        +datetime updated_at
     }
 
     class Grievance {
@@ -138,15 +137,12 @@ classDiagram
         +int department_id
         +int clearance_request_id
         +string subject
-        +string description
         +string priority
         +float disputed_amount
         +string status
         +datetime sla_deadline
         +bool is_escalated
         +datetime resolved_at
-        +string resolution_notes
-        +datetime created_at
     }
 
     class AuditLog {
@@ -159,66 +155,7 @@ classDiagram
         +datetime timestamp
     }
 
-    %% Chain of Responsibility Classes
-    class DepartmentHandler {
-        <<abstract>>
-        #DepartmentHandler _next_handler
-        +set_next(handler: DepartmentHandler) DepartmentHandler
-        +handle(request: ClearanceRequest, dept_code: string, user: User, action: string, remarks: string, dues: float) dict*
-        #verify_prerequisites(request: ClearanceRequest, db: Session) bool*
-        #generate_signature(staff_id: int, dept_code: string, req_id: int) string
-    }
-
-    class LibraryHandler {
-        +gate_number: 1
-        #verify_prerequisites(request, db) bool
-    }
-
-    class HostelHandler {
-        +gate_number: 1
-        #verify_prerequisites(request, db) bool
-    }
-
-    class SportsComplexHandler {
-        +gate_number: 1
-        #verify_prerequisites(request, db) bool
-    }
-
-    class DepartmentLabsHandler {
-        +gate_number: 2
-        #verify_prerequisites(request, db) bool
-    }
-
-    class AccountsHandler {
-        +gate_number: 3
-        #verify_prerequisites(request, db) bool
-    }
-
-    class ClearanceChainBuilder {
-        +build_chain() DepartmentHandler
-        +refresh_pipeline_gates(request: ClearanceRequest, db: Session) void
-    }
-
-    %% Service Providers
-    class CertificateService {
-        +generate_certificate_hash(cert_id: string, sid: string, year: string, date: datetime) string
-        +generate_clearance_pdf(request: ClearanceRequest, db: Session) bytes
-    }
-
-    class GrievanceService {
-        +calculate_sla_deadline(priority: string) datetime
-        +check_and_escalate_sla(db: Session) list
-        +resolve_grievance(id: int, notes: string, db: Session) Grievance
-    }
-
-    %% Inheritance Relationships
-    DepartmentHandler <|-- LibraryHandler
-    DepartmentHandler <|-- HostelHandler
-    DepartmentHandler <|-- SportsComplexHandler
-    DepartmentHandler <|-- DepartmentLabsHandler
-    DepartmentHandler <|-- AccountsHandler
-
-    %% Associations & Multiplicities
+    %% Entity Relationships & Multiplicities
     User "1" --> "0..*" ClearanceRequest : submits
     User "1" --> "0..*" DepartmentApproval : signs
     User "1" --> "0..*" Grievance : files
@@ -228,11 +165,76 @@ classDiagram
     ClearanceRequest "1" o-- "0..*" Grievance : associates
     Department "1" --> "0..*" DepartmentApproval : governs
     Department "1" --> "0..*" Grievance : receives
+```
 
-    ClearanceChainBuilder ..> DepartmentHandler : constructs
-    ClearanceChainBuilder ..> ClearanceRequest : evaluates
-    CertificateService ..> ClearanceRequest : mints
-    GrievanceService ..> Grievance : arbitrates
+### 2.2 Behavioral Chain of Responsibility & Service Orchestration Diagram
+
+```mermaid
+classDiagram
+    direction TB
+
+    class DepartmentHandler {
+        <<abstract>>
+        #DepartmentHandler _next_handler
+        +set_next(handler) DepartmentHandler
+        +handle(request, dept, user, action, remarks, dues)*
+        #verify_prerequisites(request, db)* bool
+        #generate_signature(staff_id, dept_code, req_id) string
+    }
+
+    class LibraryHandler {
+        +gate_number = 1
+        #verify_prerequisites(request, db) bool
+    }
+
+    class HostelHandler {
+        +gate_number = 1
+        #verify_prerequisites(request, db) bool
+    }
+
+    class SportsComplexHandler {
+        +gate_number = 1
+        #verify_prerequisites(request, db) bool
+    }
+
+    class DepartmentLabsHandler {
+        +gate_number = 2
+        #verify_prerequisites(request, db) bool
+    }
+
+    class AccountsHandler {
+        +gate_number = 3
+        #verify_prerequisites(request, db) bool
+    }
+
+    class ClearanceChainBuilder {
+        +build_chain() DepartmentHandler
+        +refresh_pipeline_gates(request, db) void
+    }
+
+    class CertificateService {
+        +generate_certificate_hash(cert_id, sid, year, date) string
+        +generate_clearance_pdf(request, db) bytes
+    }
+
+    class GrievanceService {
+        +calculate_sla_deadline(priority) datetime
+        +check_and_escalate_sla(db) list
+        +resolve_grievance(id, notes, db) Grievance
+    }
+
+    %% Inheritance Structure
+    DepartmentHandler <|-- LibraryHandler
+    DepartmentHandler <|-- HostelHandler
+    DepartmentHandler <|-- SportsComplexHandler
+    DepartmentHandler <|-- DepartmentLabsHandler
+    DepartmentHandler <|-- AccountsHandler
+
+    %% Service & Chain Dependencies
+    ClearanceChainBuilder ..> DepartmentHandler : constructs & links
+    ClearanceChainBuilder ..> ClearanceRequest : evaluates prerequisites
+    CertificateService ..> ClearanceRequest : mints HMAC certificate
+    GrievanceService ..> Grievance : arbitrates & escalates SLA
 ```
 
 ---
