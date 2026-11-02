@@ -6,20 +6,6 @@
 
 ---
 
-### OMG UML 2.5 Modeling Rules & Standards Compliance Matrix
-This document conforms strictly to the **Object Management Group (OMG) UML 2.5 Superstructure Specification**:
-
-| Diagram Type | Diagram Classification | Formal OMG UML 2.5 Rules & Semantics Applied | Section |
-| :--- | :---: | :--- | :--- |
-| **Use Case Diagram** | Behavioral | Actors outside system boundary; use cases within boundary; precise `<<include>>` (mandatory functional dependency) and `<<extend>>` (conditional extension) stereotypes. | Section 1 |
-| **Class Diagram** | Structural | 3-compartment notation; member visibility indicators (`+` Public, `#` Protected, `-` Private); precise relationship semantics: Generalization (`<|--`), Realization (`..|>`), Composition (`*--`), Aggregation (`o--`), Association (`-->`), Dependency (`..>`); multiplicities on both ends. | Section 2 |
-| **Activity Diagram** | Behavioral | Concurrency fork and join bars; decision and merge diamonds; action states; initial/final activity nodes; swimlane encapsulation of gate authorities. | Section 3 |
-| **Sequence Diagram** | Interaction | Participant lifelines; strictly descending chronological time axis; synchronous calls (`->>`), returns (`-->>`); interaction use fragments (`alt`, `opt`, `loop`). | Section 4 |
-| **State Machine Diagram** | Behavioral | State transitions triggered by events and guards (`Event [guard] / action`); composite states (`Gate 1`, `Gate 2`, `Gate 3`); initial pseudo-states (`[*]`). | Section 5 |
-| **Component & Deployment**| Structural / Physical | 3-tier boundary separation (Client UI $\rightarrow$ Application Services $\rightarrow$ Persistent Data Store); interface connectors and protocol definitions. | Section 6 |
-
----
-
 ## 1. Use Case Model & Diagram
 
 ### 1.1 Actors & Role Boundaries
