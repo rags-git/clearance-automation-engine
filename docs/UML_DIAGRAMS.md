@@ -241,71 +241,84 @@ classDiagram
 
 ## 3. Dynamic Behavioral Model: Activity Diagram
 
-This activity diagram captures the end-to-end lifecycle of a PEC clearance request, illustrating parallel concurrency forks, barrier joins, and sequential dependency gates:
+This activity diagram models the end-to-end dynamic workflow of a PEC clearance request, illustrating parallel concurrency forks, barrier joins, and sequential dependency gates:
 
 ```mermaid
 flowchart TD
-    Start([PEC Student Submits Clearance via 8-Digit SID]) --> Init[System Spawns 5 Department Approval Gates]
-    Init --> ForkGate1((Fork: Gate 1 Parallel Dispatch))
+    %% Styling Definitions
+    classDef startEnd fill:#d1fae5,stroke:#047857,stroke-width:2.5px,color:#064e3b,font-weight:bold
+    classDef action fill:#f3f4f6,stroke:#4b5563,stroke-width:1.5px,color:#111827
+    classDef decision fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold
+    classDef forkJoin fill:#374151,stroke:#111827,stroke-width:3px,color:#ffffff,font-weight:bold
+    classDef pass fill:#e0f2fe,stroke:#0284c7,stroke-width:1.5px,color:#0369a1
+    classDef reject fill:#fee2e2,stroke:#dc2626,stroke-width:1.5px,color:#991b1b
+    classDef milestone fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#5b21b6,font-weight:bold
 
-    subgraph Gate1 ["Gate 1: Concurrent Central Facilities"]
-        ForkGate1 --> LibReview[Dr. B.R. Ambedkar Central Library]
-        ForkGate1 --> HostReview[PEC Hostels Council]
-        ForkGate1 --> SportReview[Gymkhana & Sports Complex]
+    Start([Start: Student Submits Clearance]):::startEnd --> Init[Initialize 5 Department Approval Records]:::action
+    Init --> ForkG1((FORK: Gate 1 Parallel Review)):::forkJoin
 
-        LibReview --> LibCheck{Library Books / RFID Dues Clear?}
-        LibCheck -- Yes --> LibSign[Sign Digital Signature: LIBRARY]
-        LibCheck -- No --> LibReject[Mark REJECTED + Log Overdue Books/Fine]
+    subgraph SG_Gate1 ["Gate 1: Concurrent Central Facilities (Parallel Reviews)"]
+        direction TB
+        ForkG1 --> LibCheck{Library Books / Dues Clear?}:::decision
+        LibCheck -- "Clear" --> LibSign[Approved: Sign HMAC Library]:::pass
+        LibCheck -- "Dues" --> LibRej[Rejected: Overdue Books / Fine]:::reject
 
-        HostReview --> HostCheck{Room Handover & Mess Dues Clear?}
-        HostCheck -- Yes --> HostSign[Sign Digital Signature: HOSTEL]
-        HostCheck -- No --> HostReject[Mark REJECTED + Log Mess Liability]
+        ForkG1 --> HostCheck{Hostel Room & Mess Clear?}:::decision
+        HostCheck -- "Clear" --> HostSign[Approved: Sign HMAC Hostel]:::pass
+        HostCheck -- "Dues" --> HostRej[Rejected: Mess Dues Liability]:::reject
 
-        SportReview --> SportCheck{Equipment & Swimming Pool Clear?}
-        SportCheck -- Yes --> SportSign[Sign Digital Signature: SPORTS]
-        SportCheck -- No --> SportReject[Mark REJECTED + Log Equipment Penalty]
+        ForkG1 --> SportCheck{Sports Equipment Clear?}:::decision
+        SportCheck -- "Clear" --> SportSign[Approved: Sign HMAC Sports]:::pass
+        SportCheck -- "Dues" --> SportRej[Rejected: Equipment Penalty]:::reject
     end
 
-    LibSign --> JoinGate1((Join Gate 1))
-    HostSign --> JoinGate1
-    SportSign --> JoinGate1
+    LibSign --> JoinG1((JOIN: Gate 1 Barrier)):::forkJoin
+    HostSign --> JoinG1
+    SportSign --> JoinG1
 
-    JoinGate1 --> BarrierCheck{Are ALL Gate 1 Facilities APPROVED?}
-    
-    BarrierCheck -- No --> BlockGate2[Hold Gate 2 in WAITING_PREREQUISITE]
-    BlockGate2 --> GrievanceBranch{Student Files Grievance or Pays Dues?}
-    GrievanceBranch -- Student Resolves Dues --> ForkGate1
-    GrievanceBranch -- DAA Executes Override --> OverrideGate1[DAA Override Applied: Gate 1 Unblocked]
-    OverrideGate1 --> UnlockGate2
+    JoinG1 --> G1Barrier{All 3 Gate 1 Facilities Approved?}:::decision
 
-    BarrierCheck -- Yes --> UnlockGate2[Unlock Gate 2: Department Labs CSE/ECE/Mech]
+    LibRej --> G1Hold[Gate 1 Blocked: Resolve Dues or Appeal]:::reject
+    HostRej --> G1Hold
+    SportRej --> G1Hold
 
-    subgraph Gate2 ["Gate 2: Sequential Academic & Research Labs"]
-        UnlockGate2 --> LabCheck{Workstations & Lab Kits Returned?}
-        LabCheck -- Yes --> LabSign[Sign Digital Signature: LABS]
-        LabCheck -- No --> LabReject[Mark REJECTED + Log Lab Hardware Liability]
+    G1Hold --> DAAOverride1{DAA Override / Dues Settled?}:::decision
+    DAAOverride1 -- "Resolved / Overridden" --> UnlockG2[Unlock Gate 2: Advance Labs to PENDING]:::milestone
+    DAAOverride1 -- "Unresolved" --> StopWait[Halt Progress: Await Resolution]:::reject
+
+    G1Barrier -- "Yes" --> UnlockG2
+    G1Barrier -- "No" --> G1Hold
+
+    subgraph SG_Gate2 ["Gate 2: Department Computing & Hardware Labs"]
+        direction TB
+        UnlockG2 --> LabCheck{Lab Kits & Workstation Clear?}:::decision
+        LabCheck -- "Clear" --> LabSign[Approved: Sign HMAC Labs]:::pass
+        LabCheck -- "Missing" --> LabRej[Rejected: Hardware Liability]:::reject
     end
 
-    LabSign --> Gate3Check{Gate 1 & Gate 2 Both APPROVED?}
-    Gate3Check -- Yes --> UnlockGate3[Unlock Gate 3: Accounts & Finance Branch]
-    Gate3Check -- No --> BlockGate3[Hold Accounts in WAITING_PREREQUISITE]
+    LabRej --> G2Hold[Gate 2 Blocked: Return Assets or DAA Override]:::reject
+    G2Hold --> DAAOverride2{DAA Override / Assets Returned?}:::decision
+    DAAOverride2 -- "Resolved" --> UnlockG3[Unlock Gate 3: Advance Accounts to PENDING]:::milestone
+    DAAOverride2 -- "Unresolved" --> StopWait
 
-    subgraph Gate3 ["Gate 3: Terminal Accounts & Caution Money"]
-        UnlockGate3 --> AccCheck{Semester Tuition Clear?}
-        AccCheck -- Yes --> AccSign[Sign Digital Signature: ACCOUNTS + Authorize Caution Money Refund]
-        AccCheck -- No --> AccReject[Mark REJECTED + Log Tuition Balance]
+    LabSign --> UnlockG3
+
+    subgraph SG_Gate3 ["Gate 3: Institutional Accounts & Finance Branch"]
+        direction TB
+        UnlockG3 --> AccCheck{Semester Tuition & Fees Clear?}:::decision
+        AccCheck -- "Clear" --> AccSign[Approved: Sign HMAC Accounts]:::pass
+        AccCheck -- "Dues" --> AccRej[Rejected: Unpaid Balance]:::reject
     end
 
-    AccSign --> MintCert[Mint Official Certificate ID: PEC-CLR-YYYY-XXXXX]
-    MintCert --> ComputeHash[Compute Cryptographic SHA-256 Digest]
-    ComputeHash --> GenPDF[Generate Downloadable PDF with DAA & DSA Seals]
-    GenPDF --> End([Student Clearance Completed Successfully])
+    AccRej --> AccHold[Gate 3 Blocked: Hold Caution Money Escrow]:::reject
+    AccHold --> DAAOverride3{Fee Payment / DAA Waiver?}:::decision
+    DAAOverride3 -- "Settled" --> AccSign
+    DAAOverride3 -- "Unsettled" --> StopWait
 
-    LibReject --> HoldPip[Pipeline Blocked]
-    HostReject --> HoldPip
-    SportReject --> HoldPip
-    LabReject --> HoldPip
-    AccReject --> HoldPip
+    AccSign --> Mint[Validate All 5 Seals & Authorize ₹10,000 Caution Money Refund]:::milestone
+    Mint --> Cert[Mint Certificate ID & Compute SHA-256 Digest]:::milestone
+    Cert --> GenPDF[Generate Verifiable PDF Certificate]:::milestone
+    GenPDF --> End([End: Clearance Issued]):::startEnd
 ```
 
 ---
