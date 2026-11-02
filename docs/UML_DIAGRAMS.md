@@ -75,6 +75,8 @@ flowchart LR
 
 ---
 
+<div class="page-break"></div>
+
 ## 2. Static Structural Model: Class Diagram
 
 The static structural architecture of the system is divided into two focused, high-contrast class diagrams to ensure maximum visual clarity and readability:
@@ -167,6 +169,8 @@ classDiagram
     Department "1" --> "0..*" Grievance : receives
 ```
 
+<div class="page-break"></div>
+
 ### 2.2 Behavioral Chain of Responsibility & Service Orchestration Diagram
 
 ```mermaid
@@ -238,6 +242,8 @@ classDiagram
 ```
 
 ---
+
+<div class="page-break"></div>
 
 ## 3. Dynamic Behavioral Model: Activity Diagram
 
@@ -474,6 +480,8 @@ sequenceDiagram
 
 ---
 
+<div class="page-break"></div>
+
 ## 5. Behavioral State Machine Diagram
 
 This state machine models the discrete status lifecycles of both the master clearance request and individual department approval gates:
@@ -520,6 +528,8 @@ stateDiagram-v2
 ```
 
 ---
+
+<div class="page-break"></div>
 
 ## 6. System Architecture & Component Deployment Diagram
 
