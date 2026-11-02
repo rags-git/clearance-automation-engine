@@ -81,21 +81,26 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       font-weight: 600 !important;
     }}
     .mermaid .messageText {{
-      font-size: 13px !important;
-      font-weight: 500 !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
       stroke: none !important;
     }}
     .mermaid .actor {{
-      font-size: 13.5px !important;
+      font-size: 14px !important;
       font-weight: 700 !important;
     }}
     .mermaid .noteText {{
-      font-size: 12px !important;
-      font-weight: 600 !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
     }}
     .mermaid .loopText {{
-      font-size: 12px !important;
-      font-weight: 600 !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+    }}
+    .page-break {{
+      page-break-before: always !important;
+      break-before: page !important;
+      margin-top: 20px;
     }}
     table {{
       font-size: 9pt !important;
@@ -158,15 +163,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       flowchart: {{ htmlLabels: true, curve: 'basis' }},
       sequence: {{
         useMaxWidth: false,
-        diagramMarginX: 10,
+        diagramMarginX: 5,
         diagramMarginY: 10,
-        actorMargin: 35,
-        width: 140,
-        height: 45,
-        boxMargin: 10,
+        actorMargin: 15,
+        width: 100,
+        height: 38,
+        boxMargin: 8,
         boxTextMargin: 5,
-        noteMargin: 10,
-        messageMargin: 30,
+        noteMargin: 8,
+        messageMargin: 26,
         mirrorActors: false
       }}
     }});
