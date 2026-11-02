@@ -325,118 +325,169 @@ flowchart TD
 
 ## 4. Interaction Models: Sequence Diagrams
 
+The dynamic interaction between external actors, API gateways, business logic engines, and database layers is presented across three structured, chronological sequence diagrams:
+1. **Multi-Gate Approval & Cryptographic Minting** (Clearance lifecycle, prerequisite gating, HMAC sealing, and PDF issuance)
+2. **Grievance Dispute Lifecycle & Automated SLA Escalation** (Student appeals, timer countdowns, and DAA alerts)
+3. **Executive Administrative Override & Serialization** (DAA barrier unlocks, audit trail logging, and concurrency control)
+
 ### 4.1 Sequence Diagram 1: Multi-Gate Approval & Cryptographic Minting
+
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Student as PEC Student (SID: 22103042)
-    actor LibraryStaff as Librarian (Gate 1)
-    actor LabStaff as HOD Labs (Gate 2)
-    actor AccountsStaff as Accounts Officer (Gate 3)
-    participant API as Clearance API Gateway
-    participant CoR as Chain of Responsibility Engine
-    participant DB as System Database
+    actor Student as PEC Student
+    actor Staff as Positional Staff
+    participant API as API Gateway
+    participant CoR as Clearance Engine (CoR)
+    participant DB as Relational Database
     participant Cert as Certificate Service
 
-    Student->>API: POST /api/v1/clearance/apply
-    API->>DB: INSERT ClearanceRequest & 5 Department Approvals
-    DB-->>Student: 201 Created (Gate 1: PENDING, Gates 2-3: WAITING)
-
-    LibraryStaff->>API: POST /api/v1/clearance/staff/decision/{approval_id} (APPROVED)
-    API->>CoR: handle(request, "LIBRARY", staff, APPROVED)
-    CoR->>CoR: verify_prerequisites() -> PASS (Gate 1 has no prerequisites)
-    CoR->>CoR: generate_digital_signature(staff_id, "LIBRARY")
-    CoR->>DB: UPDATE Approval SET status=APPROVED, signature=HMAC
-    CoR->>CoR: refresh_pipeline_gates()
-    DB-->>LibraryStaff: 200 OK (Signed & Sealed)
-
-    Note over LibraryStaff, LabStaff: Hostel and Sports sign off concurrently...
-
-    LabStaff->>API: POST /api/v1/clearance/staff/decision/{approval_id} (APPROVED)
-    API->>CoR: handle(request, "LABS", staff, APPROVED)
-    CoR->>CoR: verify_prerequisites() -> Check Gate 1
-    alt Gate 1 Incomplete
-        CoR-->>API: 400 Bad Request ("Prerequisite unmet: Prior clearance required")
-    else Gate 1 All Approved
-        CoR->>CoR: generate_digital_signature(staff_id, "LABS")
-        CoR->>DB: UPDATE Approval SET status=APPROVED, signature=HMAC
-        CoR->>CoR: refresh_pipeline_gates() -> Unlocks Gate 3
-        DB-->>LabStaff: 200 OK (Labs Approved)
+    %% Stage 1: Initiation
+    rect rgb(240, 249, 255)
+        Note over Student, DB: Stage 1: Student Clearance Submission
+        Student->>+API: POST /api/v1/clearance/apply
+        API->>+DB: INSERT ClearanceRequest & 5 Department Gates
+        DB-->>-API: 201 Created (Gate 1: PENDING, Gates 2-3: WAITING)
+        API-->>-Student: Application Registered & Active
     end
 
-    AccountsStaff->>API: POST /api/v1/clearance/staff/decision/{approval_id} (APPROVED)
-    API->>CoR: handle(request, "ACCOUNTS", staff, APPROVED)
-    CoR->>CoR: verify_prerequisites() -> Check Gates 1 & 2 Approved
-    CoR->>DB: UPDATE ClearanceRequest SET status=APPROVED, cert_id="PEC-CLR-YYYY-XXXXX"
-    CoR->>Cert: generate_certificate_hash(cert_id, sid, year, timestamp)
-    Cert-->>DB: Save SHA-256 Digest
-    DB-->>AccountsStaff: 200 OK (Clearance Completed & Caution Money Released)
+    %% Stage 2: Gate 1 Parallel Reviews
+    rect rgb(245, 243, 255)
+        Note over Staff, DB: Stage 2: Gate 1 Parallel Reviews (Library, Hostel, Sports)
+        Staff->>+API: POST /api/v1/clearance/staff/decision (Gate 1 APPROVED)
+        API->>+CoR: handle(request, "LIBRARY", staff, APPROVED)
+        CoR->>CoR: verify_prerequisites() -> True (Parallel Gate)
+        CoR->>CoR: generate_digital_signature(staff_id, "LIBRARY")
+        CoR->>+DB: UPDATE Approval (status=APPROVED, seal=HMAC)
+        DB-->>-CoR: Row Updated
+        CoR->>CoR: refresh_pipeline_gates()
+        CoR-->>-API: Sign-off Confirmed
+        API-->>-Staff: 200 OK (Signed & Sealed)
+    end
 
-    Student->>API: GET /api/v1/certificate/download/{request_id}
-    API->>Cert: generate_clearance_pdf(request)
-    Cert-->>Student: Stream Downloadable Vector PDF
+    %% Stage 3: Gate 2 Prerequisite Barrier
+    rect rgb(254, 243, 199)
+        Note over Staff, DB: Stage 3: Gate 2 Review & Dependency Barrier Check
+        Staff->>+API: POST /api/v1/clearance/staff/decision (Gate 2 Labs)
+        API->>+CoR: handle(request, "LABS", staff, APPROVED)
+        CoR->>+DB: Query Gate 1 Statuses
+        DB-->>-CoR: Gate 1 Complete (Lib, Host, Sport all APPROVED)
+        CoR->>CoR: generate_digital_signature(staff_id, "LABS")
+        CoR->>+DB: UPDATE Approval (status=APPROVED, seal=HMAC)
+        DB-->>-CoR: Row Updated
+        CoR->>CoR: refresh_pipeline_gates() -> Unlocks Gate 3
+        CoR-->>-API: Labs Cleared
+        API-->>-Staff: 200 OK (Gate 2 Approved)
+    end
+
+    %% Stage 4: Gate 3 & Minting
+    rect rgb(236, 253, 245)
+        Note over Student, Cert: Stage 4: Gate 3 Accounts Approval & Certificate Minting
+        Staff->>+API: POST /api/v1/clearance/staff/decision (Accounts APPROVED)
+        API->>+CoR: handle(request, "ACCOUNTS", staff, APPROVED)
+        CoR->>+DB: UPDATE ClearanceRequest (status=APPROVED, cert_id="PEC-CLR-YYYY-XXXXX")
+        DB-->>-CoR: Request Approved & ₹10,000 Caution Money Released
+        CoR->>+Cert: generate_certificate_hash(cert_id, sid, timestamp)
+        Cert->>+DB: Store SHA-256 Public Verification Hash
+        DB-->>-Cert: Hash Stored
+        Cert-->>-CoR: Minting Completed
+        CoR-->>-API: Final Sign-off Recorded
+        API-->>Staff: 200 OK (Clearance Complete)
+
+        Student->>+API: GET /api/v1/certificate/download/{id}
+        API->>+Cert: generate_clearance_pdf(request)
+        Cert-->>-API: Verifiable Vector PDF Binary
+        API-->>-Student: Stream Official Clearance Certificate PDF
+    end
 ```
 
-### 4.2 Sequence Diagram 2: Grievance Lifecycle & Automated DAA Escalation
+### 4.2 Sequence Diagram 2: Grievance Dispute Lifecycle & Automated SLA Escalation
+
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Student as PEC Student (SID: 22105029)
-    participant API as Grievance API Gateway
-    participant SLA as SLA Escalation Engine
-    actor Warden as Chief Warden (Hostel)
+    actor Student as PEC Student
+    participant API as Grievance Gateway
+    participant SLA as SLA Engine
+    actor Staff as Positional Staff
     actor DAA as Dean Academic Affairs (DAA)
     participant DB as System Database
 
-    Student->>API: POST /api/v1/grievance (Priority=HIGH, Dept=HOSTEL, Due=₹3,500)
-    API->>SLA: calculate_sla_deadline(priority=HIGH) -> now + 12 Hours
-    API->>DB: INSERT Grievance (status=OPEN, is_escalated=False)
-    DB-->>Student: 201 Grievance Registered (Deadline Assigned)
-
-    Note over SLA, DB: 12 Hours elapse without staff resolution...
-
-    loop Periodic SLA Audit Scan
-        SLA->>DB: SELECT * FROM grievances WHERE now > sla_deadline AND status='OPEN'
-        DB-->>SLA: Returns breached ticket
-        SLA->>DB: UPDATE Grievance SET is_escalated=True, status='ESCALATED'
-        SLA->>DB: INSERT AuditLog ("SLA_BREACH_ESCALATED", DAA_ALERT)
+    %% Filing
+    rect rgb(254, 242, 242)
+        Note over Student, DB: Step 1: Student Files Grievance Dispute
+        Student->>+API: POST /api/v1/grievance (Priority=HIGH, Dept=HOSTEL, Due=₹3,500)
+        API->>SLA: calculate_sla_deadline(priority=HIGH) -> now + 12 Hours
+        API->>+DB: INSERT Grievance (status=OPEN, is_escalated=False)
+        DB-->>-API: Record Saved
+        API-->>-Student: 201 Created (12h SLA Deadline Assigned)
     end
 
-    DAA->>API: GET /api/v1/admin/analytics
-    API-->>DAA: Returns breached grievance metrics & department alert
+    %% SLA Breach Loop
+    rect rgb(254, 243, 199)
+        Note over SLA, DAA: Step 2: SLA Timer Expiry & Automated Escalation
+        loop Periodic SLA Audit Daemon
+            SLA->>+DB: SELECT * FROM grievances WHERE now > deadline AND status='OPEN'
+            DB-->>-SLA: Breached Ticket Found
+            SLA->>+DB: UPDATE Grievance (is_escalated=True, status='ESCALATED')
+            DB-->>-SLA: Ticket Escalated
+            SLA->>+DB: INSERT AuditLog ("SLA_BREACH_ESCALATED")
+            DB-->>-SLA: Audit Entry Created
+        end
 
-    Warden->>API: POST /api/v1/grievance/{id}/resolve (Resolution Notes, Waive Due)
-    API->>DB: UPDATE Grievance SET status=RESOLVED, resolved_at=now
-    API->>DB: UPDATE DepartmentApproval SET due_amount=0.0
-    DB-->>Warden: 200 OK (Grievance Resolved & Due Cleared)
+        DAA->>+API: GET /api/v1/admin/analytics
+        API->>+DB: Fetch Escalated Alerts & Overdue SLA Metrics
+        DB-->>-API: Escalation Counts & Department Bottlenecks
+        API-->>-DAA: 200 OK (High Priority SLA Alert Banner)
+    end
+
+    %% Resolution
+    rect rgb(240, 253, 244)
+        Note over Staff, DB: Step 3: Staff Resolution & Financial Adjustment
+        Staff->>+API: POST /api/v1/grievance/{id}/resolve (Notes="Fee Adjusted", Due=₹0)
+        API->>+DB: UPDATE Grievance (status=RESOLVED, resolved_at=now)
+        API->>+DB: UPDATE DepartmentApproval (due_amount=0.0)
+        DB-->>-API: Updates Committed
+        API-->>-Staff: 200 OK (Dispute Resolved & Dues Waived)
+    end
 ```
 
-### 4.3 Sequence Diagram 3: Administrative Override & Concurrency Race Prevention
+### 4.3 Sequence Diagram 3: Administrative Override & Concurrency Control
+
 ```mermaid
 sequenceDiagram
     autonumber
-    actor DAA as Dean Academic Affairs (Admin)
-    actor Staff as Positional Staff
-    participant API as Administration API
-    participant CoR as Chain of Responsibility Engine
-    participant DB as System Database (Serialized Transaction)
+    actor Staff as Department Staff
+    actor DAA as Dean Academic Affairs
+    participant API as Admin Gateway
+    participant CoR as Clearance Engine
+    participant DB as Relational Database (Serializable Tx)
 
-    Staff->>API: POST /api/v1/clearance/staff/decision (Mark REJECTED, ₹500 Due)
-    API->>DB: UPDATE DepartmentApproval SET status='REJECTED', due_amount=500.0
-    DB-->>Staff: 200 OK (Gate Blocked)
+    %% Initial Rejection
+    rect rgb(254, 242, 242)
+        Note over Staff, DB: Step 1: Department Records Liability & Rejection
+        Staff->>+API: POST /api/v1/clearance/staff/decision (REJECTED, Due=₹500)
+        API->>+DB: UPDATE DepartmentApproval (status='REJECTED', due_amount=500.0)
+        DB-->>-API: Gate Blocked
+        API-->>-Staff: 200 OK (Clearance Pipeline Halted)
+    end
 
-    Note over DAA, DB: Student petitions DAA; DAA authorizes immediate override
-
-    DAA->>API: POST /api/v1/admin/override/{approval_id} (Reason="Approved by DAA Council")
-    API->>DB: BEGIN TRANSACTION (SERIALIZABLE)
-    API->>DB: UPDATE DepartmentApproval SET status='APPROVED', due_amount=0.0
-    API->>CoR: generate_digital_signature(admin_id, dept_code)
-    API->>DB: UPDATE DepartmentApproval SET digital_signature=HMAC
-    API->>CoR: refresh_pipeline_gates(request, db)
-    CoR->>DB: Unblock downstream dependent gates
-    API->>DB: INSERT AuditLog ("ADMIN_OVERRIDE", admin_id, metadata)
-    API->>DB: COMMIT TRANSACTION
-    DB-->>DAA: 200 OK (Department Overridden & Downstream Gates Unlocked)
+    %% DAA Executive Override
+    rect rgb(240, 249, 255)
+        Note over DAA, DB: Step 2: DAA Executive Override Transaction
+        DAA->>+API: POST /api/v1/admin/override/{approval_id} (Reason="Approved by Council")
+        API->>+DB: BEGIN TRANSACTION (SERIALIZABLE)
+        API->>DB: UPDATE DepartmentApproval SET status='APPROVED', due_amount=0.0
+        API->>CoR: generate_digital_signature(admin_id, dept_code)
+        CoR-->>API: Cryptographic HMAC Seal
+        API->>DB: UPDATE DepartmentApproval SET digital_signature=HMAC
+        API->>CoR: refresh_pipeline_gates(request, db)
+        CoR->>DB: Advance Downstream Gates from WAITING to PENDING
+        API->>DB: INSERT AuditLog ("ADMIN_OVERRIDE", admin_id, metadata)
+        API->>DB: COMMIT TRANSACTION
+        DB-->>-API: Transaction Committed Safely
+        API-->>-DAA: 200 OK (Override Complete & Pipeline Unblocked)
+    end
 ```
 
 ---
