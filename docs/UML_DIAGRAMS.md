@@ -10,7 +10,7 @@
 
 ### 1.1 Actors & Role Boundaries
 - **Student Actor:** Registered PEC student identified by an 8-digit SID (e.g., `22103042`).
-- **Positional Staff Actor:** Departmental authority operating under permanent institutional designations (*Librarian*, *Chief Warden*, *Gymkhana President*, *HOD Labs*, *Accounts Officer*).
+- **Positional Staff Actor:** Departmental authority operating under institutional designations.
 - **Dean Academic Affairs (DAA / Admin Actor):** Executive authority holding override privileges and institutional audit oversight.
 - **Public Certificate Verifier Actor:** External unauthenticated party validating clearance credentials.
 
