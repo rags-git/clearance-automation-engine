@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from backend.app.core.database import get_db
-from backend.app.models.models import ClearanceRequest, ClearanceStatusEnum, User, RoleEnum
+from backend.app.models.models import ClearanceRequest, ClearanceStatusEnum, RoleEnum
 from backend.app.services.certificate_service import CertificateService
-from backend.app.routers.auth import get_current_user
+from backend.app.routers.auth import oauth2_scheme, get_current_user_from_token_str
 
 router = APIRouter(prefix="/certificate", tags=["Certificate & Public Verification"])
 
@@ -13,9 +13,19 @@ router = APIRouter(prefix="/certificate", tags=["Certificate & Public Verificati
 @router.get("/download/{request_id}")
 def download_certificate(
     request_id: int,
-    current_user: User = Depends(get_current_user),
+    token_header: Optional[str] = Depends(oauth2_scheme),
+    token: Optional[str] = Query(None, description="Auth token for direct downloads"),
     db: Session = Depends(get_db)
 ):
+    auth_token = token_header or token
+    if not auth_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    current_user = get_current_user_from_token_str(auth_token, db)
     request = db.query(ClearanceRequest).filter(ClearanceRequest.id == request_id).first()
     if not request:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clearance request not found")

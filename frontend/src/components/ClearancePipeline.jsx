@@ -1,8 +1,7 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Clock, Lock, ShieldCheck, KeyRound, ArrowRight, GitFork } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, Lock, ShieldCheck, KeyRound, ArrowRight, GitBranch } from 'lucide-react';
 
 export const ClearancePipeline = ({ approvals = [] }) => {
-  // Sort approvals by clearance gate
   const gate1 = approvals.filter((a) => a.clearance_gate === 1);
   const gate2 = approvals.filter((a) => a.clearance_gate === 2);
   const gate3 = approvals.filter((a) => a.clearance_gate === 3);
@@ -11,30 +10,30 @@ export const ClearancePipeline = ({ approvals = [] }) => {
     switch (status) {
       case 'APPROVED':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>APPROVED</span>
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-mono-code font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 shadow-[0_0_12px_rgba(52,211,153,0.3)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.9)] animate-ping" />
+            <span>CLEARED</span>
           </span>
         );
       case 'REJECTED':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-            <XCircle className="w-3.5 h-3.5 text-red-600" />
-            <span>REJECTED</span>
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-mono-code font-bold bg-rose-500/20 text-rose-300 border border-rose-400/50 shadow-[0_0_12px_rgba(244,63,94,0.3)]">
+            <XCircle className="w-3.5 h-3.5 text-rose-400" />
+            <span>DISPUTED</span>
           </span>
         );
       case 'WAITING_PREREQUISITE':
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">
-            <Lock className="w-3.5 h-3.5 text-slate-400" />
-            <span>GATE LOCKED</span>
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-mono-code font-medium bg-zinc-800/90 text-zinc-400 border border-zinc-700">
+            <Lock className="w-3 h-3 text-zinc-400" />
+            <span>LOCKED</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            <Clock className="w-3.5 h-3.5 text-amber-600" />
-            <span>PENDING REVIEW</span>
+          <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-mono-code font-medium bg-amber-500/20 text-amber-200 border border-amber-400/40 shadow-[0_0_10px_rgba(245,158,11,0.25)]">
+            <Clock className="w-3 h-3 text-amber-400 animate-spin" style={{ animationDuration: '6s' }} />
+            <span>IN QUEUE</span>
           </span>
         );
     }
@@ -48,55 +47,57 @@ export const ClearancePipeline = ({ approvals = [] }) => {
     return (
       <div
         key={appr.id}
-        className={`rounded-xl p-4 transition border shadow-xs ${
+        className={`group relative rounded-xl p-4 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-2xl border ${
           isApproved
-            ? 'bg-emerald-50/40 border-emerald-200'
+            ? 'bg-gradient-to-br from-emerald-950/30 to-emerald-900/10 border-emerald-500/40 hover:border-emerald-400 shadow-[0_0_20px_-3px_rgba(16,185,129,0.18)]'
             : isRejected
-            ? 'bg-red-50/40 border-red-200'
+            ? 'bg-gradient-to-br from-rose-950/35 to-rose-900/15 border-rose-500/50 hover:border-rose-400 shadow-[0_0_20px_-3px_rgba(244,63,94,0.22)]'
             : isLocked
-            ? 'bg-slate-50/70 border-slate-200 opacity-75'
-            : 'bg-white border-amber-200 ring-1 ring-amber-100'
+            ? 'bg-black/40 border-white/[0.06] opacity-60'
+            : 'bg-gradient-to-br from-zinc-900/80 to-amber-950/20 border-amber-500/40 hover:border-amber-400 shadow-[0_0_20px_-3px_rgba(245,158,11,0.15)]'
         }`}
       >
         <div className="flex justify-between items-start gap-2 mb-2">
           <div>
-            <h4 className="font-semibold text-sm text-slate-900">{appr.department_name}</h4>
-            <span className="text-[11px] font-mono text-slate-500 tracking-wider uppercase">
-              Dept Code: {appr.department_code}
+            <h4 className="font-bold text-xs text-zinc-100 group-hover:text-white transition">{appr.department_name}</h4>
+            <span className="text-[10px] font-mono-code text-zinc-400 tracking-wider">
+              {appr.department_code}
             </span>
           </div>
           {getStatusBadge(appr.status)}
         </div>
 
         {/* Remarks / Dues */}
-        <div className="text-xs text-slate-600 mb-2">
+        <div className="text-[11px] text-zinc-400 mb-2">
           {appr.remarks ? (
-            <p className="italic bg-white/70 p-2 rounded-lg border border-slate-200/60">{appr.remarks}</p>
+            <p className="bg-black/40 p-2 rounded-lg border border-white/[0.05] font-mono-code text-[11px] text-zinc-300">
+              "{appr.remarks}"
+            </p>
           ) : isLocked ? (
-            <p className="text-slate-400">Waiting for all prerequisite departments to approve first.</p>
+            <p className="text-zinc-500 italic">Waiting for prerequisite gates to clear.</p>
           ) : (
-            <p className="text-slate-400">Under verification by departmental officials.</p>
+            <p className="text-zinc-500 italic">Under review by assigned departmental desk.</p>
           )}
         </div>
 
         {/* Dues Alert in INR */}
         {appr.due_amount > 0 && (
-          <div className="text-xs font-semibold text-red-600 bg-red-100/70 px-2.5 py-1.5 rounded-md mb-2 flex items-center justify-between">
-            <span>Outstanding Dues:</span>
-            <span className="font-bold">₹{Number(appr.due_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <div className="text-xs font-mono-code font-bold text-rose-300 bg-rose-950/50 border border-rose-500/30 px-2.5 py-1.5 rounded-lg mb-2 flex items-center justify-between">
+            <span className="text-rose-400 text-[10px] uppercase">Pending Dues:</span>
+            <span>₹{Number(appr.due_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
         )}
 
         {/* Signatory & Digital Signature */}
         {isApproved && (
-          <div className="pt-2 border-t border-emerald-200/60 mt-2 space-y-1">
-            <div className="flex items-center justify-between text-[11px] text-slate-500">
-              <span>Signatory:</span>
-              <span className="font-medium text-slate-700">{appr.staff_name || 'Department Officer'}</span>
+          <div className="pt-2 border-t border-emerald-500/20 mt-2 space-y-1">
+            <div className="flex items-center justify-between text-[10px] font-mono-code text-zinc-400">
+              <span>OFFICER:</span>
+              <span className="text-zinc-300">{appr.staff_name || 'Department Officer'}</span>
             </div>
             {appr.digital_signature && (
-              <div className="flex items-center space-x-1.5 bg-emerald-100/80 px-2 py-1 rounded text-[10px] font-mono text-emerald-800">
-                <KeyRound className="w-3 h-3 text-emerald-700 shrink-0" />
+              <div className="flex items-center space-x-1.5 bg-black/60 px-2 py-1 rounded border border-emerald-500/20 text-[10px] font-mono-code text-emerald-400">
+                <KeyRound className="w-3 h-3 text-emerald-400 shrink-0" />
                 <span className="truncate">{appr.digital_signature}</span>
               </div>
             )}
@@ -107,81 +108,84 @@ export const ClearancePipeline = ({ approvals = [] }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-5 border-b border-slate-100 mb-6 gap-2">
+    <div className="glow-card rounded-2xl p-5 sm:p-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-white/[0.06] mb-6 gap-2">
         <div>
           <div className="flex items-center space-x-2">
-            <h3 className="font-bold text-base text-slate-900">Multi-Department Clearance Pipeline</h3>
-            <span className="text-[11px] font-semibold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-200">
-              Chain of Responsibility (3 Gates)
+            <GitBranch className="w-4 h-4 text-rose-400" />
+            <h3 className="font-semibold text-sm text-zinc-100 tracking-wide font-mono-code">
+              MULTI-GATE PIPELINE // CoR PATTERN
+            </h3>
+            <span className="text-[10px] font-mono-code bg-white/[0.05] text-zinc-400 px-2 py-0.5 rounded border border-white/[0.08]">
+              3 GATES
             </span>
           </div>
-          <p className="text-xs text-slate-500">
-            Gate 1 operates in parallel; Gate 2 and Gate 3 enforce strict dependency resolution.
+          <p className="text-xs text-zinc-400 mt-1">
+            Gate 1 concurrent validation; Gates 2 & 3 resolve sequentially upon cryptographic sign-off.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 relative">
         {/* Gate 1: Parallel */}
-        <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/80">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+        <div className="space-y-3 bg-white/[0.02] p-4 rounded-xl border border-white/[0.06]">
+          <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
             <div className="flex items-center space-x-2">
-              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">
-                1
+              <span className="w-5 h-5 rounded-md bg-rose-500/20 border border-rose-500/30 text-rose-300 font-mono-code text-xs font-bold flex items-center justify-center">
+                01
               </span>
-              <span className="font-bold text-sm text-slate-800">Gate 1: Parallel Clearance</span>
+              <span className="font-semibold text-xs text-zinc-200">Parallel Desks</span>
             </div>
-            <span className="text-[10px] font-semibold uppercase text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-              Concurrent
+            <span className="text-[9px] font-mono-code uppercase text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+              CONCURRENT
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">
-            Library, Hostel, and Sports Complex can review and approve independently.
+          <p className="text-[11px] text-zinc-400">
+            Dr. B.R. Ambedkar Library, Hostels, and Gymkhana verify records concurrently.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {gate1.map(renderDepartmentCard)}
           </div>
         </div>
 
         {/* Gate 2: Sequential Lab Gate */}
-        <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/80">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+        <div className="space-y-3 bg-white/[0.02] p-4 rounded-xl border border-white/[0.06]">
+          <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
             <div className="flex items-center space-x-2">
-              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">
-                2
+              <span className="w-5 h-5 rounded-md bg-purple-500/20 border border-purple-500/30 text-purple-300 font-mono-code text-xs font-bold flex items-center justify-center">
+                02
               </span>
-              <span className="font-bold text-sm text-slate-800">Gate 2: Department Labs</span>
+              <span className="font-semibold text-xs text-zinc-200">Department Labs</span>
             </div>
-            <span className="text-[10px] font-semibold uppercase text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-              Sequential
+            <span className="text-[9px] font-mono-code uppercase text-zinc-400 bg-zinc-800/60 px-2 py-0.5 rounded border border-zinc-700/50">
+              SEQUENTIAL
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">
-            Requires all Gate 1 clearances (Library, Hostel, Sports) to be APPROVED.
+          <p className="text-[11px] text-zinc-400">
+            Prerequisite: Requires all Gate 1 clearances to be officially approved first.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {gate2.map(renderDepartmentCard)}
           </div>
         </div>
 
         {/* Gate 3: Final Accounts Gate */}
-        <div className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-200/80">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+        <div className="space-y-3 bg-white/[0.02] p-4 rounded-xl border border-white/[0.06]">
+          <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.06]">
             <div className="flex items-center space-x-2">
-              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">
-                3
+              <span className="w-5 h-5 rounded-md bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono-code text-xs font-bold flex items-center justify-center">
+                03
               </span>
-              <span className="font-bold text-sm text-slate-800">Gate 3: Final Accounts</span>
+              <span className="font-semibold text-xs text-zinc-200">Accounts & Caution Money</span>
             </div>
-            <span className="text-[10px] font-semibold uppercase text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-              Final Sign-off
+            <span className="text-[9px] font-mono-code uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              FINAL SEAL
             </span>
           </div>
-          <p className="text-[11px] text-slate-500">
-            Final financial verification and caution deposit settlement. Mints certificate upon approval.
+          <p className="text-[11px] text-zinc-400">
+            Final security deposit settlement. Upon approval, mints official clearance credential.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {gate3.map(renderDepartmentCard)}
           </div>
         </div>

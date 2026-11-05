@@ -6,27 +6,15 @@ const AuthContext = createContext(null);
 export const DEMO_USERS = [
   {
     role: 'STUDENT',
-    label: 'Alice Sharma (B.Tech CSE - SID: 22103042)',
-    email: 'alice@pec.edu.in',
-    desc: 'B.Tech CSE (Batch 2022-26). All 5 gates approved. PEC certificate ready.',
+    label: 'Raghav Bhardwaj (B.Tech CSE - SID: 24106017)',
+    email: 'raghav@pec.edu.in',
+    desc: 'B.Tech CSE (SID: 24106017). All 5 gates approved. PEC certificate ready.',
   },
   {
     role: 'STUDENT',
-    label: 'Bobdeep Singh (B.Tech ECE - SID: 22104018)',
-    email: 'bob@pec.edu.in',
-    desc: 'B.Tech ECE. Library & Kurukshetra Hostel cleared; Gymkhana ₹500 pending.',
-  },
-  {
-    role: 'STUDENT',
-    label: 'Charlie Verma (B.Tech Mech - SID: 22105029)',
-    email: 'charlie@pec.edu.in',
-    desc: 'B.Tech Mech. Shivalik mess fee (₹3,500) disputed; SLA breached & escalated to DAA.',
-  },
-  {
-    role: 'STUDENT',
-    label: 'Alex Grover (B.Tech CSE - SID: 22103001)',
-    email: 'student@pec.edu.in',
-    desc: 'B.Tech CSE student ready to submit new clearance for live demonstration.',
+    label: 'Karan Jain (B.Tech CSE - SID: 24106003)',
+    email: 'karan@pec.edu.in',
+    desc: 'B.Tech CSE (SID: 24106003). Library & Hostel cleared; Gymkhana ₹500 pending.',
   },
   {
     role: 'STAFF',

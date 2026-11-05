@@ -108,67 +108,71 @@ export const StaffDashboard = ({ user }) => {
 
   return (
     <div className="space-y-8">
-      {/* Staff Header */}
-      <div className="bg-gradient-to-r from-red-950 via-amber-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
-        <div className="inline-flex items-center space-x-2 bg-red-900/80 px-3 py-1 rounded-full text-xs font-semibold text-amber-200 mb-3 border border-red-800">
-          <ShieldCheck className="w-4 h-4 text-amber-400" />
-          <span>PEC Department Staff Verification Portal</span>
+      {/* Staff Header - Dark Living System Theme */}
+      <div className="glow-card rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
+        <div className="inline-flex items-center space-x-2 bg-white/[0.04] px-3 py-1 rounded-full text-xs font-mono-code text-amber-300 mb-3 border border-white/[0.08]">
+          <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+          <span>DEPARTMENT DESK // VERIFICATION TERMINAL</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{user.full_name}</h1>
-        <p className="text-sm text-amber-100 mt-2 max-w-2xl">
-          Punjab Engineering College (Sector 12, Chandigarh): Review student clearance requests, inspect records, generate tamper-evident HMAC digital signatures upon approval, or flag liabilities.
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono-code">
+          {user.full_name.toLowerCase()}
+        </h1>
+        <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-2xl leading-relaxed">
+          Punjab Engineering College: Department clearance review console. Verify equipment returns, assess liability dues, and sign clearance records with HMAC-SHA256 seals.
         </p>
       </div>
 
       {/* Pending Approvals Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-2">
+      <div className="glow-card rounded-2xl p-5 sm:p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-white/[0.06] gap-2">
           <div>
-            <h3 className="font-bold text-base text-slate-900">Active Clearance Queue</h3>
-            <p className="text-xs text-slate-500">Student requests ready for departmental review & digital signing.</p>
+            <h3 className="font-semibold text-sm text-zinc-100 font-mono-code">
+              ACTIVE QUEUE // AWAITING SIGNATURE
+            </h3>
+            <p className="text-xs text-zinc-400">Student requests ready for departmental review & digital signing.</p>
           </div>
-          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            {pendingApprovals.length} Requests Awaiting Sign-off
+          <span className="text-[10px] font-mono-code font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+            {pendingApprovals.length} IN FLIGHT
           </span>
         </div>
 
         {pendingApprovals.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 text-sm">
-            No pending clearance requests requiring immediate action.
+          <div className="p-8 text-center text-zinc-500 text-xs font-mono-code">
+            // QUEUE EMPTY. ALL PENDING SUBMISSIONS CLEARED.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-y border-slate-100">
+            <table className="w-full text-left text-xs font-mono-code">
+              <thead className="bg-white/[0.02] text-zinc-500 uppercase tracking-wider text-[10px] border-y border-white/[0.06]">
                 <tr>
                   <th className="py-3 px-4">Request Ref</th>
                   <th className="py-3 px-4">Department Gate</th>
-                  <th className="py-3 px-4">Current Status</th>
-                  <th className="py-3 px-4">Outstanding Dues</th>
-                  <th className="py-3 px-4 text-right">Verification Action</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4">Liabilities</th>
+                  <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/[0.04]">
                 {pendingApprovals.map((appr) => (
-                  <tr key={appr.id} className="hover:bg-slate-50/60 transition">
-                    <td className="py-3.5 px-4 font-bold text-slate-900">
-                      Request #{appr.request_id}
+                  <tr key={appr.id} className="hover:bg-white/[0.02] transition">
+                    <td className="py-3.5 px-4 font-bold text-zinc-200">
+                      #{appr.request_id}
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="font-semibold text-slate-800">{appr.department_name}</span>
-                      <span className="text-[10px] text-slate-400 block">Gate {appr.clearance_gate}</span>
+                      <span className="font-semibold text-zinc-200">{appr.department_name}</span>
+                      <span className="text-[10px] text-zinc-500 block">Gate 0{appr.clearance_gate}</span>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                        <Clock className="w-3 h-3" />
+                      <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                        <Clock className="w-3 h-3 text-amber-400" />
                         <span>PENDING</span>
                       </span>
                     </td>
                     <td className="py-3.5 px-4">
                       {appr.due_amount > 0 ? (
-                        <span className="font-bold text-red-600">₹{Number(appr.due_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                        <span className="font-bold text-rose-400">₹{Number(appr.due_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                       ) : (
-                        <span className="text-slate-400">₹0.00</span>
+                        <span className="text-zinc-500">₹0.00</span>
                       )}
                     </td>
                     <td className="py-3.5 px-4 text-right">
@@ -179,9 +183,9 @@ export const StaffDashboard = ({ user }) => {
                           setRemarks('All books and dues verified with zero liabilities.');
                           setDueAmount('0.00');
                         }}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg transition shadow-xs"
+                        className="bg-white hover:bg-zinc-200 text-zinc-950 font-bold px-3 py-1.5 rounded-lg transition text-xs cursor-pointer shadow-sm"
                       >
-                        Review & Sign
+                        // review_and_sign
                       </button>
                     </td>
                   </tr>
@@ -194,26 +198,26 @@ export const StaffDashboard = ({ user }) => {
 
       {/* Locked / Prerequisite Blocked Queue */}
       {lockedApprovals.length > 0 && (
-        <div className="bg-slate-50/70 rounded-2xl border border-slate-200 p-6 space-y-3">
+        <div className="glow-card rounded-2xl p-5 sm:p-6 space-y-3 bg-[#0a0b10]">
           <div className="flex items-center space-x-2">
-            <Lock className="w-4 h-4 text-slate-500" />
-            <h3 className="font-bold text-sm text-slate-800">
-              Downstream Dependent Requests ({lockedApprovals.length})
+            <Lock className="w-4 h-4 text-zinc-500" />
+            <h3 className="font-semibold text-xs text-zinc-300 font-mono-code">
+              DOWNSTREAM BLOCKED (DEPENDENCY RESOLUTION) // {lockedApprovals.length}
             </h3>
           </div>
-          <p className="text-xs text-slate-500">
-            These requests belong to sequential gates (Department Labs / Accounts) and are blocked by the Chain of Responsibility until all prior gates are fully approved.
+          <p className="text-xs text-zinc-500">
+            Requests assigned to sequential gates (Department Labs / Accounts) blocked until upstream gates sign off.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {lockedApprovals.map((appr) => (
-              <div key={appr.id} className="p-3 bg-white rounded-xl border border-slate-200 text-xs">
+              <div key={appr.id} className="p-3 bg-white/[0.02] rounded-xl border border-white/[0.06] text-xs font-mono-code">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-bold text-slate-800">Request #{appr.request_id}</span>
-                  <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded border border-slate-200">
-                    GATE LOCKED
+                  <span className="font-semibold text-zinc-300">Request #{appr.request_id}</span>
+                  <span className="text-[9px] bg-zinc-800 text-zinc-400 px-2 py-0.5 rounded">
+                    LOCKED
                   </span>
                 </div>
-                <p className="text-slate-400 text-[11px]">Awaiting prerequisite department sign-offs.</p>
+                <p className="text-zinc-500 text-[11px]">Awaiting prerequisite department sign-offs.</p>
               </div>
             ))}
           </div>
@@ -221,44 +225,48 @@ export const StaffDashboard = ({ user }) => {
       )}
 
       {/* Grievance Resolution Queue */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="glow-card rounded-2xl p-5 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
           <div>
-            <h3 className="font-bold text-base text-slate-900">Department Grievances & SLA Queue</h3>
-            <p className="text-xs text-slate-500">Student appeals and disputes under active SLA timers.</p>
+            <h3 className="font-semibold text-sm text-zinc-100 font-mono-code">
+              GRIEVANCE ESCALATION PIPELINE // SLA WATCH
+            </h3>
+            <p className="text-xs text-zinc-400">Student appeals and disputes under active SLA timers.</p>
           </div>
         </div>
 
         {grievances.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4 text-center">No open grievances for this department.</p>
+          <p className="text-xs font-mono-code text-zinc-500 py-4 text-center">
+            // NO ACTIVE GRIEVANCES FOR THIS DEPARTMENT DESK.
+          </p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 font-mono-code text-xs">
             {grievances.map((g) => (
               <div
                 key={g.id}
                 className={`p-4 rounded-xl border transition flex flex-col md:flex-row md:items-center justify-between gap-4 ${
                   g.is_escalated
-                    ? 'bg-red-50/70 border-red-200'
+                    ? 'bg-rose-950/20 border-rose-500/40'
                     : g.status === 'RESOLVED'
-                    ? 'bg-slate-50 border-slate-200'
-                    : 'bg-amber-50/50 border-amber-200'
+                    ? 'bg-emerald-950/15 border-emerald-500/30'
+                    : 'bg-white/[0.02] border-white/[0.06]'
                 }`}
               >
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-bold text-sm text-slate-900">{g.subject}</span>
-                    <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-slate-200">
+                    <span className="font-semibold text-zinc-200">{g.subject}</span>
+                    <span className="text-[10px] bg-white/[0.05] text-zinc-400 px-2 py-0.5 rounded border border-white/[0.08]">
                       Student: {g.student_name}
                     </span>
                     {g.is_escalated && (
-                      <span className="text-[10px] font-bold bg-red-600 text-white px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded">
                         ESCALATED TO DEAN
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-600">{g.description}</p>
+                  <p className="text-xs text-zinc-400">{g.description}</p>
                   {g.staff_response && (
-                    <p className="text-xs text-emerald-700 bg-emerald-50 p-2 rounded border border-emerald-200">
+                    <p className="text-xs text-emerald-400 bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
                       <strong>Resolution: </strong>{g.staff_response}
                     </p>
                   )}
@@ -270,9 +278,9 @@ export const StaffDashboard = ({ user }) => {
                       setSelectedGrievance(g);
                       setStaffResponse('');
                     }}
-                    className="shrink-0 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2 rounded-xl text-xs transition"
+                    className="shrink-0 bg-white hover:bg-zinc-200 text-zinc-950 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer"
                   >
-                    Respond & Resolve
+                    // respond_and_resolve
                   </button>
                 )}
               </div>
@@ -283,18 +291,18 @@ export const StaffDashboard = ({ user }) => {
 
       {/* Decision Modal */}
       {selectedApproval && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-bold text-lg text-slate-900 mb-1">
-              Verify Clearance: Request #{selectedApproval.request_id}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 font-mono-code text-xs">
+          <div className="glow-card rounded-2xl max-w-md w-full p-6 border border-white/[0.12] bg-[#0d0e15]">
+            <h3 className="font-bold text-sm text-zinc-100 mb-1">
+              // VERIFY_CLEARANCE: REQUEST #{selectedApproval.request_id}
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
-              Department: <strong>{selectedApproval.department_name}</strong> (Gate {selectedApproval.clearance_gate})
+            <p className="text-xs text-zinc-400 mb-4">
+              Desk: <strong className="text-zinc-200">{selectedApproval.department_name}</strong> (Gate 0{selectedApproval.clearance_gate})
             </p>
 
             <form onSubmit={handleDecisionSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1 text-[10px]">
                   Decision
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -304,25 +312,25 @@ export const StaffDashboard = ({ user }) => {
                       setDecisionType('APPROVED');
                       setDueAmount('0.00');
                     }}
-                    className={`p-3 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${
+                    className={`p-3 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition cursor-pointer ${
                       decisionType === 'APPROVED'
-                        ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm'
+                        : 'bg-white/[0.02] text-zinc-400 border-white/[0.08] hover:bg-white/[0.04]'
                     }`}
                   >
-                    <CheckCircle2 className="w-4 h-4" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     <span>Approve & Sign</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setDecisionType('REJECTED')}
-                    className={`p-3 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition ${
+                    className={`p-3 rounded-xl text-xs font-bold border flex items-center justify-center space-x-2 transition cursor-pointer ${
                       decisionType === 'REJECTED'
-                        ? 'bg-red-600 text-white border-red-600'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-sm'
+                        : 'bg-white/[0.02] text-zinc-400 border-white/[0.08] hover:bg-white/[0.04]'
                     }`}
                   >
-                    <XCircle className="w-4 h-4" />
+                    <XCircle className="w-4 h-4 text-rose-400" />
                     <span>Reject / Block</span>
                   </button>
                 </div>
@@ -330,37 +338,37 @@ export const StaffDashboard = ({ user }) => {
 
               {decisionType === 'REJECTED' && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                    Outstanding Due Amount (₹ INR)
+                  <label className="block text-zinc-400 uppercase tracking-wider mb-1 text-[10px]">
+                    Outstanding Liability (₹ INR)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     value={dueAmount}
                     onChange={(e) => setDueAmount(e.target.value)}
-                    className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-red-500"
+                    className="w-full bg-black/50 border border-rose-500/40 rounded-xl p-2.5 text-rose-200 focus:outline-hidden"
                     required
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1 text-[10px]">
                   Official Remarks / Justification
                 </label>
                 <textarea
                   rows={3}
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                  className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
                   required
                 />
               </div>
 
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[11px] text-slate-600 flex items-start space-x-2">
-                <KeyRound className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="p-3 bg-white/[0.02] rounded-xl border border-white/[0.06] text-[11px] text-zinc-400 flex items-start space-x-2">
+                <KeyRound className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>
-                  Approval will generate an irreversible <strong>HMAC-SHA256 Digital Signature Seal</strong> tied to your officer identity and the clearance record.
+                  Approval will generate an irreversible <strong className="text-zinc-200">HMAC-SHA256 Digital Signature</strong> attached to your officer record.
                 </span>
               </div>
 
@@ -368,17 +376,17 @@ export const StaffDashboard = ({ user }) => {
                 <button
                   type="button"
                   onClick={() => setSelectedApproval(null)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-4 py-2 text-zinc-400 hover:text-white rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={processing}
-                  className={`px-5 py-2 text-sm font-semibold text-white rounded-xl transition ${
+                  className={`px-5 py-2 font-bold rounded-xl transition cursor-pointer text-zinc-950 ${
                     decisionType === 'APPROVED'
-                      ? 'bg-emerald-600 hover:bg-emerald-700'
-                      : 'bg-red-600 hover:bg-red-700'
+                      ? 'bg-emerald-400 hover:bg-emerald-300'
+                      : 'bg-rose-400 hover:bg-rose-300'
                   }`}
                 >
                   {processing ? 'Signing...' : `Confirm ${decisionType}`}
@@ -391,26 +399,26 @@ export const StaffDashboard = ({ user }) => {
 
       {/* Grievance Resolution Modal */}
       {selectedGrievance && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-bold text-lg text-slate-900 mb-2">Resolve Grievance #{selectedGrievance.id}</h3>
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 mb-4">
-              <p><strong>Student:</strong> {selectedGrievance.student_name}</p>
-              <p><strong>Subject:</strong> {selectedGrievance.subject}</p>
-              <p className="mt-1 text-slate-500">{selectedGrievance.description}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 font-mono-code text-xs">
+          <div className="glow-card rounded-2xl max-w-md w-full p-6 border border-white/[0.12] bg-[#0d0e15]">
+            <h3 className="font-bold text-sm text-zinc-100 mb-2">// RESOLVE GRIEVANCE #{selectedGrievance.id}</h3>
+            <div className="bg-white/[0.02] p-3 rounded-xl border border-white/[0.06] text-zinc-300 mb-4">
+              <p><strong className="text-zinc-400">Student:</strong> {selectedGrievance.student_name}</p>
+              <p><strong className="text-zinc-400">Subject:</strong> {selectedGrievance.subject}</p>
+              <p className="mt-1 text-zinc-500 text-[11px]">{selectedGrievance.description}</p>
             </div>
 
             <form onSubmit={handleGrievanceResolve} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
-                  Department Resolution Details
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1 text-[10px]">
+                  Resolution Notes
                 </label>
                 <textarea
                   rows={4}
                   value={staffResponse}
                   onChange={(e) => setStaffResponse(e.target.value)}
-                  placeholder="Explain whether dues are waived, records updated, or what steps student must follow..."
-                  className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Explain whether dues are waived or updated..."
+                  className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
                   required
                 />
               </div>
@@ -419,14 +427,14 @@ export const StaffDashboard = ({ user }) => {
                 <button
                   type="button"
                   onClick={() => setSelectedGrievance(null)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-4 py-2 text-zinc-400 hover:text-white rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={resolvingGrievance}
-                  className="px-5 py-2 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition"
+                  className="px-5 py-2 font-bold text-zinc-950 bg-white hover:bg-zinc-200 rounded-xl transition cursor-pointer"
                 >
                   {resolvingGrievance ? 'Submitting...' : 'Mark as Resolved'}
                 </button>

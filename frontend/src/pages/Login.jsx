@@ -23,39 +23,39 @@ export const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto my-12 bg-white rounded-3xl border border-slate-200 p-8 shadow-xl">
+    <div className="max-w-md mx-auto my-12 glow-card rounded-2xl border border-white/[0.1] p-8 shadow-2xl bg-[#0c0d14]">
       <div className="text-center space-y-2 mb-6">
-        <div className="w-12 h-12 bg-red-900 text-amber-200 rounded-2xl flex items-center justify-center mx-auto shadow-md font-black text-xl">
+        <div className="w-12 h-12 bg-rose-950/60 border border-rose-500/30 text-rose-300 rounded-xl flex items-center justify-center mx-auto shadow-md font-mono-code font-bold text-sm">
           PEC
         </div>
-        <h2 className="text-2xl font-black text-slate-900">Sign in to PEC Clearance Engine</h2>
-        <p className="text-xs text-slate-500">
-          Punjab Engineering College (Sector 12, Chandigarh) • Enter credentials or pick a demo evaluator persona.
+        <h2 className="text-xl font-bold text-zinc-100 font-mono-code">// AUTHENTICATE_SESSION</h2>
+        <p className="text-xs text-zinc-400 font-mono-code">
+          Punjab Engineering College (Sector 12, Chandigarh) • Clearance Engine Access Portal
         </p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-xs text-red-600 rounded-xl">
+        <div className="mb-4 p-3 bg-rose-950/40 border border-rose-500/30 text-xs font-mono-code text-rose-300 rounded-xl">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 font-mono-code text-xs">
         <div>
-          <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+          <label className="block text-zinc-400 uppercase tracking-wider mb-1">
             Institutional Email
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="e.g. alice@university.edu"
-            className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+            placeholder="e.g. alice@pec.edu.in"
+            className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
             required
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+          <label className="block text-zinc-400 uppercase tracking-wider mb-1">
             Password
           </label>
           <input
@@ -63,25 +63,25 @@ export const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
             required
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition shadow-xs flex items-center justify-center space-x-2"
+          className="w-full py-2.5 bg-white hover:bg-zinc-200 text-zinc-950 font-bold text-xs rounded-xl transition shadow-md flex items-center justify-center space-x-2 cursor-pointer"
         >
-          <span>{loading ? 'Signing in...' : 'Sign In'}</span>
+          <span>{loading ? '// authenticating...' : '// sign_in'}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>
 
       {/* Demo Switcher Quick Buttons */}
-      <div className="mt-8 pt-6 border-t border-slate-100">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center space-x-1">
-          <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
-          <span>One-Click Demo Personas (Evaluation)</span>
+      <div className="mt-8 pt-6 border-t border-white/[0.08]">
+        <p className="text-[10px] font-mono-code uppercase tracking-wider text-zinc-500 mb-3 flex items-center space-x-1.5">
+          <UserCheck className="w-3.5 h-3.5 text-rose-400" />
+          <span>EVALUATOR QUICK ACCESS // PRE-SEEDED</span>
         </p>
         <div className="space-y-2">
           {DEMO_USERS.slice(0, 5).map((demo) => (
@@ -89,14 +89,14 @@ export const Login = () => {
               key={demo.email}
               type="button"
               onClick={() => demoLogin(demo.email)}
-              className="w-full text-left p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition text-xs flex justify-between items-center"
+              className="w-full text-left p-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.06] transition text-xs font-mono-code flex justify-between items-center cursor-pointer"
             >
-              <div>
-                <span className="font-bold text-slate-800 block">{demo.label}</span>
-                <span className="text-[10px] text-slate-400">{demo.desc}</span>
+              <div className="truncate mr-2">
+                <span className="font-semibold text-zinc-200 block truncate">{demo.label}</span>
+                <span className="text-[10px] text-zinc-500 block truncate">{demo.desc}</span>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">
-                Log in
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 shrink-0">
+                AUTH
               </span>
             </button>
           ))}

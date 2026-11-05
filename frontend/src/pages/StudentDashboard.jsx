@@ -93,56 +93,60 @@ export const StudentDashboard = ({ user }) => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-red-950 via-rose-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+      {/* Welcome Banner - Clean Glowing Terminal Aesthetics with High Contrast */}
+      <div className="glow-card ambient-glow-border p-6 sm:p-8 relative rounded-2xl">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-rose-500/20 via-purple-500/15 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
+        <div className="absolute bottom-[-50px] left-[30%] w-[300px] h-[300px] bg-cyan-500/15 rounded-full blur-2xl pointer-events-none animate-float" />
+
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center space-x-2 bg-red-900/80 px-3 py-1 rounded-full text-xs font-semibold text-amber-200 border border-red-800 mb-3">
-            <span>PEC SID: {user.roll_number || 'Enrolled Student'}</span>
-            <span>•</span>
-            <span>{user.email}</span>
-            <span>•</span>
-            <span>PEC Chandigarh</span>
+          <div className="inline-flex items-center space-x-2 bg-[var(--bg-surface-hover)] px-3.5 py-1.5 rounded-full text-xs font-mono-code border border-rose-500/40 mb-3 shadow-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block mr-1 animate-pulse" />
+            <span className="font-bold text-rose-500 dark:text-rose-400">SID // {user.roll_number || 'ENROLLED STUDENT'}</span>
+            <span className="text-zinc-400">•</span>
+            <span className="text-[var(--text-primary)] font-medium">{user.email}</span>
+            <span className="text-zinc-400">•</span>
+            <span className="text-cyan-600 dark:text-cyan-400 font-bold">PEC SEC-12</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Welcome, {user.full_name}
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-primary)] font-mono-code">
+            welcome, <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">{user.full_name.toLowerCase()}</span>
           </h1>
-          <p className="text-sm text-rose-100 mt-2 leading-relaxed">
-            Punjab Engineering College Digital Clearance Engine: Track Dr. B.R. Ambedkar Central Library, Hostels, Gymkhana, Department Labs, and Accounts Branch clearances in real-time.
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-2.5 leading-relaxed font-sans">
+            Autonomous clearance runtime: Real-time verification status across Dr. B.R. Ambedkar Central Library, PEC Hostels, Gymkhana, Research Labs, and Accounts Branch.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3 font-mono-code text-xs">
             {!activeRequest ? (
               <button
                 onClick={() => setIsApplyModalOpen(true)}
-                className="bg-white text-indigo-900 hover:bg-indigo-50 font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center space-x-2 shadow-sm"
+                className="bg-rose-600 hover:bg-rose-500 text-white hover:scale-105 active:scale-95 font-bold px-5 py-2.5 rounded-xl transition duration-200 flex items-center space-x-2 shadow-lg shadow-rose-500/20 cursor-pointer"
               >
-                <PlusCircle className="w-4 h-4 text-indigo-600" />
-                <span>Apply for Clearance</span>
+                <PlusCircle className="w-4 h-4 text-white" />
+                <span>// apply_clearance</span>
               </button>
             ) : activeRequest.overall_status === 'APPROVED' ? (
               <button
                 onClick={() => setIsCertModalOpen(true)}
-                className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition flex items-center space-x-2 shadow-sm"
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 hover:scale-105 active:scale-95 text-white font-extrabold px-6 py-2.5 rounded-xl transition duration-300 flex items-center space-x-2 shadow-xl shadow-emerald-500/30 cursor-pointer animate-glow-pulse"
               >
-                <Download className="w-4 h-4" />
-                <span>View & Download Certificate</span>
+                <Download className="w-4 h-4 text-white" />
+                <span>// download_certificate.pdf</span>
               </button>
             ) : (
               <button
                 onClick={() => setIsGrievanceModalOpen(true)}
-                className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center space-x-2 shadow-sm"
+                className="bg-amber-500/20 hover:bg-amber-500/30 hover:scale-105 text-amber-700 dark:text-amber-200 border border-amber-500/50 font-bold px-5 py-2.5 rounded-xl transition duration-200 flex items-center space-x-2 cursor-pointer shadow-md shadow-amber-500/10"
               >
-                <AlertTriangle className="w-4 h-4" />
-                <span>File Grievance / Dispute Dues</span>
+                <AlertTriangle className="w-4 h-4 text-amber-500" />
+                <span>// file_dispute</span>
               </button>
             )}
 
             <button
               onClick={() => setIsGrievanceModalOpen(true)}
-              className="bg-indigo-800/80 hover:bg-indigo-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm border border-indigo-600 transition flex items-center space-x-2"
+              className="bg-[var(--bg-surface-hover)] hover:bg-rose-500/10 hover:scale-105 active:scale-95 text-[var(--text-primary)] font-medium px-5 py-2.5 rounded-xl border border-[var(--border-subtle)] transition duration-200 flex items-center space-x-2 cursor-pointer shadow-sm"
             >
-              <HelpCircle className="w-4 h-4 text-indigo-300" />
-              <span>Submit Grievance</span>
+              <HelpCircle className="w-4 h-4 text-rose-500" />
+              <span>// submit_grievance</span>
             </button>
           </div>
         </div>
@@ -152,36 +156,39 @@ export const StudentDashboard = ({ user }) => {
       {activeRequest ? (
         <div className="space-y-6">
           {/* Status Header Bar */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="glow-card p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Request #{activeRequest.id}
+                <span className="text-xs font-mono-code text-zinc-500 uppercase tracking-wider">
+                  REQUEST_ID // #{activeRequest.id}
                 </span>
                 <span
-                  className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                  className={`text-[10px] font-mono-code font-bold px-2.5 py-0.5 rounded-full border ${
                     activeRequest.overall_status === 'APPROVED'
-                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                       : activeRequest.overall_status === 'REJECTED'
-                      ? 'bg-red-100 text-red-800 border-red-300'
-                      : 'bg-amber-100 text-amber-800 border-amber-300'
+                      ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                      : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                   }`}
                 >
-                  {activeRequest.overall_status}
+                  STATUS: {activeRequest.overall_status}
                 </span>
               </div>
-              <h2 className="text-lg font-bold text-slate-900 mt-1">
-                {activeRequest.reason} ({activeRequest.academic_year} • {activeRequest.semester})
+              <h2 className="text-base sm:text-lg font-bold text-zinc-100 mt-1.5 font-mono-code">
+                {activeRequest.reason}
               </h2>
+              <p className="text-xs text-zinc-400 mt-0.5 font-mono-code">
+                TERM // {activeRequest.academic_year} • {activeRequest.semester}
+              </p>
             </div>
 
             {activeRequest.overall_status === 'APPROVED' && (
               <button
                 onClick={() => setIsCertModalOpen(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition shadow-xs"
+                className="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono-code font-semibold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 transition cursor-pointer"
               >
-                <Download className="w-4 h-4" />
-                <span>Certificate Ref: {activeRequest.certificate_id}</span>
+                <Download className="w-4 h-4 text-emerald-400" />
+                <span>REF: {activeRequest.certificate_id}</span>
               </button>
             )}
           </div>
@@ -190,43 +197,47 @@ export const StudentDashboard = ({ user }) => {
           <ClearancePipeline approvals={activeRequest.approvals} />
         </div>
       ) : (
-        <div className="bg-white p-10 rounded-3xl border border-dashed border-slate-300 text-center space-y-4">
-          <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto">
-            <FileText className="w-7 h-7" />
+        <div className="glow-card p-10 rounded-2xl text-center space-y-4">
+          <div className="w-12 h-12 bg-white/[0.04] border border-white/[0.08] text-zinc-400 rounded-xl flex items-center justify-center mx-auto">
+            <FileText className="w-6 h-6 text-rose-400" />
           </div>
           <div className="max-w-md mx-auto">
-            <h3 className="font-bold text-slate-900 text-lg">No Active Clearance Request Found</h3>
-            <p className="text-xs text-slate-500 mt-1">
-              You do not have a clearance process underway. Initiate a new clearance request to begin the verification chain across Library, Hostel, Sports, Research Labs, and Accounts.
+            <h3 className="font-bold text-zinc-200 text-base font-mono-code">// NO ACTIVE CLEARANCE</h3>
+            <p className="text-xs text-zinc-400 mt-1">
+              No clearance pipeline active. Initiate a new clearance request to trigger the multi-gate CoR chain.
             </p>
           </div>
           <button
             onClick={() => setIsApplyModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition shadow-xs inline-flex items-center space-x-2"
+            className="bg-white text-zinc-950 hover:bg-zinc-200 font-bold px-5 py-2.5 rounded-xl text-xs font-mono-code transition inline-flex items-center space-x-2 cursor-pointer shadow-md"
           >
-            <PlusCircle className="w-4 h-4" />
-            <span>Initiate Clearance Request</span>
+            <PlusCircle className="w-4 h-4 text-rose-600" />
+            <span>// initiate_clearance</span>
           </button>
         </div>
       )}
 
       {/* Student Grievance Tracker */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div className="glow-card rounded-2xl p-5 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
           <div>
-            <h3 className="font-bold text-base text-slate-900">Your Submitted Grievances</h3>
-            <p className="text-xs text-slate-500">Track resolution progress and SLA escalation deadlines.</p>
+            <h3 className="font-semibold text-sm text-zinc-100 font-mono-code">
+              GRIEVANCE TICKETS // SLA RUNTIME
+            </h3>
+            <p className="text-xs text-zinc-400">Track resolution progress and SLA escalation deadlines.</p>
           </div>
           <button
             onClick={() => setIsGrievanceModalOpen(true)}
-            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition"
+            className="text-xs font-mono-code text-rose-300 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-3 py-1.5 rounded-lg transition cursor-pointer"
           >
-            + New Grievance
+            + file_ticket
           </button>
         </div>
 
         {grievances.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4 text-center">No grievances filed. All good!</p>
+          <p className="text-xs font-mono-code text-zinc-500 py-6 text-center">
+            // NO ACTIVE GRIEVANCES FOUND. ALL CLEAR.
+          </p>
         ) : (
           <div className="space-y-3">
             {grievances.map((g) => (
@@ -234,42 +245,42 @@ export const StudentDashboard = ({ user }) => {
                 key={g.id}
                 className={`p-4 rounded-xl border transition ${
                   g.is_escalated
-                    ? 'bg-red-50/50 border-red-200'
+                    ? 'bg-rose-950/20 border-rose-500/40'
                     : g.status === 'RESOLVED'
-                    ? 'bg-emerald-50/30 border-emerald-200'
-                    : 'bg-slate-50/70 border-slate-200'
+                    ? 'bg-emerald-950/20 border-emerald-500/30'
+                    : 'bg-white/[0.02] border-white/[0.06]'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                   <div className="flex items-center space-x-2">
-                    <span className="font-bold text-sm text-slate-900">{g.subject}</span>
-                    <span className="text-[10px] font-mono bg-slate-200 text-slate-700 px-2 py-0.5 rounded">
+                    <span className="font-semibold text-xs text-zinc-100 font-mono-code">{g.subject}</span>
+                    <span className="text-[10px] font-mono-code bg-white/[0.05] text-zinc-400 px-2 py-0.5 rounded border border-white/[0.08]">
                       {g.department_name}
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     {g.is_escalated ? (
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300 flex items-center space-x-1">
-                        <ShieldAlert className="w-3 h-3 text-red-600" />
+                      <span className="text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30 flex items-center space-x-1">
+                        <ShieldAlert className="w-3 h-3 text-rose-400" />
                         <span>SLA BREACH: ESCALATED TO DEAN</span>
                       </span>
                     ) : (
-                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                      <span className="text-[10px] font-mono-code px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">
                         {g.status}
                       </span>
                     )}
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    <span className="text-[10px] font-mono-code font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
                       {g.priority} ({g.sla_hours}h SLA)
                     </span>
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-600 mb-2">{g.description}</p>
+                <p className="text-xs text-zinc-400 mb-2">{g.description}</p>
 
                 {g.staff_response && (
-                  <div className="mt-2 p-2.5 bg-white rounded-lg border border-slate-200 text-xs">
-                    <span className="font-semibold text-slate-800">Department Response: </span>
-                    <span className="text-slate-600">{g.staff_response}</span>
+                  <div className="mt-2 p-2.5 bg-black/40 rounded-lg border border-white/[0.06] text-xs font-mono-code">
+                    <span className="text-zinc-500 block text-[10px] uppercase">DEPARTMENT RESPONSE:</span>
+                    <span className="text-zinc-300">{g.staff_response}</span>
                   </div>
                 )}
               </div>
@@ -280,42 +291,42 @@ export const StudentDashboard = ({ user }) => {
 
       {/* Apply Modal */}
       {isApplyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-bold text-lg text-slate-900 mb-4">Apply for Academic Clearance</h3>
-            <form onSubmit={handleApply} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+          <div className="glow-card rounded-2xl max-w-md w-full p-6 border border-white/[0.12] bg-[#0d0e15]">
+            <h3 className="font-bold text-base text-zinc-100 font-mono-code mb-4">// APPLY FOR CLEARANCE</h3>
+            <form onSubmit={handleApply} className="space-y-4 text-xs font-mono-code">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1">
                   Academic Year
                 </label>
                 <input
                   type="text"
                   value={applyForm.academic_year}
                   onChange={(e) => setApplyForm({ ...applyForm, academic_year: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1">
                   Semester
                 </label>
                 <input
                   type="text"
                   value={applyForm.semester}
                   onChange={(e) => setApplyForm({ ...applyForm, semester: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-zinc-400 uppercase tracking-wider mb-1">
                   Purpose / Reason
                 </label>
                 <select
                   value={applyForm.reason}
                   onChange={(e) => setApplyForm({ ...applyForm, reason: e.target.value })}
-                  className="w-full text-sm border border-slate-300 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-black/50 border border-white/[0.1] rounded-xl p-2.5 text-zinc-100 focus:outline-hidden focus:border-rose-500"
                 >
                   <option value="B.Tech Final Degree & Transcript Release (Batch 2022-26)">B.Tech Final Degree & Transcript Release (Batch 2022-26)</option>
                   <option value="Mandatory 6-Month Industrial Internship Clearance (Semester 7/8)">Mandatory 6-Month Industrial Internship Clearance (Semester 7/8)</option>
@@ -329,14 +340,14 @@ export const StudentDashboard = ({ user }) => {
                 <button
                   type="button"
                   onClick={() => setIsApplyModalOpen(false)}
-                  className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-xl"
+                  className="px-4 py-2 text-zinc-400 hover:text-white rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={applying}
-                  className="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition"
+                  className="px-5 py-2 font-bold text-zinc-950 bg-white hover:bg-zinc-200 rounded-xl transition cursor-pointer"
                 >
                   {applying ? 'Submitting...' : 'Submit Request'}
                 </button>

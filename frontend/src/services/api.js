@@ -92,6 +92,13 @@ export const api = {
     if (certHash) params.append('cert_hash', certHash);
     return request(`/certificate/verify?${params.toString()}`);
   },
-  getCertificateDownloadUrl: (requestId) =>
-    `${API_BASE}/certificate/download/${requestId}`,
+  downloadCertificate: async (requestId) => {
+    const response = await request(`/certificate/download/${requestId}`);
+    const blob = await response.blob();
+    return blob;
+  },
+  getCertificateDownloadUrl: (requestId) => {
+    const token = localStorage.getItem('token');
+    return `${API_BASE}/certificate/download/${requestId}${token ? `?token=${token}` : ''}`;
+  },
 };
