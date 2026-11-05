@@ -19,7 +19,7 @@
 
 ---
 
-## 🌟 Executive Summary for Evaluator
+## 🌟 Executive Overview & Problem Statement
 
 The **PEC Academic Grievance, No-Dues & Clearance Automation Engine** solves the long-standing bureaucratic problem of manual paper-based clearance circulars at Punjab Engineering College. 
 
@@ -30,7 +30,7 @@ During graduation or internship semesters, a student previously had to physicall
 2. **Cryptographic Validation**: Eliminates forged rubber stamps by stamping an irreversible **HMAC-SHA256 digital signature seal** on every departmental clearance step.
 3. **Automated Grievance Redressal (SLA Escalation)**: Enables students to formally dispute liabilities directly from their portal. Tickets operate on strict SLA countdown timers (Critical: 4h, High: 12h, Medium: 24h, Low: 48h) and automatically escalate to the **Dean Academic Affairs (DAA)** upon timer breach.
 4. **Verifiable Institutional Degree Clearance Certificates**: Generates tamper-evident, downloadable PDF credentials with official PEC letterhead and a public verification gateway for prospective employers and foreign universities.
-5. **Modern Living System UI**: Designed with an ultra-clean developer aesthetic inspired by modern engineering systems, featuring full **Bright & Dark Mode**, responsive telemetry widgets, and an instant **1-Click Evaluator Persona Switcher**.
+5. **Modern Living System UI**: Designed with an ultra-clean developer aesthetic inspired by modern engineering systems, featuring full **Bright & Dark Mode**, responsive telemetry widgets, and an instant **1-Click Role Switcher**.
 
 ---
 
@@ -72,13 +72,13 @@ flowchart LR
 
 ---
 
-## 👥 Evaluator Personas (1-Click Switcher Available in UI)
+## 👥 Demo Personas & Test Credentials (1-Click Switcher Available in UI)
 
-To simplify live evaluation, the system includes pre-seeded demo accounts. In the top navigation bar, click the **`personas`** dropdown to instantly switch between accounts without entering passwords.
+To simplify testing and demonstrations, the system includes pre-seeded demo accounts. In the top navigation bar, click the **`personas`** dropdown to instantly switch between accounts without entering passwords.
 
 All demo accounts use password: `password123`
 
-| Role | Persona Name | Email | SID / Designation | Evaluation Scenario |
+| Role | Persona Name | Email | SID / Designation | Scenario & State |
 | :--- | :--- | :--- | :--- | :--- |
 | **Student (Cleared)** | **Raghav Bhardwaj** | `raghav@pec.edu.in` | **`24106017`** (B.Tech CSE) | All 5 gates approved with HMAC signatures. Official PEC certificate ready to view and download. |
 | **Student (In-Progress)** | **Karan Jain** | `karan@pec.edu.in` | **`24106003`** (B.Tech CSE) | Gate 1 partially cleared (Library & Hostel approved; Gymkhana ₹500 dues pending). Gates 2 & 3 locked. |
