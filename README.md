@@ -13,7 +13,7 @@
 [![React](https://img.shields.io/badge/React-19.0-61dafb)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4.0-38bdf8)](https://tailwindcss.com/)
 
-**Submitted by:** Raghav Bhardwaj (SID: `24106017`) & Karan Jain (SID: `24106003`) (B.Tech CSE, Batch 2022-2026)  
+**Submitted by:** Raghav Bhardwaj (SID: `24106017`) & Karan Jain (SID: `24106003`) (B.Tech CSE, Batch 2024-2028)  
 **Submitted to:** Dr. Rajesh Bhatia (Course: Software Engineering)  
 **Institution:** Punjab Engineering College (Deemed to be University), Sector 12, Chandigarh  
 
