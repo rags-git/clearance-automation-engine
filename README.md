@@ -74,20 +74,20 @@ flowchart LR
 
 ## 👥 Demo Personas & Test Credentials (1-Click Switcher Available in UI)
 
-To simplify testing and demonstrations, the system includes pre-seeded demo accounts. In the top navigation bar, click the **`personas`** dropdown to instantly switch between accounts without entering passwords.
+To simplify testing and demonstrations, the system includes pre-seeded demo accounts. In the top navigation bar, click the **`personas`** dropdown or use the quick access buttons on the login screen to instantly switch between accounts without typing credentials.
 
-All demo accounts use password: `password123`
+> **Universal Demo Password:** `password123` (applies to all accounts below)
 
-| Role | Persona Name | Email | SID / Designation | Scenario & State |
-| :--- | :--- | :--- | :--- | :--- |
-| **Student (Cleared)** | **Raghav Bhardwaj** | `raghav@pec.edu.in` | **`24106017`** (B.Tech CSE) | All 5 gates approved with HMAC signatures. Official PEC certificate ready to view and download. |
-| **Student (In-Progress)** | **Karan Jain** | `karan@pec.edu.in` | **`24106003`** (B.Tech CSE) | Gate 1 partially cleared (Library & Hostel approved; Gymkhana ₹500 dues pending). Gates 2 & 3 locked. |
-| **Staff (Library)** | Central Librarian | `library@pec.edu.in` | Head, Dr. B.R. Ambedkar Library | Inspect Gate 1 pending book records and sign clearances. |
-| **Staff (Hostels)** | Chief Warden | `hostel@pec.edu.in` | PEC Hostels Office | Inspect hostel room surrender and mess fees. |
-| **Staff (Sports)** | Sports In-Charge | `sports@pec.edu.in` | President Gymkhana | Inspect equipment liabilities (e.g. Karan's ₹500 dues). |
-| **Staff (Labs)** | Head of Department | `labs@pec.edu.in` | HOD - Computing & Research Labs | Inspect Gate 2 lab equipment once Gate 1 clears. |
-| **Staff (Accounts)**| Accounts Officer | `accounts@pec.edu.in`| Caution Money & Finance | Gate 3 final release and caution money settlement. |
-| **Administrator** | Dean Academic Affairs | `admin@pec.edu.in` | DAA Office (PEC Chandigarh) | High-level telemetry, bottleneck analytics, SLA breach audits, and audit logs. |
+| Role | Persona Name | Institutional Email (Username) | Password | SID / Designation | Scenario & State |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Student (Cleared)** | **Raghav Bhardwaj** | `raghav@pec.edu.in` | `password123` | **`24106017`** (B.Tech CSE) | All 5 gates approved with HMAC signatures. Official PEC certificate ready to view and download. |
+| **Student (In-Progress)** | **Karan Jain** | `karan@pec.edu.in` | `password123` | **`24106003`** (B.Tech CSE) | Gate 1 partially cleared (Library & Hostel approved; Gymkhana ₹500 dues pending). Gates 2 & 3 locked. |
+| **Staff (Library)** | Central Librarian | `library@pec.edu.in` | `password123` | Head, Dr. B.R. Ambedkar Library | Inspect Gate 1 pending book records and sign clearances. |
+| **Staff (Hostels)** | Chief Warden | `hostel@pec.edu.in` | `password123` | PEC Hostels Office | Inspect hostel room surrender and mess fees. |
+| **Staff (Sports)** | Sports In-Charge | `sports@pec.edu.in` | `password123` | President Gymkhana | Inspect equipment liabilities (e.g. Karan's ₹500 dues). |
+| **Staff (Labs)** | Head of Department | `labs@pec.edu.in` | `password123` | HOD - Computing & Research Labs | Inspect Gate 2 lab equipment once Gate 1 clears. |
+| **Staff (Accounts)**| Accounts Officer | `accounts@pec.edu.in`| `password123` | Caution Money & Finance | Gate 3 final release and caution money settlement. |
+| **Administrator** | Dean Academic Affairs | `admin@pec.edu.in` | `password123` | DAA Office (PEC Chandigarh) | High-level telemetry, bottleneck analytics, SLA breach audits, and audit logs. |
 
 ---
 
