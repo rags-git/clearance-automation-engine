@@ -140,8 +140,22 @@ def seed_database():
             db.add(u)
         db.flush()
 
-        # PEC Students with authentic 8-digit PEC SIDs (e.g. 22103042 -> 2022 batch, 103 CSE, roll 042)
+        # PEC Students with authentic 8-digit PEC SIDs
         print("Seeding PEC engineering students...")
+        raghav = User(
+            email="raghav@pec.edu.in",
+            full_name="Raghav Bhardwaj",
+            role=RoleEnum.STUDENT,
+            roll_number="24106017",  # B.Tech CSE
+            hashed_password=default_pw
+        )
+        karan = User(
+            email="karan@pec.edu.in",
+            full_name="Karan Jain",
+            role=RoleEnum.STUDENT,
+            roll_number="24106003",  # B.Tech CSE
+            hashed_password=default_pw
+        )
         alice = User(
             email="alice@pec.edu.in",
             full_name="Alice Sharma",
@@ -170,13 +184,97 @@ def seed_database():
             roll_number="22103001",  # B.Tech CSE 2022-26
             hashed_password=default_pw
         )
-        for s in [alice, bob, charlie, demo_student]:
+        for s in [raghav, karan, alice, bob, charlie, demo_student]:
             db.add(s)
         db.flush()
 
-        # 1. Alice: Fully Approved Clearance with PEC Certificate Generated
+        # 0. Raghav: Fully Approved Clearance with PEC Certificate Generated
         print("Seeding PEC clearance requests...")
         now = datetime.now(timezone.utc)
+        req_raghav = ClearanceRequest(
+            student_id=raghav.id,
+            academic_year="2025-2026",
+            semester="Semester 8 (Final B.Tech)",
+            reason="B.Tech Final Degree & Transcript Release (Batch 2022-26)",
+            overall_status=ClearanceStatusEnum.APPROVED,
+            certificate_id="PEC-CLR-2026-00017",
+            certificate_hash="a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0",
+            created_at=now - timedelta(days=5),
+            updated_at=now - timedelta(days=1)
+        )
+        db.add(req_raghav)
+        db.flush()
+
+        # All 5 departments approved for Raghav with PEC digital signatures
+        for code, staff in staff_users.items():
+            dept = dept_objs[code]
+            sig = generate_digital_signature(staff.id, staff.full_name, code, req_raghav.id, now - timedelta(days=2))
+            appr = DepartmentApproval(
+                request_id=req_raghav.id,
+                department_id=dept.id,
+                status=ApprovalStatusEnum.APPROVED,
+                staff_id=staff.id,
+                approved_at=now - timedelta(days=2),
+                remarks=f"All assets surrendered and accounts reconciled with zero pending liability for {dept.name}.",
+                due_amount=0.0,
+                digital_signature=sig
+            )
+            db.add(appr)
+
+        # 0.5 Karan: In Progress (Gate 1 partially cleared at PEC)
+        req_karan = ClearanceRequest(
+            student_id=karan.id,
+            academic_year="2025-2026",
+            semester="Semester 8 (Final B.Tech)",
+            reason="Mandatory 6-Month Industrial Internship Clearance (Semester 8)",
+            overall_status=ClearanceStatusEnum.IN_PROGRESS,
+            created_at=now - timedelta(days=2),
+            updated_at=now - timedelta(hours=3)
+        )
+        db.add(req_karan)
+        db.flush()
+
+        db.add(DepartmentApproval(
+            request_id=req_karan.id,
+            department_id=dept_objs["LIBRARY"].id,
+            status=ApprovalStatusEnum.APPROVED,
+            staff_id=staff_users["LIBRARY"].id,
+            approved_at=now - timedelta(days=1),
+            remarks="Dr. B.R. Ambedkar Central Library books returned. No fine overdue.",
+            due_amount=0.0,
+            digital_signature=generate_digital_signature(staff_users["LIBRARY"].id, staff_users["LIBRARY"].full_name, "LIBRARY", req_karan.id, now - timedelta(days=1))
+        ))
+        db.add(DepartmentApproval(
+            request_id=req_karan.id,
+            department_id=dept_objs["HOSTEL"].id,
+            status=ApprovalStatusEnum.APPROVED,
+            staff_id=staff_users["HOSTEL"].id,
+            approved_at=now - timedelta(hours=5),
+            remarks="Kurukshetra Hostel Room #142 vacated, keys surrendered, mess balance settled.",
+            due_amount=0.0,
+            digital_signature=generate_digital_signature(staff_users["HOSTEL"].id, staff_users["HOSTEL"].full_name, "HOSTEL", req_karan.id, now - timedelta(hours=5))
+        ))
+        db.add(DepartmentApproval(
+            request_id=req_karan.id,
+            department_id=dept_objs["SPORTS"].id,
+            status=ApprovalStatusEnum.PENDING,
+            remarks="Pending Gymkhana badminton racket and tournament jersey return.",
+            due_amount=500.0  # INR (₹500)
+        ))
+        db.add(DepartmentApproval(
+            request_id=req_karan.id,
+            department_id=dept_objs["LABS"].id,
+            status=ApprovalStatusEnum.WAITING_PREREQUISITE,
+            remarks="Awaiting completion of Gate 1 parallel clearances (Gymkhana)."
+        ))
+        db.add(DepartmentApproval(
+            request_id=req_karan.id,
+            department_id=dept_objs["ACCOUNTS"].id,
+            status=ApprovalStatusEnum.WAITING_PREREQUISITE,
+            remarks="Awaiting all prior gates before releasing caution money security refund."
+        ))
+
+        # 1. Alice: Fully Approved Clearance with PEC Certificate Generated
         req_alice = ClearanceRequest(
             student_id=alice.id,
             academic_year="2025-2026",

@@ -5,12 +5,17 @@ from contextlib import asynccontextmanager
 from backend.app.core.config import settings
 from backend.app.core.database import engine, Base
 from backend.app.routers import auth, clearance, grievance, admin, certificate
+from backend.app.seed import seed_database
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create DB tables if not existing
+    # Create DB tables and auto-seed if not existing
     Base.metadata.create_all(bind=engine)
+    try:
+        seed_database()
+    except Exception as e:
+        print(f"Startup seed notice: {e}")
     yield
 
 
