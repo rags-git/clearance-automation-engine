@@ -81,7 +81,7 @@ export const Login = () => {
       <div className="mt-8 pt-6 border-t border-white/[0.08]">
         <p className="text-[10px] font-mono-code uppercase tracking-wider text-zinc-500 mb-3 flex items-center space-x-1.5">
           <UserCheck className="w-3.5 h-3.5 text-rose-400" />
-          <span>EVALUATOR QUICK ACCESS // PRE-SEEDED</span>
+          <span>DEMO QUICK ACCESS // PRE-SEEDED</span>
         </p>
         <div className="space-y-2">
           {DEMO_USERS.slice(0, 5).map((demo) => (
