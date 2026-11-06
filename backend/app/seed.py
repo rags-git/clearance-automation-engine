@@ -34,9 +34,45 @@ def seed_database():
     db = SessionLocal()
 
     try:
-        # Check if already seeded
+        default_pw = get_password_hash("password123")
+
+        # 1. Self-healing check: Ensure all existing users have valid password123 hash
+        existing_users = db.query(User).all()
+        if existing_users:
+            needs_update = False
+            from backend.app.core.security import verify_password
+            for u in existing_users:
+                if not verify_password("password123", u.hashed_password):
+                    u.hashed_password = default_pw
+                    needs_update = True
+            if needs_update:
+                db.commit()
+                print("Self-healed existing user passwords to password123.")
+
+        # Check if already fully seeded with departments
         if db.query(Department).first():
-            print("PEC Database already contains data. Skipping initial seeding.")
+            # Check if raghav and karan exist; if not, seed them into the existing database
+            raghav_exists = db.query(User).filter(User.email == "raghav@pec.edu.in").first()
+            if not raghav_exists:
+                print("Adding Raghav and Karan personas to existing database...")
+                raghav = User(
+                    email="raghav@pec.edu.in",
+                    full_name="Raghav Bhardwaj",
+                    role=RoleEnum.STUDENT,
+                    roll_number="24106017",
+                    hashed_password=default_pw
+                )
+                karan = User(
+                    email="karan@pec.edu.in",
+                    full_name="Karan Jain",
+                    role=RoleEnum.STUDENT,
+                    roll_number="24106003",
+                    hashed_password=default_pw
+                )
+                db.add(raghav)
+                db.add(karan)
+                db.commit()
+                print("Raghav and Karan personas added.")
             return
 
         print("Seeding PEC Chandigarh departments...")
