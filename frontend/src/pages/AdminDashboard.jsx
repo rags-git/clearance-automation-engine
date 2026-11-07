@@ -86,15 +86,15 @@ export const AdminDashboard = ({ user }) => {
       <div className="glow-card rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center space-x-2 bg-white/[0.04] px-3 py-1 rounded-full text-xs text-purple-300 mb-3 border border-white/[0.08]">
-              <Users className="w-3.5 h-3.5 text-purple-400" />
-              <span>DAA OVERSIGHT // INSTITUTIONAL TELEMETRY</span>
+            <div className="inline-flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full text-xs text-blue-800 mb-3 border border-blue-100">
+              <Users className="w-3.5 h-3.5 text-blue-700" />
+              <span>Administration</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              dean academic affairs
+              Clearance overview
             </h1>
             <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-2xl leading-relaxed font-sans">
-              Punjab Engineering College (Sector 12, Chandigarh): Real-time bottleneck identification, multi-gate status tracking, SLA grievance escalation engine, and immutable audit logs.
+              Monitor student requests, departmental progress, grievance deadlines, and the audit history.
             </p>
           </div>
 
@@ -106,7 +106,7 @@ export const AdminDashboard = ({ user }) => {
               title="Scan active grievances and auto-escalate overdue tickets"
             >
               <ShieldAlert className="w-4 h-4 text-rose-400" />
-              <span>{triggeringSla ? '// auditing_sla...' : '// run_sla_breach_audit'}</span>
+              <span>{triggeringSla ? 'Checking deadlines…' : 'Check grievance deadlines'}</span>
             </button>
             <button
               onClick={loadData}
@@ -121,9 +121,9 @@ export const AdminDashboard = ({ user }) => {
         {/* Tab Navigation */}
         <div className="mt-8 flex space-x-2 border-t border-white/[0.06] pt-4 overflow-x-auto">
           {[
-            { id: 'analytics', label: '// telemetry_kpis', icon: BarChart3 },
-            { id: 'requests', label: `// student_roster (${requests.length})`, icon: FileText },
-            { id: 'audit', label: `// audit_trail (${auditLogs.length})`, icon: History },
+            { id: 'analytics', label: 'Overview', icon: BarChart3 },
+            { id: 'requests', label: `Student requests (${requests.length})`, icon: FileText },
+            { id: 'audit', label: `Audit history (${auditLogs.length})`, icon: History },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

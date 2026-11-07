@@ -110,15 +110,15 @@ export const StaffDashboard = ({ user }) => {
     <div className="space-y-8">
       {/* Staff Header - Dark Living System Theme */}
       <div className="glow-card rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
-        <div className="inline-flex items-center space-x-2 bg-white/[0.04] px-3 py-1 rounded-full text-xs font-mono-code text-amber-300 mb-3 border border-white/[0.08]">
-          <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          <span>DEPARTMENT DESK // VERIFICATION TERMINAL</span>
+        <div className="inline-flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full text-xs text-blue-800 mb-3 border border-blue-100">
+          <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
+          <span>Department workspace</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-mono-code">
-          {user.full_name.toLowerCase()}
+          {user.full_name}
         </h1>
         <p className="text-xs sm:text-sm text-zinc-400 mt-2 max-w-2xl leading-relaxed">
-          Punjab Engineering College: Department clearance review console. Verify equipment returns, assess liability dues, and sign clearance records with HMAC-SHA256 seals.
+          Review student clearance requests, record any outstanding dues, and submit departmental decisions.
         </p>
       </div>
 
@@ -127,18 +127,18 @@ export const StaffDashboard = ({ user }) => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-white/[0.06] gap-2">
           <div>
             <h3 className="font-semibold text-sm text-zinc-100 font-mono-code">
-              ACTIVE QUEUE // AWAITING SIGNATURE
+              Awaiting your review
             </h3>
             <p className="text-xs text-zinc-400">Student requests ready for departmental review & digital signing.</p>
           </div>
           <span className="text-[10px] font-mono-code font-bold text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-            {pendingApprovals.length} IN FLIGHT
+            {pendingApprovals.length} pending
           </span>
         </div>
 
         {pendingApprovals.length === 0 ? (
           <div className="p-8 text-center text-zinc-500 text-xs font-mono-code">
-            // QUEUE EMPTY. ALL PENDING SUBMISSIONS CLEARED.
+            No requests are waiting for your department.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -185,7 +185,7 @@ export const StaffDashboard = ({ user }) => {
                         }}
                         className="bg-white hover:bg-zinc-200 text-zinc-950 font-bold px-3 py-1.5 rounded-lg transition text-xs cursor-pointer shadow-sm"
                       >
-                        // review_and_sign
+                        Review request
                       </button>
                     </td>
                   </tr>
@@ -229,9 +229,9 @@ export const StaffDashboard = ({ user }) => {
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
           <div>
             <h3 className="font-semibold text-sm text-zinc-100 font-mono-code">
-              GRIEVANCE ESCALATION PIPELINE // SLA WATCH
+              Grievances requiring attention
             </h3>
-            <p className="text-xs text-zinc-400">Student appeals and disputes under active SLA timers.</p>
+            <p className="text-xs text-zinc-400">Student appeals, disputes, and response deadlines.</p>
           </div>
         </div>
 
@@ -280,7 +280,7 @@ export const StaffDashboard = ({ user }) => {
                     }}
                     className="shrink-0 bg-white hover:bg-zinc-200 text-zinc-950 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer"
                   >
-                    // respond_and_resolve
+                    Respond
                   </button>
                 )}
               </div>

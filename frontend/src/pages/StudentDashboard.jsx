@@ -93,35 +93,31 @@ export const StudentDashboard = ({ user }) => {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Banner - Clean Glowing Terminal Aesthetics with High Contrast */}
-      <div className="glow-card ambient-glow-border p-6 sm:p-8 relative rounded-2xl">
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-rose-500/20 via-purple-500/15 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse-slow" />
-        <div className="absolute bottom-[-50px] left-[30%] w-[300px] h-[300px] bg-cyan-500/15 rounded-full blur-2xl pointer-events-none animate-float" />
-
+      <div className="glow-card p-6 sm:p-8 relative">
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center space-x-2 bg-[var(--bg-surface-hover)] px-3.5 py-1.5 rounded-full text-xs font-mono-code border border-rose-500/40 mb-3 shadow-sm">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block mr-1 animate-pulse" />
-            <span className="font-bold text-rose-500 dark:text-rose-400">SID // {user.roll_number || 'ENROLLED STUDENT'}</span>
+            <span className="font-semibold text-blue-700 dark:text-blue-300">Student ID: {user.roll_number || 'Enrolled student'}</span>
             <span className="text-zinc-400">•</span>
             <span className="text-[var(--text-primary)] font-medium">{user.email}</span>
             <span className="text-zinc-400">•</span>
             <span className="text-cyan-600 dark:text-cyan-400 font-bold">PEC SEC-12</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-primary)] font-mono-code">
-            welcome, <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">{user.full_name.toLowerCase()}</span>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+            Welcome, <span className="text-blue-700 dark:text-blue-300">{user.full_name}</span>
           </h1>
           <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-2.5 leading-relaxed font-sans">
-            Autonomous clearance runtime: Real-time verification status across Dr. B.R. Ambedkar Central Library, PEC Hostels, Gymkhana, Research Labs, and Accounts Branch.
+            View your clearance progress, follow departmental approvals, and contact a department if you need help.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3 font-mono-code text-xs">
+          <div className="mt-6 flex flex-wrap gap-3 text-sm">
             {!activeRequest ? (
               <button
                 onClick={() => setIsApplyModalOpen(true)}
                 className="bg-rose-600 hover:bg-rose-500 text-white hover:scale-105 active:scale-95 font-bold px-5 py-2.5 rounded-xl transition duration-200 flex items-center space-x-2 shadow-lg shadow-rose-500/20 cursor-pointer"
               >
                 <PlusCircle className="w-4 h-4 text-white" />
-                <span>// apply_clearance</span>
+                <span>Apply for clearance</span>
               </button>
             ) : activeRequest.overall_status === 'APPROVED' ? (
               <button
@@ -129,7 +125,7 @@ export const StudentDashboard = ({ user }) => {
                 className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 hover:scale-105 active:scale-95 text-white font-extrabold px-6 py-2.5 rounded-xl transition duration-300 flex items-center space-x-2 shadow-xl shadow-emerald-500/30 cursor-pointer animate-glow-pulse"
               >
                 <Download className="w-4 h-4 text-white" />
-                <span>// download_certificate.pdf</span>
+                <span>Download certificate</span>
               </button>
             ) : (
               <button
@@ -137,7 +133,7 @@ export const StudentDashboard = ({ user }) => {
                 className="bg-amber-500/20 hover:bg-amber-500/30 hover:scale-105 text-amber-700 dark:text-amber-200 border border-amber-500/50 font-bold px-5 py-2.5 rounded-xl transition duration-200 flex items-center space-x-2 cursor-pointer shadow-md shadow-amber-500/10"
               >
                 <AlertTriangle className="w-4 h-4 text-amber-500" />
-                <span>// file_dispute</span>
+                <span>Review a clearance issue</span>
               </button>
             )}
 
@@ -146,7 +142,7 @@ export const StudentDashboard = ({ user }) => {
               className="bg-[var(--bg-surface-hover)] hover:bg-rose-500/10 hover:scale-105 active:scale-95 text-[var(--text-primary)] font-medium px-5 py-2.5 rounded-xl border border-[var(--border-subtle)] transition duration-200 flex items-center space-x-2 cursor-pointer shadow-sm"
             >
               <HelpCircle className="w-4 h-4 text-rose-500" />
-              <span>// submit_grievance</span>
+              <span>Submit a grievance</span>
             </button>
           </div>
         </div>
@@ -160,7 +156,7 @@ export const StudentDashboard = ({ user }) => {
             <div>
               <div className="flex items-center space-x-3">
                 <span className="text-xs font-mono-code text-zinc-500 uppercase tracking-wider">
-                  REQUEST_ID // #{activeRequest.id}
+                  Request #{activeRequest.id}
                 </span>
                 <span
                   className={`text-[10px] font-mono-code font-bold px-2.5 py-0.5 rounded-full border ${
@@ -171,14 +167,14 @@ export const StudentDashboard = ({ user }) => {
                       : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                   }`}
                 >
-                  STATUS: {activeRequest.overall_status}
+                  {activeRequest.overall_status.replace('_', ' ')}
                 </span>
               </div>
               <h2 className="text-base sm:text-lg font-bold text-zinc-100 mt-1.5 font-mono-code">
                 {activeRequest.reason}
               </h2>
               <p className="text-xs text-zinc-400 mt-0.5 font-mono-code">
-                TERM // {activeRequest.academic_year} • {activeRequest.semester}
+                {activeRequest.academic_year} • {activeRequest.semester}
               </p>
             </div>
 
