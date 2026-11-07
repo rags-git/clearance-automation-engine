@@ -69,6 +69,23 @@ def test_dues_amount_boundary_values(amount):
     assert req.due_amount == amount
 
 
+@pytest.mark.parametrize("amount", [-0.01, -1, float("nan"), float("inf")])
+def test_dues_amount_rejects_negative_and_non_finite_values(amount):
+    with pytest.raises(ValidationError):
+        ApprovalDecisionRequest(decision=ApprovalStatusEnum.REJECTED, due_amount=amount)
+
+
+@pytest.mark.parametrize("payload", [
+    {"academic_year": "", "semester": "Semester 8", "reason": "Graduation"},
+    {"academic_year": "2025-2026", "semester": " ", "reason": "Graduation"},
+    {"academic_year": "2025-2026", "semester": "Semester 8", "reason": ""},
+])
+def test_clearance_request_rejects_empty_fields(payload):
+    from backend.app.schemas.schemas import ClearanceRequestCreate
+    with pytest.raises(ValidationError):
+        ClearanceRequestCreate(**payload)
+
+
 # ---------------------------------------------------------------------------
 # 3. Equivalence Partitioning: Grievance Priority & SLA Mappings
 # Valid partitions: CRITICAL (4h), HIGH (12h), MEDIUM (24h), LOW (48h)
@@ -107,6 +124,17 @@ def test_grievance_priority_invalid_partitions_rejection(invalid_priority):
             description="Testing invalid priority",
             priority=invalid_priority
         )
+
+
+@pytest.mark.parametrize("payload", [
+    {"department_id": 0, "subject": "Valid subject", "description": "Long enough description"},
+    {"department_id": 1, "subject": "x", "description": "Long enough description"},
+    {"department_id": 1, "subject": "Valid subject", "description": "short"},
+    {"department_id": 1, "subject": "Valid subject", "description": "Long enough description", "clearance_request_id": 0},
+])
+def test_grievance_rejects_invalid_submission_fields(payload):
+    with pytest.raises(ValidationError):
+        GrievanceCreate(**payload)
 
 
 # ---------------------------------------------------------------------------

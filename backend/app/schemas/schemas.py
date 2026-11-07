@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict, Field, field_validator
 from backend.app.models.models import (
     RoleEnum,
     ClearanceStatusEnum,
@@ -59,7 +59,7 @@ class DepartmentResponse(BaseModel):
 class ApprovalDecisionRequest(BaseModel):
     decision: ApprovalStatusEnum  # APPROVED or REJECTED
     remarks: Optional[str] = "Cleared with no pending dues."
-    due_amount: Optional[float] = 0.0
+    due_amount: Optional[float] = Field(default=0.0, ge=0, allow_inf_nan=False)
 
 
 class DepartmentApprovalResponse(BaseModel):
@@ -81,9 +81,14 @@ class DepartmentApprovalResponse(BaseModel):
 
 # Clearance Request Schemas
 class ClearanceRequestCreate(BaseModel):
-    academic_year: str = "2025-2026"
-    semester: str = "Semester 8"
-    reason: str = "Graduation Clearance & Degree Award"
+    academic_year: str = Field(default="2025-2026", min_length=4, max_length=20)
+    semester: str = Field(default="Semester 8", min_length=1, max_length=40)
+    reason: str = Field(default="Graduation Clearance & Degree Award", min_length=1, max_length=300)
+
+    @field_validator("academic_year", "semester", "reason", mode="before")
+    @classmethod
+    def strip_required_text(cls, value):
+        return value.strip() if isinstance(value, str) else value
 
 
 class ClearanceRequestResponse(BaseModel):
@@ -102,16 +107,21 @@ class ClearanceRequestResponse(BaseModel):
     certificate_hash: Optional[str] = None
     created_at: datetime
     updated_at: datetime
-    approvals: List[DepartmentApprovalResponse] = []
+    approvals: List[DepartmentApprovalResponse] = Field(default_factory=list)
 
 
 # Grievance Schemas
 class GrievanceCreate(BaseModel):
-    clearance_request_id: Optional[int] = None
-    department_id: int
-    subject: str
-    description: str
+    clearance_request_id: Optional[int] = Field(default=None, gt=0)
+    department_id: int = Field(gt=0)
+    subject: str = Field(min_length=3, max_length=200)
+    description: str = Field(min_length=10, max_length=5000)
     priority: GrievancePriorityEnum = GrievancePriorityEnum.MEDIUM
+
+    @field_validator("subject", "description", mode="before")
+    @classmethod
+    def strip_required_text(cls, value):
+        return value.strip() if isinstance(value, str) else value
 
 
 class GrievanceResolveRequest(BaseModel):

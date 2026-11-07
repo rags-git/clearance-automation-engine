@@ -8,7 +8,8 @@ from backend.app.models.models import (
     DepartmentApproval,
     Department,
     User,
-    RoleEnum
+    RoleEnum,
+    ApprovalStatusEnum,
 )
 from backend.app.schemas.schemas import (
     ClearanceRequestCreate,
@@ -124,7 +125,9 @@ def get_staff_approval_queue(
     db: Session = Depends(get_db)
 ):
     """Returns the pending clearance approvals for staff's department or all if Admin."""
-    query = db.query(DepartmentApproval).join(ClearanceRequest)
+    query = db.query(DepartmentApproval).join(ClearanceRequest).filter(
+        DepartmentApproval.status == ApprovalStatusEnum.PENDING
+    )
 
     if current_user.role == RoleEnum.STAFF:
         if not current_user.department_id:

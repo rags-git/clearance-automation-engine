@@ -1,10 +1,14 @@
 import React from 'react';
-import { CheckCircle2, XCircle, Clock, Lock, ShieldCheck, KeyRound, ArrowRight, GitBranch } from 'lucide-react';
+import { XCircle, Clock, Lock, KeyRound, GitBranch } from 'lucide-react';
 
 export const ClearancePipeline = ({ approvals = [] }) => {
   const gate1 = approvals.filter((a) => a.clearance_gate === 1);
   const gate2 = approvals.filter((a) => a.clearance_gate === 2);
   const gate3 = approvals.filter((a) => a.clearance_gate === 3);
+  const rejected = approvals.filter((a) => a.status === 'REJECTED');
+  const pending = approvals.filter((a) => a.status === 'PENDING');
+  const blocker = rejected[0] || pending[0];
+  const waitingOn = approvals.filter((a) => a.status === 'WAITING_PREREQUISITE');
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -124,6 +128,16 @@ export const ClearancePipeline = ({ approvals = [] }) => {
             Gate 1 concurrent validation; Gates 2 & 3 resolve sequentially upon cryptographic sign-off.
           </p>
         </div>
+      </div>
+
+      <div className="mb-5 rounded-xl border border-amber-500/20 bg-amber-500/[0.06] px-4 py-3 text-sm text-zinc-200" role="status" aria-live="polite">
+        {rejected.length > 0 ? (
+          <><strong className="text-rose-300">Action needed:</strong> {rejected.map((a) => a.department_name).join(', ')} marked this clearance as disputed. Review the remarks and contact the department.</>
+        ) : blocker ? (
+          <><strong className="text-amber-200">Next step:</strong> {blocker.department_name} (Gate {blocker.clearance_gate}) is awaiting review.{waitingOn.length > 0 && <> {waitingOn.map((a) => a.department_name).join(', ')} {waitingOn.length === 1 ? 'is' : 'are'} locked until earlier approvals are complete.</>}</>
+        ) : approvals.length > 0 ? (
+          <><strong className="text-emerald-300">All department approvals are complete.</strong> Your clearance is ready.</>
+        ) : 'Department status will appear here once a clearance request is created.'}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 relative">

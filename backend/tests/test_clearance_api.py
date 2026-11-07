@@ -104,3 +104,45 @@ def test_grievance_submission_and_sla(client):
     assert data["priority"] == "CRITICAL"
     assert data["sla_hours"] == 4
     assert data["status"] == "OPEN"
+
+
+def test_invalid_clearance_submission_is_rejected(client):
+    login_resp = client.post("/api/v1/auth/login", json={
+        "email": "student@pec.edu.in",
+        "password": "password123"
+    })
+    token = login_resp.json()["access_token"]
+    response = client.post(
+        "/api/v1/clearance/apply",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"academic_year": "", "semester": "Semester 8", "reason": "Graduation"}
+    )
+    assert response.status_code == 422
+
+
+def test_invalid_grievance_submission_is_rejected(client):
+    login_resp = client.post("/api/v1/auth/login", json={
+        "email": "student@pec.edu.in",
+        "password": "password123"
+    })
+    token = login_resp.json()["access_token"]
+    response = client.post(
+        "/api/v1/grievance",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"department_id": 1, "subject": "x", "description": "short"}
+    )
+    assert response.status_code == 422
+
+
+def test_negative_due_decision_is_rejected(client):
+    staff_login = client.post("/api/v1/auth/login", json={
+        "email": "library@pec.edu.in",
+        "password": "password123"
+    })
+    token = staff_login.json()["access_token"]
+    response = client.post(
+        "/api/v1/clearance/staff/decision/1",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"decision": "REJECTED", "due_amount": -1}
+    )
+    assert response.status_code == 422

@@ -86,6 +86,58 @@ def test_staff_forbidden_from_admin_audit_logs(api_client):
     assert "Admin privileges required" in resp.json()["detail"]
 
 
+def test_clearance_queue_only_returns_actionable_department_items(api_client):
+    import uuid
+    suffix = uuid.uuid4().hex[:8]
+    student_response = api_client.post("/api/v1/auth/register", json={
+        "email": f"queue_{suffix}@pec.edu.in",
+        "password": "password123",
+        "full_name": "Queue Test Student",
+        "roll_number": f"9{suffix[:7]}"
+    })
+    assert student_response.status_code == 200
+    student_token = student_response.json()["access_token"]
+    apply_response = api_client.post(
+        "/api/v1/clearance/apply",
+        headers={"Authorization": f"Bearer {student_token}"},
+        json={"academic_year": "2025-2026", "semester": "Semester 8", "reason": "Queue test"}
+    )
+    assert apply_response.status_code == 200
+
+    library_token = get_token(api_client, "library@pec.edu.in")
+    admin_token = get_token(api_client, "admin@pec.edu.in")
+
+    library_queue = api_client.get(
+        "/api/v1/clearance/staff/queue",
+        headers={"Authorization": f"Bearer {library_token}"}
+    )
+    admin_queue = api_client.get(
+        "/api/v1/clearance/staff/queue",
+        headers={"Authorization": f"Bearer {admin_token}"}
+    )
+
+    assert library_queue.status_code == 200
+    assert admin_queue.status_code == 200
+    library_items = library_queue.json()
+    admin_items = admin_queue.json()
+    assert library_items
+    assert all(item["department_code"] == "LIBRARY" for item in library_items)
+    assert all(item["status"] == "PENDING" for item in library_items + admin_items)
+    assert len(admin_items) >= len(library_items)
+    assert {item["department_code"] for item in admin_items}.issuperset(
+        {item["department_code"] for item in library_items}
+    )
+
+
+def test_staff_queue_excludes_completed_and_locked_items(api_client):
+    admin_token = get_token(api_client, "admin@pec.edu.in")
+    response = api_client.get(
+        "/api/v1/clearance/staff/queue",
+        headers={"Authorization": f"Bearer {admin_token}"}
+    )
+    assert all(item["status"] == "PENDING" for item in response.json())
+
+
 def test_staff_cross_department_signoff_forbidden(api_client):
     # Library staff tries to sign off for Sports department
     lib_token = get_token(api_client, "library@pec.edu.in")
